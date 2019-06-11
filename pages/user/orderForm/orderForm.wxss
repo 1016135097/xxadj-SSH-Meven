@@ -1,0 +1,71 @@
+
+.secondary {
+  background:#479DE6;
+  color:#666;
+  margin:17rpx;
+  margin-bottom:0rpx;
+  }
+  
+.success-nav {
+    background: #479DE6;
+    color: #fff;
+  }
+  .form-input-btn>.iconfont {
+    padding: 0 10rpx;
+    font-size: 50rpx;
+  }
+  .nav-item {
+    display: inline-block;
+    overflow: hidden;
+    margin: 0 100rpx;
+    height: 92rpx;
+    color: #666;
+    line-height: 92rpx;
+  }
+
+  /* 订单样式 */
+  .orderFrom-proceed-finish{
+    display: block;
+    background-color: #479DE6;
+    margin: 20rpx;
+    padding: 20rpx;
+    padding-left:25rpx;
+    height: 200rpx;
+    border-radius:5pt/5pt;
+  }
+  .orderFrom-proceed-finish-dizhi{
+    display: block;
+    position:relative;
+    height:85rpx;
+  }
+  .orderFrom-proceed-finish-dianhua{
+    display: block;
+    position:relative;
+    
+  }
+  .orderFrom-proceed-finish-shijian{
+    display: block;
+    position:relative;
+   
+   
+  }
+  .orderFrom-proceed-finish-delete{
+    display:block;
+    margin-top: -100rpx;  
+  }
+  .orderFrom-proceed-finish-label{
+    margin-top: -270rpx; 
+ 
+  }
+  .orderFrom-proceed-finish-biaoqian{
+    display:block;
+    margin-left:500rpx;
+  }
+  /* 最后提示没有更多数据了 */
+  .orderFrom-proceed-finish-finish{
+    margin: 100rpx;
+    text-align: center;
+  }
+  .bar-success-zhan{
+    height: 90rpx;
+}

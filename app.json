@@ -1,0 +1,59 @@
+{
+  "pages": [
+    
+    "pages/index/index",
+    "pages/add/add",
+    "pages/add/addYourOwnDriver",
+    "pages/user/user",
+    "pages/user/redact/alterSpei/alterSpei",
+    "pages/user/redact/alterJiashi/alterJiashi",
+    "pages/user/orderForm/orderForm",
+    "pages/user/news/news",
+    "pages/user/orderReceiving/orderReceiving",
+    "pages/user/orderReceiving/orderReceivingDetail/orderReceivingDetail",
+    "pages/user/orderForm/orderFormUpdate/orderFormUpdate",
+    "pages/user/orderForm/orderFormDetail/orderFormDetail",
+    "pages/user/redact/redact",
+    "pages/user/collect/collect",
+    "pages/index/information/information",
+    "pages/user/FAQ/FAQ"
+    
+  ],
+  "tabBar": {
+    "selectedColor": "#479DE6",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/souye.png",
+        "selectedIconPath": "images/souye1.png"
+      },
+      {
+        "pagePath": "pages/add/add",
+        "text": "代驾",
+        "iconPath": "images/tianjia1.png",
+        "selectedIconPath": "images/tianjia.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "个人",
+        "iconPath": "images/account.png",
+        "selectedIconPath": "images/account_.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundColor": "#479DE6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#479DE6",
+    "navigationBarTitleText": "心系爱代驾",
+    "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+
+}

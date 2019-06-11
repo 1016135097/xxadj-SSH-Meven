@@ -1,0 +1,8 @@
+.cu-form-group {
+	background-color: var(--blueLight);
+	padding: 1rpx 30rpx;
+	display: flex;
+	align-items: center;
+	min-height: 100rpx;
+	justify-content: space-between;
+}

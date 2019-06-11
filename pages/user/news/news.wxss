@@ -1,0 +1,12 @@
+
+.botton-padding{
+    margin-bottom: 10rpx;
+}
+.cu-tag:empty:not([class*="cuIcon-"]) {
+    padding:0rpx;
+    width:30rpx;
+    height:30rpx;
+    top:3rpx;
+    right:3rpx;
+    
+}

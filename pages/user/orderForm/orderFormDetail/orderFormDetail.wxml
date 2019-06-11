@@ -1,0 +1,201 @@
+<view>
+    <view class=" bg-white padding-sm">
+        <view class="cu-card dynamic no-card">
+            <view class="cu-item shadow">
+                <!-- 信息详细 -->
+                <view class="grid col-1">
+                    <view class="bg-yellow  radius  light">
+                        <view class="padding text-center text-lg">
+                            <view>
+                                <view>{{daijiadingdanDetail.qishiweizhi}}</view>
+                            </view>
+                            <view class="solid-top padding-xs">
+                                {{daijiadingdanDetail.zhongdianweizhi==''?"...":daijiadingdanDetail.zhongdianweizhi}}
+                            </view>
+                            <view catch:tap="dial" data-phone="{{daijiadingdanDetail.phone}}">
+                                <view>{{daijiadingdanDetail.phone}}</view>
+                            </view>
+                            <view class="padding-xs">{{daijiadingdanDetail.time}}</view>
+                            <!-- 日常代驾 -->
+                            <view class="padding-xs" wx:if="{{daijiadingdanDetail.baochefuwu=='undefined'}}">
+                                <text wx:if="{{tianjiasiji_length==0}}">
+                                    {{daijiadingdanDetail.tianjiadaijia}}
+                                </text>
+                                <text wx:if="{{tianjiasiji_length!=0}}" catch:tap="chankaidaij">
+                                    {{daijiadingdanDetail.tianjiadaijia}}
+                                    <text class="text-gray">(点击查看详细)</text>
+                                </text>
+                            </view>
+                            <!-- 包时代驾 -->
+                            <view class="padding-xs" wx:if="{{daijiadingdanDetail.baoshidaijia!='undefined'&&daijiadingdanDetail.baochefuwu=='undefined'}}">
+                                <text wx:if="{{tianjiasiji_length==0}}">
+                                    {{daijiadingdanDetail.baoshidaijia}}
+                                </text>
+                                <text wx:if="{{tianjiasiji_length!=0}}" catch:tap="chankaidaij">
+                                    {{daijiadingdanDetail.tianjiadaijia}}
+                                    <text class="text-gray">(点击查看详细)</text>
+                                </text>
+                            </view>
+                            <!-- 包车代驾 -->
+                            <view class="padding-xs" wx:if="{{daijiadingdanDetail.baoshidaijia=='undefined'&&daijiadingdanDetail.baochefuwu!='undefined'}}">
+                                {{daijiadingdanDetail.baochefuwu}}
+                            </view>
+                               <!-- 包时代驾 -->
+                            <view class="padding-xs" wx:if="{{jiedanren_length==1}}" catch:tap="jiedanrenxiangxi">
+                                <text>
+                                    {{jiedanzhexinxi.username}}
+                                    <text class="text-gray">(点击查看详细)</text>
+                                </text>
+                            </view>
+                            <view class="flex solid-bottom padding justify-between">
+                                <view>
+                                    <bottom class="cu-btn line-mauve lg margin-tb-sm shadow" catchtap="orderFormUpdate" data-id='{{daijiadingdanDetail._id}}' wx:if="{{daijiadingdanDetail.ifFinish==false}}">
+                                        修改订单
+                                    </bottom>
+                                    <bottom class="cu-btn line-red lg margin-tb-sm shadow" wx:if="{{daijiadingdanDetail.ifFinish!=false}}" catchtap="orderFromDelete">
+                                        删除订单
+                                    </bottom>
+                                </view>
+                                <view>
+                                    <bottom class="cu-btn line-blue lg margin-tb-sm shadow" wx:if="{{daijiadingdanDetail.ifFinish==false}}" catchtap="wanchengcaozuo">
+                                        完成
+                                    </bottom>
+                                    <bottom class="cu-btn line-cyan lg margin-tb-sm shadow" wx:if="{{daijiadingdanDetail.ifFinish!=false}}">
+                                        已完成
+                                    </bottom>
+                                </view>
+                            </view>
+                            <view class="padding-xs" wx:if="{{daijiadingdanDetail.ifFinish!=false}}">
+                                你也完成此订单，点击下面评价，赶快去评论一番司机的技术吧。
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <!-- 点赞 收藏 -->
+                <view class="text-gray text-sm text-right padding" catch:tap="pinglunTap">
+                    评论
+                    <text class="cuIcon-messagefill margin-lr-xs"></text>
+                </view>
+                <!-- 评论 -->
+                <!-- <view class="cu-list menu-avatar comment solids-top">
+                    <view class="cu-item" wx:for="{{[1,2,3,4]}}" wx:key="index">
+                        <image src='{{yonghuxinxi[0].portrait}}' class='cu-avatar round'></image>
+                        <view class="content">
+                            <view class="text-grey">{{yonghuxinxi[0].username}}</view>
+                            <view class="text-gray text-content text-df">凯尔，你被自己的光芒变的盲目。</view>
+                            <view class="bg-orange light padding-sm radius margin-top-sm  text-sm">
+                                <view class="flex">
+                                    <view>凯尔：</view>
+                                    <view class="flex-sub">妹妹，你在帮他们给黑暗找借口吗?</view>
+                                </view>
+                            </view>
+                            <view class="margin-top-sm flex justify-between">
+                                <view class="text-gray text-df">2018年12月4日</view>
+                                <view>
+                                    <text class="cuIcon-appreciatefill text-red"></text>
+                                    <text class="cuIcon-messagefill text-gray margin-left-sm"></text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view> -->
+            </view>
+        </view>
+    </view>
+    <!-- 弹出评论框 -->
+    <view class="cu-modal show" wx:if='{{sijitanchuang==true}}'>
+        <view class="cu-dialog">
+            <view class="cu-bar bg-white justify-end">
+                <view class="content"><text wx:if="{{jiedanrenxiangxi_an!=true}}">代驾司机</text><text wx:if="{{jiedanrenxiangxi_an==true}}">接单司机</text></view>
+                <view class="action" catchtap="chankaidaijguanbi">
+                    <text class="cuIcon-close text-red"></text>
+                </view>
+            </view>
+            <view wx:if="{{jiedanrenxiangxi_an!=true}}">
+            <scroll-view wx:if="{{tianjiasiji_length!=0}}" scroll-y='true' scroll-top='0' scroll-with-animation='true' class="tiaosijijiedan-litem">
+                <view class="cu-card case" >
+                    <view class="cu-item shadow" wx:for="{{tianjiasiji}}" wx:key wx:for-item="tianjiasiji_">
+                        <view class="cu-list menu-avatar" catch:tap="xuanzeyonghu" data-item = "{{tianjiasiji_}}">
+                            <view class="cu-item">
+                                <view class="cu-avatar round lg" style="background-image:url({{tianjiasiji_.portrait}});"></view>
+                                <view class="content flex-sub">
+                                    <view class="text-grey">
+                                        {{tianjiasiji_.username}}
+                                        <text space="nbsp">驾龄：{{tianjiasiji_.jialing}}</text>
+                                    </view>
+                                    <view class="text-gray text-sm flex justify-between">
+                                        {{tianjiasiji_.addDate}} 加入
+                                        <view class="text-gray text-sm">
+                                            <text class="cuIcon-attentionfill margin-lr-xs"></text>
+                                            10
+                                            <text class="cuIcon-appreciatefill margin-lr-xs"></text>
+                                            20
+                                            <text class="cuIcon-messagefill margin-lr-xs"></text>
+                                            30
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </scroll-view>
+            </view>
+            <view wx:if="{{jiedanrenxiangxi_an==true}}">
+                <view class="image">
+                    <view class="grid col-1">
+                        <view class="bg-yellow  radius  light">
+                            <view class="padding text-center">
+                                <view>
+                                    所在地：{{jiedanzhexinxi.region[0]}},{{jiedanzhexinxi.region[1]}},{{jiedanzhexinxi.region[2]}}
+                                </view>
+                                <view class="solid-top padding-xs">年龄：{{jiedanzhexinxi.age}}</view>
+                                <view class="solid-top padding-xs">驾龄：{{jiedanzhexinxi.jialing}}</view>
+                                <view class="solid-top padding-xs">{{jiedanzhexinxi.jiashi}}</view>
+                                <view class="solid-top padding-xs">{{jiedanzhexinxi.spe_i}}</view>
+                                <view class="solid-top padding-xs">手机：{{jiedanzhexinxi.phone}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="cu-list menu-avatar">
+                    <view class="cu-item">
+                        <view class="cu-avatar round lg" style="background-image:url({{jiedanzhexinxi.portrait}});"></view>
+                        <view class="content flex-sub">
+                            <view class="text-grey">{{jiedanzhexinxi.username}}
+                            </view>
+                            <view class="text-gray text-sm flex justify-between">
+                                {{jiedanzhexinxi.addDate}} 加入
+                                <view class="text-gray text-sm">
+                                    <text class="cuIcon-attentionfill margin-lr-xs"></text>
+                                   {{jiedanzhexinxi.chakanshu}}
+                                    <text class="cuIcon-appreciatefill margin-lr-xs"></text>
+                                    {{jiedanzhexinxi.shoucangshu}}
+                                    <text class="cuIcon-messagefill margin-lr-xs"></text>
+                                    {{jiedanzhexinxi.pinglunshu}}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+       
+            </view>
+            <view wx:if="{{pinglunTapFaView == true}}">   
+            <form bindsubmit="pinglunTapFa">
+               <view > {{xuanzhedeyonghu}}</view>
+                <view class="cu-bar input">
+                    <view class="action">
+                        <text class="cuIcon-roundaddfill text-grey"></text>
+                    </view>
+                    <input class="solid-bottom" maxlength="300" name="pinglun_content" value="{{pinglun_content}}" cursor-spacing="10"></input>
+                    <view class="action">
+                        <text class="cuIcon-emojifill text-grey"></text>
+                    </view>
+                    <button class="cu-btn bg-green shadow-blur" form-type="submit">发送</button>
+                </view>
+            </form>
+        </view>
+        </view>
+        
+    </view>
+</view>
