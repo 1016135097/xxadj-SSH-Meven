@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- hibernate 和spring整合部分  **************************************** -->
+    <!-- 配置c3p0连接池 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!-- 注入属性 -->
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://111.230.73.92:3306/xxadj?useSSL=false"/>
+        <property name="user" value="xxadj"/>
+        <property name="password" value="363491343"/>
+    </bean>
+
+    <!-- sessionFactory 创建交个spring管理 -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <!-- 因为在hibernate配置文件中没有数据库配置，数据库配置在spring里面，注入dataSource -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定hibernate核心配置文件 -->
+        <property name="configLocations" value="classpath:hibernate.cfg.xml"/>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <!-- 注入dataSource -->
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- 开启事务注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="orderService" class="cn.bubbletg.xxadj.service.OrderService">
+        <!-- 注入orderDaoImpl -->
+        <property name="orderDao" ref="orderDaoImpl"/>
+    </bean>
+
+    <!-- 创建实现类对象 -->
+    <bean id="orderDaoImpl" class="cn.bubbletg.xxadj.dao.OrderDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 创建hibernateTemplate对象 -->
+    <!--    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">-->
+    <!--        注入sessionFactory-->
+    <!--        <property name="sessionFactory" ref="sessionFactory"></property>-->
+    <!--    </bean>-->
+
+    <!-- struts2和spring整合部分  **************************************** -->
+    <!-- 配置action的对象 -->
+    <bean id="orderAction" class="cn.bubbletg.xxadj.action.OrderAction" scope="prototype">
+        <!-- 注入service -->
+        <property name="orderService" ref="orderService"/>
+    </bean>
+
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <import resource="classpath:user.xml"/>
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

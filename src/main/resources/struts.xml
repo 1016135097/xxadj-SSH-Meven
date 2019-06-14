@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <package name="package01" extends="struts-default">
+        <action name="indexAction" class="cn.bubbletg.xxadj.action.indexAction">
+            <result name="success" type="redirect">login.jsp</result>
+        </action>
+        <!--    与spring 整合，class属性里面就不用写全路径了，
+                因为写了action会创建两次，直接写spring配置文件里的
+                配置的action 的 bean 的id值就可以了的
+            -->
+        <action name="orderAction_*" class="orderAction" method="{1}">
+        </action>
+        <action name="userAction_*" class="userAction" method="{1}">
+        </action>
+    </package>
+</struts>

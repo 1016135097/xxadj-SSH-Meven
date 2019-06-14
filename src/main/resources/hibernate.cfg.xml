@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+        <!-- 第一部分 配置数据库信息 -->
+<!--        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>-->
+<!--        &lt;!&ndash; <property name="hibernate.connection.url">jdbc:mysql://111.230.73.92:3306/jilei?useSSL=false&amp;serverTimezone=Hongkong&amp;characterEncoding=utf-8&amp;autoReconnect=true</property> &ndash;&gt;-->
+<!--        <property name="hibernate.connection.url">jdbc:mysql://111.230.73.92:3306/xxadj?useSSL=false&amp;serverTimezone=Hongkong&amp;characterEncoding=utf-8&amp;autoReconnect=true</property>-->
+<!--        <property name="hibernate.connection.username">xxadj</property>-->
+<!--        <property name="hibernate.connection.password">363491343</property>-->
+        <!-- 第二部分 配置hibernate信息   可有可无 -->
+        <!-- 输出底层sql语句 -->
+        <property name="hibernate.show_sql">true</property>
+        <!-- hibernate 帮我们自动创建表
+            update ：如果有了这个表，帮我们更新，如果没有，创建
+         -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <!-- 配置数据库方言
+            在mysql里面实现分页，关键字limit 只能使用mysql里面
+            在oracle 里面，实现分页 rownum
+         -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.use_sql_comments">true</property>
+
+        <!-- 第三部分 把映射放到核心配置文件中 -->
+        <mapping resource="hbm/Order.hbm.xml"/>
+        <mapping resource="hbm/User.hbm.xml"/>
+
+    </session-factory>
+
+</hibernate-configuration>

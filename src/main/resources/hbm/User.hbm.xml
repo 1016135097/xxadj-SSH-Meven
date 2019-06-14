@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+        PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <!-- 配置类和表对应 class标签 name属性：实体类全路径 table属性：数据库表名称 -->
+    <class name="cn.bubbletg.xxadj.entity.User" table="t_user">
+        <!-- 配置实体类id和表id对应，hibernate 要求实体类有一个属性唯一值，
+        hibernate要求有字段作为唯一值 -->
+        <!-- id 标签
+            name属性：实体类里面id属性名称
+            column属性：生成表里面字段名称
+         -->
+        <id name="id">
+            <!--
+                设置数据库表id增长策略
+                native : 生成表中id字段是主键和自动增长
+             -->
+            <generator class="native"/>
+        </id>
+        <!-- 配置其他属性和表字段对应
+            name属性：实体类属性名称
+            column：生成表里面字段名称，不写默认值与name 一样
+             <property name="portrait" column="portrait"/>
+         -->
+        <property name="openid"/>
+        <property name="name"/>
+        <property name="username"/>
+        <property name="portrait"/>
+        <property name="phone"/>
+        <property name="age"/>
+        <property name="drivingYears"/>
+        <property name="location"/>
+        <property name="realNameAuthentication"/>
+        <property name="drivingCertification"/>
+        <property name="region"/>
+        <property name="collectTheNumber"/>
+        <property name="visitTheNumber"/>
+        <property name="commentsTheNumber"/>
+        <property name="showCard"/>
+        <property name="joinTime"/>
+    </class>
+
+</hibernate-mapping>
