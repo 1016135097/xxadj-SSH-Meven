@@ -14,8 +14,8 @@ App({
      * 设置全局变量
      */
     this.globalData = {
-      //url: "http://localhost:8080/xxadj/",
-      url: "https://xxadj.bubbletg.cn/",
+      url: "http://localhost:8080/xxadj/",
+      //url: "https://xxadj.bubbletg.cn/",
     }
     this.globalDataOpenid = {
       openid_: openid_,

@@ -339,87 +339,123 @@ Page({
     let t = new Date(); //获得时间
     //向daijiadingdan表中添加信息
     let that = this;
-    db.collection("daijiadingdan").add({
-      // data 字段表示需新增的 JSON 数据
+    wx.request({
+      url:  app.globalData.url+'orderAction_add', //上传数据
       data: {
-        _id: t,
-        portrait: '' + this.data.portrait,// 默认头像
-        username: '' + this.data.userInfo.nickName, //默认
-        qishiweizhi: e.detail.value.qishiweizhi, //起始位置
-        zhongdianweizhi: e.detail.value.zhongdianweizhi, //终点位置
-        phone: e.detail.value.phone, //联系方式
-        time: e.detail.value.time, //预约时间
-        tianjiadaijia: '' + tianjiadaijia, //添加代驾
-        baochefuwu: '' + baochefuwu, //包车服务
-        baoshidaijia: '' + baoshidaijia, //包时代驾
-        qishiweizhilatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
-        qishiweizhilongitude: '' + this.data.qishiweizhilongitude, //起始位置经度
-        zhongdianweizhilatitude: '' + this.data.zhongdianweizhilatitude, //终点纬度
-        zhongdianweizhilongitude: '' + this.data.zhongdianweizhilongitude, //终点经度
-        ifFinish: false, //表示是否完成
-        isaccept: false, //表示是否被接单
-        jiedanren: '', //表示此订单被谁接单
-        daijiajiedan_id: '', //接单表的id
-        zhidingsij: this.data.xuandingren, //指定司机信息id
-        chuangjianshijian: [t.getFullYear() + '/' + (t.getMonth() + 1) +
-          '/' + t.getDate(), t.getHours() + ':' + t.getMinutes()],//创建时间
+            id: t.getTime(),
+            portrait: '' + this.data.portrait,// 默认头像
+            username: '' + this.data.userInfo.nickName, //默认
+            initialPosition: e.detail.value.qishiweizhi, //起始位置
+            finalPosition: e.detail.value.zhongdianweizhi, //终点位置
+            phone: e.detail.value.phone, //联系方式
+            time: e.detail.value.time, //预约时间
+            addGenerationOfDriving: '' + tianjiadaijia, //添加代驾
+            charterCarService: '' + baochefuwu, //包车服务
+            packageTimeDriving: '' + baoshidaijia, //包时代驾
+            initialPositionLatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
+            initialPositionLongitude: '' + this.data.qishiweizhilongitude, //起始位置经度
+            finalPositionLatitude: '' + this.data.zhongdianweizhilatitude, //终点纬度
+            finalPositionLongitude: '' + this.data.zhongdianweizhilongitude, //终点经度
+            ifFinish: false, //表示是否完成
+            ifAccept: false, //表示是否被接单
+            receivedBy: '', //表示此订单被谁接单
+            daijiajiedan_id: '', //接单表的id
+            zhidingsiji: '', //指定司机信息id
+            creationTime: t.getFullYear() + '/' + (t.getMonth() + 1) +
+              '/' + t.getDate()+ ' '+t.getHours() + ':' + t.getMinutes(),//创建时间
+          },
+          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
+        
+      },
+      success (res) {
+        console.log(res.data)
       }
-    }).then(add_res => {
-      // //发送模块信息
-      //   for(let i = 0;i<this.data.xuandingren.length;i++){
-      //   wx.cloud.callFunction({
-      //     name: 'mobanxiaoxi_zijitiaoxuanshiji',
-      //     data: {
-      //       touser: this.data.xuandingren[i],  //接受者id
-      //       dingdanhao : add_res._id, //订单号
-      //        xiadanyonghu :this.data.userInfo.nickName,//下单用户
-      //        formId :''+e.detail.formId,
-      //     }
-
-      //   }).then(console.log)
-      //   console.log('---e.detail.formId-----',e)
-      // }
-      for (let i = 0; i < this.data.xuandingren.length; i++) {
-        db.collection("news").add({
-          data: {
-            fadanren: app.globalDataOpenid.openid_, //下单者id
-            gaunlianId: add_res._id, //订单号 ,当是点赞时，表示点赞表id
-            jiedanren: this.data.xuandingren[i],  //接单人
-            newsName: this.data.userInfo.nickName + '让你代驾了', //信息标题
-            newsNameP: this.data.userInfo.avatarUrl,//头像
-            newsContent: '起始位置：' + e.detail.value.qishiweizhi,//信息内容,
-            chuangjianshijian: t.getFullYear() + '/' + (t.getMonth() + 1) +
-              '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//创建时间
-            ifdakai: false,//标记是否打开,每一个用户有不同的标签
-            if_and: "add", //值为add 表示代驾,
-          }
-        }).then(res => {
-          console.log("-----消息发送成功！！！")
-        }).catch(res => {
-          console.log("-----消息发送成功！！！")
-        })
-      }
-    }).then(add_ress => {
-      console.log("------------add_ress", add_ress)
-      //关闭加载...
-      wx.hideLoading();
-      //表示下单成功，把id保存到
-      console.log("下单成功", add_ress)
-      //下单成功，清空所有输入
-      that.qingchuinput();
-      that.setData({
-        modalName: 'DialogModal2',
-      })
-    }).catch(error => {
-      //关闭加载...
-      wx.hideLoading();
-      console.log("下单失败", error)
-      wx.showToast({
-        title: "下单失败！",
-        icon: "none",
-        duration: 2000
-      });
     })
+
+
+    // db.collection("daijiadingdan").add({
+    //   // data 字段表示需新增的 JSON 数据
+    //   data: {
+    //     _id: t,
+    //     portrait: '' + this.data.portrait,// 默认头像
+    //     username: '' + this.data.userInfo.nickName, //默认
+    //     qishiweizhi: e.detail.value.qishiweizhi, //起始位置
+    //     zhongdianweizhi: e.detail.value.zhongdianweizhi, //终点位置
+    //     phone: e.detail.value.phone, //联系方式
+    //     time: e.detail.value.time, //预约时间
+    //     tianjiadaijia: '' + tianjiadaijia, //添加代驾
+    //     baochefuwu: '' + baochefuwu, //包车服务
+    //     baoshidaijia: '' + baoshidaijia, //包时代驾
+    //     qishiweizhilatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
+    //     qishiweizhilongitude: '' + this.data.qishiweizhilongitude, //起始位置经度
+    //     zhongdianweizhilatitude: '' + this.data.zhongdianweizhilatitude, //终点纬度
+    //     zhongdianweizhilongitude: '' + this.data.zhongdianweizhilongitude, //终点经度
+    //     ifFinish: false, //表示是否完成
+    //     isaccept: false, //表示是否被接单
+    //     jiedanren: '', //表示此订单被谁接单
+    //     daijiajiedan_id: '', //接单表的id
+    //     zhidingsij: this.data.xuandingren, //指定司机信息id
+    //     chuangjianshijian: [t.getFullYear() + '/' + (t.getMonth() + 1) +
+    //       '/' + t.getDate(), t.getHours() + ':' + t.getMinutes()],//创建时间
+    //   }
+    // }).then(add_res => {
+    //   // //发送模块信息
+    //   //   for(let i = 0;i<this.data.xuandingren.length;i++){
+    //   //   wx.cloud.callFunction({
+    //   //     name: 'mobanxiaoxi_zijitiaoxuanshiji',
+    //   //     data: {
+    //   //       touser: this.data.xuandingren[i],  //接受者id
+    //   //       dingdanhao : add_res._id, //订单号
+    //   //        xiadanyonghu :this.data.userInfo.nickName,//下单用户
+    //   //        formId :''+e.detail.formId,
+    //   //     }
+
+    //   //   }).then(console.log)
+    //   //   console.log('---e.detail.formId-----',e)
+    //   // }
+    //   for (let i = 0; i < this.data.xuandingren.length; i++) {
+    //     db.collection("news").add({
+    //       data: {
+    //         fadanren: app.globalDataOpenid.openid_, //下单者id
+    //         gaunlianId: add_res._id, //订单号 ,当是点赞时，表示点赞表id
+    //         jiedanren: this.data.xuandingren[i],  //接单人
+    //         newsName: this.data.userInfo.nickName + '让你代驾了', //信息标题
+    //         newsNameP: this.data.userInfo.avatarUrl,//头像
+    //         newsContent: '起始位置：' + e.detail.value.qishiweizhi,//信息内容,
+    //         chuangjianshijian: t.getFullYear() + '/' + (t.getMonth() + 1) +
+    //           '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//创建时间
+    //         ifdakai: false,//标记是否打开,每一个用户有不同的标签
+    //         if_and: "add", //值为add 表示代驾,
+    //       }
+    //     }).then(res => {
+    //       console.log("-----消息发送成功！！！")
+    //     }).catch(res => {
+    //       console.log("-----消息发送成功！！！")
+    //     })
+    //   }
+    // }).then(add_ress => {
+    //   console.log("------------add_ress", add_ress)
+    //   //关闭加载...
+    //   wx.hideLoading();
+    //   //表示下单成功，把id保存到
+    //   console.log("下单成功", add_ress)
+    //   //下单成功，清空所有输入
+    //   that.qingchuinput();
+    //   that.setData({
+    //     modalName: 'DialogModal2',
+    //   })
+    // }).catch(error => {
+    //   //关闭加载...
+    //   wx.hideLoading();
+    //   console.log("下单失败", error)
+    //   wx.showToast({
+    //     title: "下单失败！",
+    //     icon: "none",
+    //     duration: 2000
+    //   });
+    // })
   },
   closeModal() {
     //关闭，留在此页
