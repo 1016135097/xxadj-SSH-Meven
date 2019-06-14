@@ -62,31 +62,59 @@ Page({
 
   adduser(e) {
     let currentDate = new Date();
-    db.collection('user').add({
-      // data 字段表示需新增的 JSON 数据
-      data: {
-        _id: '' + e.target.dataset.openid,
+    wx.request({
+      url: app.globalData.url + 'userAction_add', //上传数据
+      data:{
+        id: 1,
+        openid: '' + e.target.dataset.openid,
         name: '' + this.data.userInfo.nickName, //默认
         username: '' + this.data.userInfo.nickName, //默认
         portrait: '' + this.data.userInfo.avatarUrl, //头像地址
         phone: '17863273072', //电话
         age: '0', //年龄
-        jialing: '0', //驾龄
-        suozaidi: '北京', //所在地
-        spe_i: '未实名认证', //实名认证
-        jiashi: '未驾驶认证', //驾驶认证
-        region: ['山东省', '枣庄市', '市中区'],
-        shoucangshu: 0,    //收藏数
-        chakanshu: 0,   //查看数
-        pinglunshu: 0,  //评论数
-        showData: false,
-        addDate: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate(),//加入时间
+        drivingYears: '0', //驾龄
+        location: '北京', //所在地
+        realNameAuthentication: '未实名认证', //实名认证
+        drivingCertification: '未驾驶认证', //驾驶认证
+        region: '山东省'+ '枣庄市'+'市中区',
+        collectTheNumber: 0,    //收藏数
+        visitTheNumber: 0,   //查看数
+        commentsTheNumber: 0,  //评论数
+        showCard: false,
+        joinTime: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate(),//加入时间
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
       },
       success(res) {
-        // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
-        console.log("插入成功", res)
-      }
+        console.log(res.data)
+      }  
     })
+    // db.collection('user').add({
+    //   // data 字段表示需新增的 JSON 数据
+    //   data: {
+    //     _id: '' + e.target.dataset.openid,
+    //     name: '' + this.data.userInfo.nickName, //默认
+    //     username: '' + this.data.userInfo.nickName, //默认
+    //     portrait: '' + this.data.userInfo.avatarUrl, //头像地址
+    //     phone: '17863273072', //电话
+    //     age: '0', //年龄
+    //     jialing: '0', //驾龄
+    //     suozaidi: '北京', //所在地
+    //     spe_i: '未实名认证', //实名认证
+    //     jiashi: '未驾驶认证', //驾驶认证
+    //     region: ['山东省', '枣庄市', '市中区'],
+    //     shoucangshu: 0,    //收藏数
+    //     chakanshu: 0,   //查看数
+    //     pinglunshu: 0,  //评论数
+    //     showData: false,
+    //     addDate: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate(),//加入时间
+    //   },
+    //   success(res) {
+    //     // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
+    //     console.log("插入成功", res)
+    //   }
+    // })
 
   },
 
