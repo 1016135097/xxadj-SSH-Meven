@@ -27,9 +27,10 @@ public class UserService {
      * create time: 2019/6/13 16:44
      *
      * @Param: user 封装的用户数据
+     * @return id 用户表  ID，唯一
      */
-    public void add(User user) {
-        userDao.add(user);
+    public int add(User user) {
+        return userDao.add(user);
     }
 
     /**
@@ -65,10 +66,11 @@ public class UserService {
 
     /**
      * create by: BubbleTg
-     * description: 根据ID查询单条记录
+     * description: 根据openid查询单条记录
      * create time: 2019/6/14 15:29
+     * @return User user 用户对象，查询到数据封装到User 对象
      */
-    public void findOne(int id) {
-        userDao.findOne(id);
+    public User findOne(String openid) {
+        return userDao.findOne(openid);
     }
 }

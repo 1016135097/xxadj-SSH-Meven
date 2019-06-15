@@ -24,7 +24,7 @@
             column：生成表里面字段名称，不写默认值与name 一样
              <property name="portrait" column="portrait"/>
          -->
-        <property name="openid"/>
+        <property name="openid" unique="true"/>
         <property name="name"/>
         <property name="username"/>
         <property name="portrait"/>

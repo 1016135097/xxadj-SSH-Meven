@@ -16,8 +16,9 @@ public interface BaseDao<T> {
      * create time: 2019/6/13 17:58
      *
      * @Param: null
+     * @return
      */
-    void add(T t);
+    int add(T t);
 
     /**
      * create by: BubbleTg
@@ -43,7 +44,8 @@ public interface BaseDao<T> {
      * description: 根据id查询
      * create time: 2019/6/13 17:59
      *
-     * @Param: null
+     * @Param: id
+     * @return  T  泛型对象
      */
     T findOne(int id);
 
