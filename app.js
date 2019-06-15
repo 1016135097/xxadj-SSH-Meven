@@ -19,6 +19,7 @@ App({
     }
     this.globalDataOpenid = {
       openid_: openid_,
+      user_id:'',
     }
     //默认没有登录
     this.globalDataAndLogin={
