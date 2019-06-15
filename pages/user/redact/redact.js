@@ -461,9 +461,11 @@ Page({
         'content-type': 'application/json' // 默认值
       },
       success(res) {
-
-        console.log(res.data) //返回数据为：id=1  格式，通过=分开
-        app.globalDataOpenid.user_id = res.data.split('=')[1]; //获得返回回来的ID，保存到全局
+        thiss.setData({
+          user: res.data
+        })
+        console.log(res.data) 
+        app.globalDataOpenid.user_id = res.data.id;
       }
     })
     // //查询数据

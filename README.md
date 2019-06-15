@@ -14,5 +14,6 @@ xxadj-SSH-Meven 原来xxadj 的SSH 加Meven 版本
 ### v.2.0.0 (v.1.0.0及其其他版本查看：https://github.com/bubbletg/xxadj)
 
 > 2019年6月14日 16:38:59 实现用户信息插入，以及订单添加。
+
 > 2019年6月15日 17:00:59 实现用户信息查询，即在 redact 页面修改。
 

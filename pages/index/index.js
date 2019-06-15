@@ -445,6 +445,23 @@ Page({
                   avatarUrl: res.userInfo.avatarUrl,
                   userInfo: res.userInfo
                 })
+              let   thiss = this;
+                wx.request({
+                  url: app.globalData.url + 'userAction_findOne', //查询一条数据
+                  data: {
+                    openid: app.globalDataOpenid.openid_, //通过全局查找当前用户
+                  },          // method:'POST',
+                  header: {
+                    'content-type': 'application/json' // 默认值
+                  },
+                  success(res) {
+                    thiss.setData({
+                      user: res.data
+                    })
+                    console.log(res.data)
+                    app.globalDataOpenid.user_id = res.data.id;
+                  }
+                })
               }
             })
           }
