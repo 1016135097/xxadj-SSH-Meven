@@ -75,6 +75,8 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      * create time: 2019/6/14 15:20
      */
     public void update() {
+
+
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--------update()方法执行----");
         //更新
@@ -120,8 +122,9 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
         //根据ID查询单条记录,封装到user对象
         User findUser = userService.findOne(user.getOpenid());
 
+
         //获得好的数据，待封装
-        ServletActionContext.getResponse().getWriter().write(findUser.getUsername());
+        ServletActionContext.getResponse().getWriter().write("id="+findUser.getId());
 
 
     }
