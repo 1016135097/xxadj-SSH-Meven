@@ -2,6 +2,7 @@ package cn.bubbletg.xxadj.action;
 
 import cn.bubbletg.xxadj.entity.User;
 import cn.bubbletg.xxadj.service.UserService;
+import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.log4j.Logger;
@@ -115,18 +116,17 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      *
      */
     public void findOne() throws IOException {
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--------findOne()方法执行----");
         //根据ID查询单条记录,封装到user对象
         User findUser = userService.findOne(user.getOpenid());
-
-
-        //获得好的数据，待封装
-        ServletActionContext.getResponse().getWriter().write("id="+findUser.getId());
-
-
+        //转换为json
+        String jsonUser = JSON.toJSONString(findUser);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(jsonUser);
     }
 
 }
