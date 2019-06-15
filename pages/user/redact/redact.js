@@ -2,6 +2,7 @@
 //获得数据库引用
 const db = wx.cloud.database();
 const app = getApp();
+let user_id;   //用户id
 Page({
 
   /**
@@ -451,34 +452,45 @@ Page({
     })
     var thiss = this;
     //查询数据
-    db.collection('user').doc(app.globalDataOpenid.openid_).get({
+    wx.request({
+      url: app.globalData.url + 'userAction_findOne', //查询一条数据
+      data: {
+        openid: app.globalDataOpenid.openid_, //通过全局查找当前用户
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
       success(res) {
-        // res.data 包含该记录的数据
-        thiss.setData({
-          name: res.data.name, //姓名
-          phone: res.data.phone, //电话
-          age: res.data.age, //年龄
-          jialing: res.data.jialing, //驾龄
-          suozaidi: res.data.suozaidi, //所在地
-          spe_i: res.data.spe_i, //实名认证
-          jiashi: res.data.jiashi, //驾驶认证
-          region: res.data.region, //所在地
-          showData:res.data.showData, //是否显示
-        })
+
+        console.log(res.data) //返回数据为：id=1  格式，通过=分开
+        app.globalDataOpenid.user_id = res.data.split('=')[1]; //获得返回回来的ID，保存到全局
       }
     })
+    // //查询数据
+    // db.collection('user').doc(app.globalDataOpenid.openid_).get({
+    //   success(res) {
+    //     // res.data 包含该记录的数据
+    //     thiss.setData({
+    //       name: res.data.name, //姓名
+    //       phone: res.data.phone, //电话
+    //       age: res.data.age, //年龄
+    //       jialing: res.data.jialing, //驾龄
+    //       suozaidi: res.data.suozaidi, //所在地
+    //       spe_i: res.data.spe_i, //实名认证
+    //       jiashi: res.data.jiashi, //驾驶认证
+    //       region: res.data.region, //所在地
+    //       showData:res.data.showData, //是否显示
+    //     })
+    //   }
+    // })
+
+
   },
-
-
-
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-
     this.huodeshuju(); //获得数据
-  
-   
   },
 
 
