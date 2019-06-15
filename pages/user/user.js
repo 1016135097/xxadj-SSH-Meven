@@ -87,35 +87,10 @@ Page({
         'content-type': 'application/json' // 默认值
       },
       success(res) {
-        console.log(res.data)
+        console.log(res.data) //返回数据为：id=1  格式，通过=分开
+        app.globalDataOpenid.user_id = res.data.split('=')[1]; //获得返回回来的ID，保存到全局
       }  
     })
-    // db.collection('user').add({
-    //   // data 字段表示需新增的 JSON 数据
-    //   data: {
-    //     _id: '' + e.target.dataset.openid,
-    //     name: '' + this.data.userInfo.nickName, //默认
-    //     username: '' + this.data.userInfo.nickName, //默认
-    //     portrait: '' + this.data.userInfo.avatarUrl, //头像地址
-    //     phone: '17863273072', //电话
-    //     age: '0', //年龄
-    //     jialing: '0', //驾龄
-    //     suozaidi: '北京', //所在地
-    //     spe_i: '未实名认证', //实名认证
-    //     jiashi: '未驾驶认证', //驾驶认证
-    //     region: ['山东省', '枣庄市', '市中区'],
-    //     shoucangshu: 0,    //收藏数
-    //     chakanshu: 0,   //查看数
-    //     pinglunshu: 0,  //评论数
-    //     showData: false,
-    //     addDate: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate(),//加入时间
-    //   },
-    //   success(res) {
-    //     // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
-    //     console.log("插入成功", res)
-    //   }
-    // })
-
   },
 
 
