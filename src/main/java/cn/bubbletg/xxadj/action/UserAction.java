@@ -81,7 +81,7 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
         //更新
         userService.update(user);
         //更新成功后，重新查询用户数据，并返回数据
-       // userService.findOne(user.getOpenid());
+        // userService.findOne(user.getOpenid());
     }
 
 
@@ -113,7 +113,6 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      * create by: BubbleTg
      * description: 根据ID查询单条记录
      * create time: 2019/6/14 15:29
-     *
      */
     public void findOne() throws IOException {
         //设置返回类型

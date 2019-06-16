@@ -21,6 +21,7 @@ public class OrderService {
      * OrderDao 对象，提供spring配置文件注入
      */
     private OrderDao orderDao;
+
     public void setOrderDao(OrderDao orderDao) {
         this.orderDao = orderDao;
     }
@@ -87,10 +88,20 @@ public class OrderService {
      * description: 分页查询
      * create time: 2019/6/16 15:27
      *
-     * @param currentPage 当前页
-     * @param pageSize 每页多少条记录
+     * @param currentPage                 当前页
+     * @param pageSize                    每页多少条记录
+     * @param initialPositionLatitudeMin  起始位置纬度附近最小值
+     * @param initialPositionLatitudeMax  起始位置纬度附近最大值
+     * @param initialPositionLongitudeMin 起始位置经度附近最小值
+     * @param initialPositionLongitudeMax 起始位置经度附近最大值
+     * @param ifAccept                    表示是否被接单
+     * @param ifFinish                    表示是否完成
+     * @param receivedBy                  表示被指定的接单人
      */
-    public List<Order> pagingQuery(Integer currentPage,Integer pageSize) {
+    public List<Order> pagingQuery(Integer currentPage, Integer pageSize,
+                                   Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
+                                   Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                   boolean ifAccept, boolean ifFinish, String receivedBy) {
         //创建页面对象
         Page<Order> orderPage = new Page<>();
         //设置当前页面
@@ -105,19 +116,33 @@ public class OrderService {
          */
         int totalPage = 0;
         //整除
-        if(totalCount % pageSize == 0) {
+        if (totalCount % pageSize == 0) {
             totalPage = totalCount / pageSize;
-        }else {
+        } else {
             totalPage = totalCount / pageSize + 1;
         }
         //设置总页数
         orderPage.setTotalPage(totalPage);
         //开始的位置   当前页减一乘每页记录数
-        int begin = (currentPage-1)*pageSize;
+        int begin = (currentPage - 1) * pageSize;
         //每页记录的Order的list集合
-        List<Order> orders = orderDao.findPage(begin,pageSize);
+        List<Order> orders = orderDao.findPage(begin, pageSize,
+                initialPositionLatitudeMin, initialPositionLatitudeMax,
+                initialPositionLongitudeMin, initialPositionLongitudeMax,
+                ifAccept, ifFinish, receivedBy);
         //返回
         return orders;
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 获得Order表总记录数
+     * create time: 2019/6/16 18:00
+     *
+     * @return Order表总记录数
+     */
+    public int findCount() {
+        return orderDao.findCount();
     }
 }
 

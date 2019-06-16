@@ -9,14 +9,14 @@ import cn.bubbletg.xxadj.entity.User;
  * @modified By：
  * @version: 1.0.0
  */
-public interface UserDao extends BaseDao<User>{
+public interface UserDao extends BaseDao<User> {
     /**
      * create by: BubbleTg
      * description: 根据id查询
      * create time: 2019/6/13 17:59
      *
+     * @return User 对象
      * @Param: id
-     * @return  User 对象
      */
     User findOne(String id);
 

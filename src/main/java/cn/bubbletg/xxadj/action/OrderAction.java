@@ -10,6 +10,7 @@ import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -46,7 +47,6 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         return order;
     }
 
-
     /**
      * create by: BubbleTg
      * description: 分页查询
@@ -61,17 +61,49 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         int currentPage = Integer.valueOf(request.getParameter("currentPage"));
         //获得当前页面大小
         int pageSize = Integer.valueOf(request.getParameter("pageSize"));
-        //查询并获得数据
-        List<Order> orders = orderService.pagingQuery(currentPage, pageSize);
+        //起始位置纬度附近最小值
+        Double initialPositionLatitudeMin = Double.valueOf(request.getParameter("initialPositionLatitudeMin"));
+        //起始位置纬度附近最大值
+        Double initialPositionLatitudeMax = Double.valueOf(request.getParameter("initialPositionLatitudeMax"));
+        //起始位置经度附近最小值
+        Double initialPositionLongitudeMin = Double.valueOf(request.getParameter("initialPositionLongitudeMin"));
+        //起始位置经度附近最大值
+        Double initialPositionLongitudeMax = Double.valueOf(request.getParameter("initialPositionLongitudeMax"));
 
+        //查询并获得数据
+        List<Order> orders = orderService.pagingQuery(currentPage, pageSize,
+                initialPositionLatitudeMin, initialPositionLatitudeMax,
+                initialPositionLongitudeMin, initialPositionLongitudeMax,
+                order.isIfAccept(), order.isIfFinish(), order.getReceivedBy());
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        /*
+         通过 HashMap 保存每一次获得的长度,数据，LoadUp返回给前端
+         */
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        hashMapOrders.put("data", orders);
+        hashMapOrders.put("length", orders.size());
+        //获得Order表总记录数
+        int totalCount = orderService.findCount();
+        //开始的位置   当前页减一乘每页记录数
+        int begin = (currentPage-1) * pageSize;
+        /*
+        是否加载完毕，用开始位置+查询到的数据长度：比如第一页查询位子是0，
+        记录长度2，总长度2，表示查询全部完
+         */
+        if (begin+orders.size() >= totalCount) {
+            //LoadUp 表示加载完，即数据查询完毕
+            hashMapOrders.put("LoadUp", true);
+        } else {
+            hashMapOrders.put("LoadUp", false);
+        }
+
         //转换为json
-        String jsonUser = JSON.toJSONString(orders);
+        String jsonOrder = JSON.toJSONString(hashMapOrders);
         //传递给前端
-        ServletActionContext.getResponse().getWriter().write(jsonUser);
+        ServletActionContext.getResponse().getWriter().write(jsonOrder);
     }
 
 

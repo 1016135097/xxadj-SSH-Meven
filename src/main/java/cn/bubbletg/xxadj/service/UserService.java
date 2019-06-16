@@ -17,6 +17,7 @@ public class UserService {
      * OrderDao 对象，提供spring配置文件注入
      */
     private UserDao userDao;
+
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -26,8 +27,8 @@ public class UserService {
      * description: 用户表添加操作，即注册操作
      * create time: 2019/6/13 16:44
      *
-     * @Param: user 封装的用户数据
      * @return id 用户表  ID，唯一
+     * @Param: user 封装的用户数据
      */
     public int add(User user) {
         return userDao.add(user);
@@ -38,7 +39,7 @@ public class UserService {
      * description: 更新用户表，即修改用户信息
      * create time: 2019/6/14 15:20
      *
-     *  @Param: user 封装的用户数据
+     * @Param: user 封装的用户数据
      */
     public void update(User user) {
         userDao.update(user);
@@ -68,6 +69,7 @@ public class UserService {
      * create by: BubbleTg
      * description: 根据openid查询单条记录
      * create time: 2019/6/14 15:29
+     *
      * @return User user 用户对象，查询到数据封装到User 对象
      */
     public User findOne(String openid) {

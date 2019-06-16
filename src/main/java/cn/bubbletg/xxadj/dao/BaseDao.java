@@ -15,8 +15,8 @@ public interface BaseDao<T> {
      * description: 添加
      * create time: 2019/6/13 17:58
      *
-     * @Param: null
      * @return
+     * @Param: null
      */
     int add(T t);
 
@@ -44,8 +44,8 @@ public interface BaseDao<T> {
      * description: 根据id查询
      * create time: 2019/6/13 17:59
      *
+     * @return T  泛型对象
      * @Param: id
-     * @return  T  泛型对象
      */
     T findOne(int id);
 

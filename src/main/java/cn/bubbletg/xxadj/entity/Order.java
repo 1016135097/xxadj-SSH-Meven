@@ -11,59 +11,59 @@ public class Order {
     /**
      * id 订单的 id
      */
-    private  int id;
+    private int id;
     /**
      * 头像，下单着的头像地址
      */
-    private String  portrait;
+    private String portrait;
     /**
      * 用户名,保存下单着的用户名
      */
-    private String  username;
+    private String username;
     /**
      * 起始位置,订单信息的起始位置
      */
-    private String  initialPosition;
+    private String initialPosition;
     /**
      * 终点位置,订单信息的终点位置
      */
-    private String  finalPosition;
+    private String finalPosition;
     /**
      * 联系方式,订单信息的联系方式
      */
-    private String  phone;
+    private String phone;
     /**
      * 预约时间,订单信息的预约时间
      */
-    private String  time;
+    private String time;
     /**
      * 添加代驾,订单信息的添加代驾
      */
-    private String  addGenerationOfDriving;
+    private String addGenerationOfDriving;
     /**
      * 包车服务,订单信息的包车服务
      */
-    private String  charterCarService;
+    private String charterCarService;
     /**
      * 包时代驾,订单信息的包时代驾
      */
-    private String  packageTimeDriving;
+    private String packageTimeDriving;
     /**
      * 起始位置纬度,订单信息的起始位置纬度
      */
-    private String  initialPositionLatitude;
+    private String initialPositionLatitude;
     /**
      * 起始位置经度,订单信息的起始位置经度
      */
-    private String  initialPositionLongitude;
+    private String initialPositionLongitude;
     /**
      * 终点位置纬度,订单信息的终点位置纬度
      */
-    private String  finalPositionLatitude;
+    private String finalPositionLatitude;
     /**
      * 终点位置经度,订单信息的终点位置经度
      */
-    private String  finalPositionLongitude;
+    private String finalPositionLongitude;
     /**
      * //表示是否完成
      */
@@ -75,19 +75,19 @@ public class Order {
     /**
      * 接单人,订单信息的接单人，表示此订单被谁接单，
      */
-    private String  receivedBy;
+    private String receivedBy;
     /**
      * 接单表的id,订单信息的接单表的id---------------关联表，后期改-----------------------
      */
-    private String  daijiajiedan_id;
+    private String daijiajiedan_id;
     /**
      * 指定司机信息id,订单信息的指定司机信息id
      */
-    private String  zhidingsiji;
+    private String zhidingsiji;
     /**
      * 创建时间,订单信息的创建时间
      */
-    private String  creationTime;
+    private String creationTime;
 
 
     public int getId() {
