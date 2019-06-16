@@ -75,6 +75,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
                 initialPositionLatitudeMin, initialPositionLatitudeMax,
                 initialPositionLongitudeMin, initialPositionLongitudeMax,
                 order.isIfAccept(), order.isIfFinish(), order.getReceivedBy());
+
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
@@ -84,7 +85,19 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
          */
         HashMap<String, Object> hashMapOrders = new HashMap<>();
         hashMapOrders.put("data", orders);
+
+        //判断经纬度最大最小值是否相等，相等表示全局查找，直接返回全局查找数据
+        if(initialPositionLatitudeMin != initialPositionLatitudeMax){
+            //获得附近之外的全部数据
+            orders = orderService.pagingQueryNearbyFull(currentPage, pageSize,
+                    initialPositionLatitudeMin, initialPositionLatitudeMax,
+                    initialPositionLongitudeMin, initialPositionLongitudeMax,
+                    order.isIfAccept(), order.isIfFinish(), order.getReceivedBy());
+            //不相等，表示附近查找
+            hashMapOrders.put("dataQuan", orders);
+        }
         hashMapOrders.put("length", orders.size());
+
         //获得Order表总记录数
         int totalCount = orderService.findCount();
         //开始的位置   当前页减一乘每页记录数

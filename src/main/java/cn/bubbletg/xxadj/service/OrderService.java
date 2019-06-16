@@ -136,6 +136,44 @@ public class OrderService {
 
     /**
      * create by: BubbleTg
+     * description: 分页查询
+     * create time: 2019/6/16 15:27
+     *
+     * @param currentPage                 当前页
+     * @param pageSize                    每页多少条记录
+     * @param initialPositionLatitudeMin  起始位置纬度附近最小值
+     * @param initialPositionLatitudeMax  起始位置纬度附近最大值
+     * @param initialPositionLongitudeMin 起始位置经度附近最小值
+     * @param initialPositionLongitudeMax 起始位置经度附近最大值
+     * @param ifAccept                    表示是否被接单
+     * @param ifFinish                    表示是否完成
+     * @param receivedBy                  表示被指定的接单人
+     */
+    public List<Order> pagingQueryNearbyFull(Integer currentPage, Integer pageSize,
+                                   Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
+                                   Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                   boolean ifAccept, boolean ifFinish, String receivedBy) {
+        //创建页面对象
+        Page<Order> orderPage = new Page<>();
+        //设置当前页面
+        orderPage.setCurrentPage(currentPage);
+        //获得总记录数
+        int totalCount = orderDao.findCount();
+        //设置总记录数
+        orderPage.setTotalCount(totalCount);
+        //开始的位置   当前页减一乘每页记录数
+        int begin = (currentPage - 1) * pageSize;
+        //每页记录的Order的list集合
+        List<Order> orders = orderDao.findPageNearbyFull(begin, pageSize,
+                initialPositionLatitudeMin, initialPositionLatitudeMax,
+                initialPositionLongitudeMin, initialPositionLongitudeMax,
+                ifAccept, ifFinish, receivedBy);
+        //返回
+        return orders;
+    }
+
+    /**
+     * create by: BubbleTg
      * description: 获得Order表总记录数
      * create time: 2019/6/16 18:00
      *
