@@ -75,13 +75,13 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      * description: 更新用户表，即修改用户信息
      * create time: 2019/6/14 15:20
      */
-    public void update() {
-
-
+    public void update() throws IOException {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--------update()方法执行----");
         //更新
         userService.update(user);
+        //更新成功后，重新查询用户数据，并返回数据
+       // userService.findOne(user.getOpenid());
     }
 
 
@@ -111,11 +111,12 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
 
     /**
      * create by: BubbleTg
-     * description: 根据ID查询单条记录  TODO
+     * description: 根据ID查询单条记录
      * create time: 2019/6/14 15:29
      *
      */
     public void findOne() throws IOException {
+        //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");

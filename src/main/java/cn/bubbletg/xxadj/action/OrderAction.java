@@ -2,9 +2,15 @@ package cn.bubbletg.xxadj.action;
 
 import cn.bubbletg.xxadj.entity.Order;
 import cn.bubbletg.xxadj.service.OrderService;
+import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -19,10 +25,11 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
     /**
      * create by: BubbleTg
      * description: 属性注入  OrderService 对象，
-     *              通过OrderService对象进行具体操作
+     * 通过OrderService对象进行具体操作
      * create time: 2019/6/13 19:33
      */
     private OrderService orderService;
+
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
@@ -33,10 +40,40 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * create time: 2019/6/13 19:31
      */
     private Order order = new Order();
+
     @Override
     public Order getModel() {
         return order;
     }
+
+
+    /**
+     * create by: BubbleTg
+     * description: 分页查询
+     * create time: 2019/6/16 15:26
+     */
+    public void pagingQuery() throws IOException {
+        //显示日志信息
+        Logger.getLogger(OrderAction.class).info("--订单操作--------pagingQuery()方法执行---");
+        //获得请求域对象
+        HttpServletRequest request = ServletActionContext.getRequest();
+        //获得当前页
+        int currentPage = Integer.valueOf(request.getParameter("currentPage"));
+        //获得当前页面大小
+        int pageSize = Integer.valueOf(request.getParameter("pageSize"));
+        //查询并获得数据
+        List<Order> orders = orderService.pagingQuery(currentPage, pageSize);
+
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        //转换为json
+        String jsonUser = JSON.toJSONString(orders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(jsonUser);
+    }
+
 
     /**
      * create by: BubbleTg
@@ -58,7 +95,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 更新订单表
      * create time: 2019/6/14 15:20
      */
-    public void update(){
+    public void update() {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
         //更新
@@ -71,7 +108,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */
-    public void delete(){
+    public void delete() {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------delete()方法执行----");
         //删除
@@ -83,7 +120,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 订单查询操作，首页展示
      * create time: 2019/6/14 15:13
      */
-    public void findAll(){
+    public void findAll() {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------findAll()方法执行----");
         //订单查询操作，查询全部
@@ -95,7 +132,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 根据ID查询单条记录
      * create time: 2019/6/14 15:29
      */
-    public void findOne(){
+    public void findOne() {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------findOne()方法执行----");
         //根据ID查询单条记录

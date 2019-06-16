@@ -30,7 +30,7 @@
       <option name="IGNORE_JAVADOC_PERIOD" value="true" />
       <option name="IGNORE_DUPLICATED_THROWS" value="false" />
       <option name="IGNORE_POINT_TO_ITSELF" value="false" />
-      <option name="myAdditionalJavadocTags" value="date,description：订单实体类，用户发布代驾产生的订单实体类。,modified,version:,description：你好,description：使用模型驱动获得数据,Param:,return,description：Order,description：订单表操作具体实现,description：BaseDao,description：,return:,description：用户类，封装用户信息,description：UserDao,description：UserDao接口的实现" />
+      <option name="myAdditionalJavadocTags" value="date,description：订单实体类，用户发布代驾产生的订单实体类。,modified,version:,description：你好,description：使用模型驱动获得数据,Param:,return,description：Order,description：订单表操作具体实现,description：BaseDao,description：,return:,description：用户类，封装用户信息,description：UserDao,description：UserDao接口的实现,description：提供页面显示相关操作，如分页查询" />
     </inspection_tool>
   </profile>
 </component>

@@ -2,6 +2,8 @@ package cn.bubbletg.xxadj.dao;
 
 import cn.bubbletg.xxadj.entity.Order;
 
+import java.util.List;
+
 /**
  * @author ：BubbleTg
  * @date ：Created in 2019/6/13 17:47
@@ -19,5 +21,24 @@ public interface OrderDao extends BaseDao<Order> {
      * @Param: order 用户对象
      */
     // public void add(Order order);
+
+    /**
+     * create by: BubbleTg
+     * description: 获得总记录数据
+     * create time: 2019/6/16 15:33
+     * @return  总记录数据
+     */
+    int findCount();
+
+    /**
+     * create by: BubbleTg
+     * description: 分页查询操作
+     * create time: 2019/6/16 16:03
+     *
+     * @param begin 开始查询位置
+     * @param pageSize 每页显示数
+     * @return: list 返回查询到的多条记录
+     */
+    List<Order> findPage(int begin, int pageSize);
 
 }
