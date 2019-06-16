@@ -4,7 +4,6 @@ const db = wx.cloud.database();
 const app = getApp();
 let user_id;   //用户id
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -47,7 +46,7 @@ Page({
   },
   //判断是否实名认证
   ifSpei: function(e) {
-    if (this.data.spe_i != '未实名认证') {
+    if (this.data.user.realNameAuthentication != '未实名认证') {
       //提示
       wx.showToast({
         title: "您已经实名认证！！！不可修改",
@@ -61,7 +60,7 @@ Page({
   },
   //判断是否驾驶认证
   ifJiashi: function(e) {
-    if (this.data.jiashi != '未驾驶认证') {
+    if (this.data.user.drivingCertification != '未驾驶认证') {
       //提示
       wx.showToast({
         title: "您已经驾驶认证！！！不可修改",
@@ -98,22 +97,34 @@ Page({
   alterSuozaidi(e) {
     console.log("修改所在地被点击。。。。。。。。。。", e);
     //更新到数据库
-    var thiss = this;
-    db.collection('user').doc(app.globalDataOpenid.openid_).update({
+    wx.request({
+      url: app.globalData.url + 'userAction_update', //更新
       data: {
-        region: e.detail.value
+        id: this.data.user.id,
+        openid: this.data.user.openid,
+        name: this.data.user.name, //默认
+        username: this.data.user.username, //默认
+        portrait: this.data.user.portrait, //头像地址
+        phone: this.data.user.phone, //电话
+        age: this.data.user.age, //年龄
+        drivingYears: this.data.user.drivingYears, //驾龄
+        location: e.detail.value[0] + e.detail.value[1] + e.detail.value[2], //所在地
+        realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+        drivingCertification: this.data.user.drivingCertification, //驾驶认证
+        region: e.detail.value[0] + e.detail.value[1] + e.detail.value[2],
+        collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+        visitTheNumber: this.data.user.visitTheNumber,   //查看数
+        commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+        showCard: this.data.user.showCard,
+        joinTime: this.data.user.joinTime,
+      },           // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
       },
       success(res) {
-        //提示
-        wx.showToast({
-          title: "修改成功！",
-          icon: "none",
-          duration: 2000
-        })
-        //刷新
-        thiss.huodeshuju();
+        getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
       }
-    });
+    })
   },
 
   //修改实名认证
@@ -162,28 +173,38 @@ Page({
         return;
       }
       //当与原始ide数据相等时，不用更新数据库
-      if (e.detail.value.name != this.data.modalValue) {
-        //更新数据
-        var thiss = this;
-        db.collection('user').doc(app.globalDataOpenid.openid_).update({
+      if (e.detail.value.name != this.data.user.name) {
+        //更新到数据库
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
           data: {
-            name: e.detail.value.name
+            id: this.data.user.id,
+            openid: this.data.user.openid,
+            name: e.detail.value.name, //默认
+            username: this.data.user.username, //默认
+            portrait: this.data.user.portrait, //头像地址
+            phone: this.data.user.phone, //电话
+            age: this.data.user.age, //年龄
+            drivingYears: this.data.user.drivingYears, //驾龄
+            location: this.data.user.location, //所在地
+            realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+            drivingCertification: this.data.user.drivingCertification, //驾驶认证
+            region: this.data.user.region,
+            collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+            visitTheNumber: this.data.user.visitTheNumber,   //查看数
+            commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+            showCard: this.data.user.showCard,
+            joinTime: this.data.user.joinTime,
+          },           // method:'POST',
+          header: {
+            'content-type': 'application/json' // 默认值
           },
           success(res) {
-            //提示
-            wx.showToast({
-              title: "修改成功！",
-              icon: "none",
-              duration: 2000
-            })
-            //刷新
-            thiss.huodeshuju();
+            getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
           }
-        });
+        })
       }
-
     }
-
     /**
      * 修改电话
      */
@@ -207,26 +228,37 @@ Page({
         return false;
       }
       //当与原始ide数据相等时，不用更新数据库
-      if (e.detail.value.phone != this.data.modalValue) {
-        //更新具体操作
-        var thiss = this;
-        db.collection('user').doc(app.globalDataOpenid.openid_).update({
+      if (e.detail.value.phone != this.data.user.phone) {
+        //更新到数据库
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
           data: {
-            phone: e.detail.value.phone
+            id: this.data.user.id,
+            openid: this.data.user.openid,
+            name: this.data.user.name, //默认
+            username: this.data.user.username, //默认
+            portrait: this.data.user.portrait, //头像地址
+            phone: e.detail.value.phone, //电话
+            age: this.data.user.age, //年龄
+            drivingYears: this.data.user.drivingYears, //驾龄
+            location: this.data.user.location, //所在地
+            realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+            drivingCertification: this.data.user.drivingCertification, //驾驶认证
+            region: this.data.user.region,
+            collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+            visitTheNumber: this.data.user.visitTheNumber,   //查看数
+            commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+            showCard: this.data.user.showCard,
+            joinTime: this.data.user.joinTime,
+          },           // method:'POST',
+          header: {
+            'content-type': 'application/json' // 默认值
           },
           success(res) {
-            //提示
-            wx.showToast({
-              title: "修改成功！",
-              icon: "none",
-              duration: 2000
-            })
-            //刷新
-            thiss.huodeshuju();
+            getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
           }
-        });
+        })
       }
-
     }
 
     /**
@@ -244,34 +276,45 @@ Page({
         return;
       }
       //当与原始ide数据相等时，不用更新数据库
-      if (e.detail.value.age != this.data.modalValue) {
+      if (e.detail.value.age != this.data.user.age) {
         //更新到数据库
-        var thiss = this;
-        db.collection('user').doc(app.globalDataOpenid.openid_).update({
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
           data: {
-            age: e.detail.value.age
+            id: this.data.user.id,
+            openid: this.data.user.openid,
+            name: this.data.user.name, //默认
+            username: this.data.user.username, //默认
+            portrait: this.data.user.portrait, //头像地址
+            phone: this.data.user.phone, //电话
+            age: e.detail.value.age, //年龄
+            drivingYears: this.data.user.drivingYears, //驾龄
+            location: this.data.user.location, //所在地
+            realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+            drivingCertification: this.data.user.drivingCertification, //驾驶认证
+            region: this.data.user.region,
+            collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+            visitTheNumber: this.data.user.visitTheNumber,   //查看数
+            commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+            showCard: this.data.user.showCard,
+            joinTime: this.data.user.joinTime,
+          },           // method:'POST',
+          header: {
+            'content-type': 'application/json' // 默认值
           },
           success(res) {
-            //提示
-            wx.showToast({
-              title: "修改成功！",
-              icon: "none",
-              duration: 2000
-            })
-            //刷新
-            thiss.huodeshuju();
+            getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
           }
-        });
+        })
       }
-
     }
 
     /**
      * 修改驾龄
      */
-    if (modalTitle_ == 'jialing') {
+    if (modalTitle_ == 'drivingYears') {
       //先判断用户是否填写完整
-      if (e.detail.value.jialing == '') {
+      if (e.detail.value.drivingYears == '') {
         //提示
         wx.showToast({
           title: "驾龄不能为空",
@@ -281,28 +324,38 @@ Page({
         return;
       }
       //当与原始ide数据相等时，不用更新数据库
-      if (e.detail.value.jialing != this.data.modalValue) {
+      if (e.detail.value.drivingYears != this.data.user.drivingYears) {
         //更新到数据库
-        var thiss = this;
-        db.collection('user').doc(app.globalDataOpenid.openid_).update({
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
           data: {
-            jialing: e.detail.value.jialing
+            id: this.data.user.id,
+            openid: this.data.user.openid,
+            name: this.data.user.name, //默认
+            username: this.data.user.username, //默认
+            portrait: this.data.user.portrait, //头像地址
+            phone: this.data.user.phone, //电话
+            age: this.data.user.age, //年龄
+            drivingYears: e.detail.value.drivingYears, //驾龄
+            location: this.data.user.location, //所在地
+            realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+            drivingCertification: this.data.user.drivingCertification, //驾驶认证
+            region: this.data.user.region,
+            collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+            visitTheNumber: this.data.user.visitTheNumber,   //查看数
+            commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+            showCard: this.data.user.showCard,
+            joinTime: this.data.user.joinTime,
+          },           // method:'POST',
+          header: {
+            'content-type': 'application/json' // 默认值
           },
           success(res) {
-            //提示
-            wx.showToast({
-              title: "修改成功！",
-              icon: "none",
-              duration: 2000
-            })
-            //刷新
-            thiss.huodeshuju();
+            getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
           }
-        });
+        })
       }
-
     }
-
     //关闭修改框
     this.closeModal();
     //加载更新提示框
@@ -316,21 +369,35 @@ Page({
   },
   //更新SetShadow
   updateSetShadow:function(ee){
-    db.collection('user').doc(app.globalDataOpenid.openid_).update({
-      data: {
-        showData: ee,
-      },
-      success(res) {
-        //提示
-        wx.showToast({
-          title: "操作成功！",
-          icon: "none",
-          duration: 2000
-        })
-       
-      }
-    });
-
+      //更新到数据库
+      wx.request({
+        url: app.globalData.url + 'userAction_update', //更新
+        data: {
+          id: this.data.user.id,
+          openid: this.data.user.openid,
+          name: this.data.user.name, //默认
+          username: this.data.user.username, //默认
+          portrait: this.data.user.portrait, //头像地址
+          phone: this.data.user.phone, //电话
+          age: this.data.user.age, //年龄
+          drivingYears: this.data.user.drivingYears, //驾龄
+          location: this.data.user.location, //所在地
+          realNameAuthentication: this.data.user.realNameAuthentication, //实名认证
+          drivingCertification: this.data.user.drivingCertification, //驾驶认证
+          region: this.data.user.region,
+          collectTheNumber: this.data.user.collectTheNumber,    //收藏数
+          visitTheNumber: this.data.user.visitTheNumber,   //查看数
+          commentsTheNumber: this.data.user.commentsTheNumber,  //评论数
+          showCard: ee,
+          joinTime: this.data.user.joinTime,
+        },           // method:'POST',
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success(res) {
+          getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
+        }
+      })
   },
   /**
    * 是否展示个人资料
@@ -384,71 +451,20 @@ Page({
    */
   onLoad: function(options) {
     let that = this;
-    //判断用户是否把授权关闭了
-    wx.getSetting({
-      success(res) {
-        console.log(res.authSetting)
-        //没有授权
-        if(!res.authSetting['scope.userInfo']){
-          //关闭加载...
-          wx.hideLoading();
-          //用户关闭授权
-          wx.showModal({
-            title: '是否需要打开设置页面',
-            content: '你也取消获得用户信息，是否打开设置页面进行授权',
-            confirmText: '确定',
-            cancelText: '取消',
-            success(res) {
-              console.log(res)
-              //表示点击了取消
-              if (res.confirm == false) {
-                //关闭当前页面
-                wx.navigateBack();
-              } else {
-                wx.openSetting({
-                  success(res) {
-                    if(res.authSetting['scope.userInfo']){
-                      that.huodeshuju(); //获得数据
-                    }
-                  }
-                })
-              }
-            }
-          })
-        }
-      }
-    })
-  
     //获得传递过来的 openid
     this.setData({
       openid: app.globalDataOpenid.openid_
     })  
- 
-  },
 
-  huodeshuju: function(e) {
-     //显示加载
-     wx.showLoading({
+  },
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function() {
+    //显示加载
+    wx.showLoading({
       title: '加载中',
       icon: 'loading',
-    })
-     // 获取用户信息
-     wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo
-              })
-              //关闭加载...
-              wx.hideLoading()
-            }
-          })
-        }
-      }
     })
     var thiss = this;
     //查询数据
@@ -464,35 +480,11 @@ Page({
         thiss.setData({
           user: res.data
         })
-        console.log(res.data) 
+        //关闭加载...
+        wx.hideLoading()
         app.globalDataOpenid.user_id = res.data.id;
       }
     })
-    // //查询数据
-    // db.collection('user').doc(app.globalDataOpenid.openid_).get({
-    //   success(res) {
-    //     // res.data 包含该记录的数据
-    //     thiss.setData({
-    //       name: res.data.name, //姓名
-    //       phone: res.data.phone, //电话
-    //       age: res.data.age, //年龄
-    //       jialing: res.data.jialing, //驾龄
-    //       suozaidi: res.data.suozaidi, //所在地
-    //       spe_i: res.data.spe_i, //实名认证
-    //       jiashi: res.data.jiashi, //驾驶认证
-    //       region: res.data.region, //所在地
-    //       showData:res.data.showData, //是否显示
-    //     })
-    //   }
-    // })
-
-
-  },
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function() {
-    this.huodeshuju(); //获得数据
   },
 
 
