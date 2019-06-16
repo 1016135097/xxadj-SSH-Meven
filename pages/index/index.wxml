@@ -47,58 +47,63 @@
         </view>
     </view>
 </block>
-<block wx:if="{{xianshi=='shouye'}}"> 
+<block wx:if="{{xianshi=='shouye'}}">
     <!-- 首页显示模块 -->
     <view class='card-list-box'>
-        <view class='item-list-box mt-sm' wx:for="{{shouyefujin}}"  wx:key="index" wx:for-item="item" >
-            <view class="goods-list-li" catch:tap="sousuoxiangxi" data-sousuoid="{{item._id}}">
+        <view class='item-list-box mt-sm' wx:for="{{shouyefujin}}" wx:key="index" wx:for-item="item">
+            <view class="goods-list-li" catch:tap="sousuoxiangxi" data-sousuoid="{{item.id}}">
                 <view class='goods-list-main'>
-                <image src='{{item.portrait}}' mode='aspectFill' class='goods-list-img'></image>
-                <view class='goods-list-text'>
-                    <view class='goods-list-top'>
-                    <view class='text-lg'>{{item.qishiweizhi}} </view>
-                    <view class='gray-text'>时间：{{item.time}}</view>
-                    <view class='gray-text' wx:if="{{item.tianjiadaijia != 'undefined'}}">代驾：{{item.tianjiadaijia}}</view>
-                    <view class='gray-text' wx:if="{{item.baochefuwu != 'undefined'}}">包车：{{item.baochefuwu}}</view>
-                    </view>
-                    <view class='goods-list-foot'>
-                    <view class='goods-list-price'>
-                        {{item.username}}
-                    </view>
-                    <button class='success btn sm' catch:tap="sousuoxiangxi" data-sousuoid="{{item._id}}"> 去接单
-                        <text class='iconfont icon-right'></text>
-                    </button>
+                    <image src='{{item.portrait}}' mode='aspectFill' class='goods-list-img'></image>
+                    <view class='goods-list-text'>
+                        <view class='goods-list-top'>
+                            <view class='text-lg'>{{item.initialPosition}}</view>
+                            <view class='gray-text'>时间：{{item.time}}</view>
+                            <view class='gray-text' wx:if="{{item.addGenerationOfDriving != 'undefined'}}">
+                                代驾：{{item.addGenerationOfDriving}}
+                            </view>
+                            <view class='gray-text' wx:if="{{item.charterCarService != 'undefined'}}">
+                                包车：{{item.charterCarService}}
+                            </view>
+                        </view>
+                        <view class='goods-list-foot'>
+                            <view class='goods-list-price'>{{item.username}}</view>
+                            <button class='success btn sm' catch:tap="sousuoxiangxi" data-sousuoid="{{item.id}}">
+                                去接单
+                                <text class='iconfont icon-right'></text>
+                            </button>
+                        </view>
                     </view>
                 </view>
-                </view>
             </view>
-            </view>
-             <view class='item-list-box mt-sm' wx:for="{{shouyequanju}}"  wx:key="index" wx:for-item="item" >
-            <view class="goods-list-li" catch:tap="sousuoxiangxi" data-sousuoid="{{item._id}}">
+        </view>
+        <view class='item-list-box mt-sm' wx:for="{{shouyequanju}}" wx:key="index" wx:for-item="item">
+            <view class="goods-list-li" catch:tap="sousuoxiangxi" data-sousuoid="{{item.id}}">
                 <view class='goods-list-main'>
-                <image src='{{item.portrait}}' mode='aspectFill' class='goods-list-img'></image>
-                <view class='goods-list-text'>
-                    <view class='goods-list-top'>
-                    <view class='text-lg'>{{item.qishiweizhi}} </view>
-                    <view class='gray-text'>时间：{{item.time}}</view>
-                    <view class='gray-text' wx:if="{{item.tianjiadaijia != 'undefined'}}">代驾：{{item.tianjiadaijia}}</view>
-                    <view class='gray-text' wx:if="{{item.baochefuwu != 'undefined'}}">包车：{{item.baochefuwu}}</view>
-                    </view>
-                    <view class='goods-list-foot'>
-                    <view class='goods-list-price'>
-                        {{item.username}}
-                    </view>
-                    <button class='success btn sm' catch:tap="sousuoxiangxi" data-sousuoid="{{item._id}}"> 去接单
-                        <text class='iconfont icon-right'></text>
-                    </button>
+                    <image src='{{item.portrait}}' mode='aspectFill' class='goods-list-img'></image>
+                    <view class='goods-list-text'>
+                        <view class='goods-list-top'>
+                            <view class='text-lg'>{{item.initialPosition}}</view>
+                            <view class='gray-text'>时间：{{item.time}}</view>
+                            <view class='gray-text' wx:if="{{item.addGenerationOfDriving != 'undefined'}}">
+                                代驾：{{item.addGenerationOfDriving}}
+                            </view>
+                            <view class='gray-text' wx:if="{{item.charterCarService != 'undefined'}}">
+                                包车：{{item.charterCarService}}
+                            </view>
+                        </view>
+                        <view class='goods-list-foot'>
+                            <view class='goods-list-price'>{{item.username}}</view>
+                            <button class='success btn sm' catch:tap="sousuoxiangxi" data-sousuoid="{{item.id}}">
+                                去接单
+                                <text class='iconfont icon-right'></text>
+                            </button>
+                        </view>
                     </view>
                 </view>
-                </view>
             </view>
-            </view>
-       
+        </view>
     </view>
-     <view class="cu-load bg-white {{!isLoad?'loading':'over'}}"></view>
+    <view class="cu-load bg-white {{!isLoad?'loading':'over'}}"></view>
 </block>
 <view class="leirong">
     <!-- 定位侧边栏 -->

@@ -1,14 +1,13 @@
 //获得数据库引用
 const db = wx.cloud.database();
 const app = getApp();
-var target_quan_wei = 0, target_quan = 0, target_ = 0;//用于分页查询起始位置,分别是 获得位置成功全局，获取位置失败全局，位置
-var count_quan_wei = 0, count_quan = 0, count_ = 0; //查询的记录总数
+var target_quan_wei = 1, target_quan = 1, target_ = 1;//用于分页查询起始位置,分别是 获得位置成功全局，获取位置失败全局，位置
+// var count_quan_wei = 0, count_quan = 0, count_ = 0; //查询的记录总数
 var shouyefujin = [], shouyequanju = []; //附近，全局
 // 引用百度地图微信小程序JSAPI模块 
 var bmap = require('../../libs/bmap-wx.min.js');
 let fujinmeiyou = false; //表示第一次获取位置成功却没有数据给一次提示
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -21,7 +20,6 @@ Page({
     qishiweizhiqiehuan: 'cur',//起始位置切换
     zhongdianweizhiqiehuan: '',//终点位置切换
   },
-
   //切换卡片
   tabSelect(e) {
     console.log(e);
@@ -177,70 +175,108 @@ Page({
    */
   weizhichaxundaijia() {
         //查询数据库   起始位置
-        const _ = db.command;
-    let that = this;
-    db.collection('daijiadingdan').where({
-      ifFinish: false, //表示是否完成
-      isaccept: false, //表示是否被接单
-      zhidingsij:[], //表示没有被指定
-      qishiweizhilongitude: _.gt(this.data.MaxMinLongitudeLatitude[0]).and(_.lt(this.data.MaxMinLongitudeLatitude[1])),
-      qishiweizhilatitude: _.gt(this.data.MaxMinLongitudeLatitude[2]).and(_.lt(this.data.MaxMinLongitudeLatitude[3])),
-
-    }).count().then(res => {
-      count_ = res.total;
-    })
-    //用于保存首页查询到的代驾信息
-    db.collection("daijiadingdan").where({
-      ifFinish: false, //表示是否完成
-      isaccept: false, //表示是否被接单
-      zhidingsij:[], //表示没有被指定
-      qishiweizhilongitude: _.gt(this.data.MaxMinLongitudeLatitude[0]).and(_.lt(this.data.MaxMinLongitudeLatitude[1])),
-      qishiweizhilatitude: _.gt(this.data.MaxMinLongitudeLatitude[2]).and(_.lt(this.data.MaxMinLongitudeLatitude[3])),
-
-    })
-      .skip(target_) // 跳过结果集中的前 10 条，从第 11 条开始返回
-      .limit(10) // 限制返回数量为 10 条
-      .get().then(res => {
-        target_ += 10;
-        //判断按附近查找到了吗？没有则按照全部查找
-        if (res.data.length <= 0) {
-          console.log("-----按附近查找没有找到！-------------");
-          if (!fujinmeiyou) {
-            fujinmeiyou = true;
-            wx.showModal({
-              title: '当前位置没有代驾信息',
-              content: '你当前位置没有代驾信息，以为你加载其他地区的信息。是否自己发布代驾信息？',
-              confirmText: '确定',
-              cancelText: '取消',
-              success(ress) {
-                //表示点击了取消
-                if (ress.confirm == false) {
-                 return;
-                } else {
-                  //切换到添加代驾
-                  wx.switchTab({
-                    url: '../add/add'
-                  })
-                }
-              }
-            })
-          }
-        }
+        let that = this;
+    wx.request({
+      url: app.globalData.url + 'orderAction_pagingQuery', //分页查询
+      data: {
+        ifFinish: false, //表示是否完成
+        ifAccept: false, //表示是否被接单
+        receivedBy: '', //表示此订单被谁接单,为空没有被指定
+        currentPage: target_, //当前页
+        pageSize: 10,//每页大小
+        //附近查找
+        initialPositionLatitudeMin: that.data.MaxMinLongitudeLatitude[2], //起始位置纬度附近最小值
+        initialPositionLatitudeMax: that.data.MaxMinLongitudeLatitude[3], //起始位置纬度附近最大值
+        initialPositionLongitudeMin: that.data.MaxMinLongitudeLatitude[0],//起始位置经度附近最小值
+        initialPositionLongitudeMax: that.data.MaxMinLongitudeLatitude[1],//起始位置经度附近最大值
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        target_ += 1; //当前页，表示一个页面，+1表示到第二个页面
+       console.log(res.data)
         for (let i = 0; i < res.data.length; i++) {
-          shouyefujin.push(res.data[i]);
+          shouyefujin.push(res.data.data[i]);
         }
         that.setData({
           shouyefujin: shouyefujin,
         })
-        //加载完成后
-        if (target_ >= count_) {
-          that.setData({
-            weizhichaxundaijia_: true,//表示附近获取完了
+        //判断是否加载完毕数据
+        if (res.data.LoadUp){
+            that.setData({
+              isLoad: true,//表示附近获取完了
           })
-          //这里表示附近加载完了，我们现在加载全局
-          that.chaxundaijia();
         }
-      })
+        
+       
+      }
+    })
+
+    // const _ = db.command;
+    // let that = this;
+    // db.collection('daijiadingdan').where({
+    //   ifFinish: false, //表示是否完成
+    //   isaccept: false, //表示是否被接单
+    //   zhidingsij:[], //表示没有被指定
+    //   qishiweizhilongitude: _.gt(this.data.MaxMinLongitudeLatitude[0]).and(_.lt(this.data.MaxMinLongitudeLatitude[1])),
+    //   qishiweizhilatitude: _.gt(this.data.MaxMinLongitudeLatitude[2]).and(_.lt(this.data.MaxMinLongitudeLatitude[3])),
+
+    // }).count().then(res => {
+    //   count_ = res.total;
+    // })
+    // //用于保存首页查询到的代驾信息
+    // db.collection("daijiadingdan").where({
+    //   ifFinish: false, //表示是否完成
+    //   isaccept: false, //表示是否被接单
+    //   zhidingsij:[], //表示没有被指定
+    //   qishiweizhilongitude: _.gt(this.data.MaxMinLongitudeLatitude[0]).and(_.lt(this.data.MaxMinLongitudeLatitude[1])),
+    //   qishiweizhilatitude: _.gt(this.data.MaxMinLongitudeLatitude[2]).and(_.lt(this.data.MaxMinLongitudeLatitude[3])),
+
+    // })
+    //   .skip(target_) // 跳过结果集中的前 10 条，从第 11 条开始返回
+    //   .limit(10) // 限制返回数量为 10 条
+    //   .get().then(res => {
+    //     target_ += 10;
+    //     //判断按附近查找到了吗？没有则按照全部查找
+    //     if (res.data.length <= 0) {
+    //       console.log("-----按附近查找没有找到！-------------");
+    //       if (!fujinmeiyou) {
+    //         fujinmeiyou = true;
+    //         wx.showModal({
+    //           title: '当前位置没有代驾信息',
+    //           content: '你当前位置没有代驾信息，以为你加载其他地区的信息。是否自己发布代驾信息？',
+    //           confirmText: '确定',
+    //           cancelText: '取消',
+    //           success(ress) {
+    //             //表示点击了取消
+    //             if (ress.confirm == false) {
+    //              return;
+    //             } else {
+    //               //切换到添加代驾
+    //               wx.switchTab({
+    //                 url: '../add/add'
+    //               })
+    //             }
+    //           }
+    //         })
+    //       }
+    //     }
+    //     for (let i = 0; i < res.data.length; i++) {
+    //       shouyefujin.push(res.data[i]);
+    //     }
+    //     that.setData({
+    //       shouyefujin: shouyefujin,
+    //     })
+    //     //加载完成后
+    //     if (target_ >= count_) {
+    //       that.setData({
+    //         weizhichaxundaijia_: true,//表示附近获取完了
+    //       })
+    //       //这里表示附近加载完了，我们现在加载全局
+    //       that.chaxundaijia();
+    //     }
+    //   })
   },
 
   /**
@@ -395,29 +431,6 @@ Page({
       name: 'login',
       complete: (res) => {
         app.globalDataOpenid.openid_ = res.result.openid;
-        //判断账号是否存在
-        db.collection('user').doc(res.result.openid).get({
-          success(){
-            app.globalDataAndLogin.login = true;
-          },
-          fail(){
-            app.globalDataAndLogin.login = false;
-            //失败不存在，提示登录
-            wx.showModal({
-              title: '登录过期',
-              content: '登录过期，请重新登录',
-              confirmText: '确定',
-              cancelText: '取消',
-              success(ress) {
-                //表示点击了取消
-                  //切换到添加代驾
-                  wx.switchTab({
-                    url: '../user/user'
-                  })        
-              }
-            })
-          }
-        })
       }
     })
     /**
@@ -426,7 +439,6 @@ Page({
  * 获得当前位置, 参数为空表示不是点击切换附近
  */
     this.weizhi('');
-
   },
 
   /**
@@ -455,10 +467,6 @@ Page({
                     'content-type': 'application/json' // 默认值
                   },
                   success(res) {
-                    thiss.setData({
-                      user: res.data
-                    })
-                    console.log(res.data)
                     app.globalDataOpenid.user_id = res.data.id;
                   }
                 })
