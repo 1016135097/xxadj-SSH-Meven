@@ -51,19 +51,19 @@ public class Order {
     /**
      * 起始位置纬度,订单信息的起始位置纬度
      */
-    private String initialPositionLatitude;
+    private Double initialPositionLatitude;
     /**
      * 起始位置经度,订单信息的起始位置经度
      */
-    private String initialPositionLongitude;
+    private Double initialPositionLongitude;
     /**
      * 终点位置纬度,订单信息的终点位置纬度
      */
-    private String finalPositionLatitude;
+    private Double finalPositionLatitude;
     /**
      * 终点位置经度,订单信息的终点位置经度
      */
-    private String finalPositionLongitude;
+    private Double finalPositionLongitude;
     /**
      * //表示是否完成
      */
@@ -97,6 +97,8 @@ public class Order {
     public void setId(int id) {
         this.id = id;
     }
+
+
 
     public String getPortrait() {
         return portrait;
@@ -170,35 +172,35 @@ public class Order {
         this.packageTimeDriving = packageTimeDriving;
     }
 
-    public String getInitialPositionLatitude() {
+    public Double getInitialPositionLatitude() {
         return initialPositionLatitude;
     }
 
-    public void setInitialPositionLatitude(String initialPositionLatitude) {
+    public void setInitialPositionLatitude(Double initialPositionLatitude) {
         this.initialPositionLatitude = initialPositionLatitude;
     }
 
-    public String getInitialPositionLongitude() {
+    public Double getInitialPositionLongitude() {
         return initialPositionLongitude;
     }
 
-    public void setInitialPositionLongitude(String initialPositionLongitude) {
+    public void setInitialPositionLongitude(Double initialPositionLongitude) {
         this.initialPositionLongitude = initialPositionLongitude;
     }
 
-    public String getFinalPositionLatitude() {
+    public Double getFinalPositionLatitude() {
         return finalPositionLatitude;
     }
 
-    public void setFinalPositionLatitude(String finalPositionLatitude) {
+    public void setFinalPositionLatitude(Double finalPositionLatitude) {
         this.finalPositionLatitude = finalPositionLatitude;
     }
 
-    public String getFinalPositionLongitude() {
+    public Double getFinalPositionLongitude() {
         return finalPositionLongitude;
     }
 
-    public void setFinalPositionLongitude(String finalPositionLongitude) {
+    public void setFinalPositionLongitude(Double finalPositionLongitude) {
         this.finalPositionLongitude = finalPositionLongitude;
     }
 
@@ -263,10 +265,10 @@ public class Order {
                 ", addGenerationOfDriving='" + addGenerationOfDriving + '\'' +
                 ", charterCarService='" + charterCarService + '\'' +
                 ", packageTimeDriving='" + packageTimeDriving + '\'' +
-                ", initialPositionLatitude='" + initialPositionLatitude + '\'' +
-                ", initialPositionLongitude='" + initialPositionLongitude + '\'' +
-                ", finalPositionLatitude='" + finalPositionLatitude + '\'' +
-                ", finalPositionLongitude='" + finalPositionLongitude + '\'' +
+                ", initialPositionLatitude=" + initialPositionLatitude +
+                ", initialPositionLongitude=" + initialPositionLongitude +
+                ", finalPositionLatitude=" + finalPositionLatitude +
+                ", finalPositionLongitude=" + finalPositionLongitude +
                 ", ifFinish=" + ifFinish +
                 ", ifAccept=" + ifAccept +
                 ", receivedBy='" + receivedBy + '\'' +

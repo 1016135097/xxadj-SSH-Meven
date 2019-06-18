@@ -1,7 +1,7 @@
 package cn.bubbletg.xxadj.dao;
 
 import cn.bubbletg.xxadj.entity.Order;
-import org.hibernate.criterion.DetachedCriteria;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
      */
     @Override
     public int findCount() {
+        Logger.getLogger(OrderDaoImpl.class).info("-------findCount()方法执行----");
         List<Order> list = (List<Order>) this.getHibernateTemplate().find("select count(*) from Order");
         // 从list中得到
         if (list != null && list.size() != 0) {
@@ -55,6 +56,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                                 Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
                                 Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
                                 boolean ifAccept, boolean ifFinish, String receivedBy) {
+        Logger.getLogger(OrderDaoImpl.class).info("-------findPage()方法执行----");
         /**
          * 分页查询，也是多条件查询，查询条件包括
          * 附近查询：
@@ -67,10 +69,44 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
          * 是否被接单：
          * --根据ifAccept值来判断
          */
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Order.class);
-        List<Order> list = (List<Order>) this.getHibernateTemplate().
-                findByCriteria(detachedCriteria, begin, pageSize);
-        return list;
+        String sql = null;
+        //查询
+        List<Order> orders = null;
+        //判断是全局查找还是附近查找
+        if (initialPositionLatitudeMin == initialPositionLatitudeMin) {
+            //附近查找
+            sql = "from Order where ifAccept=? and ifFinish =? and initialPositionLatitude > ?" +
+                    " and initialPositionLatitude < ? and initialPositionLongitude > ? " +
+                    "and initialPositionLongitude < ? and receivedBy = ?";
+            orders = this.getSessionFactory().getCurrentSession()
+                    .createQuery(sql)
+                    //设置问号参数
+                    .setParameter(0, ifAccept)
+                    .setParameter(1, ifFinish)
+                    .setParameter(2, initialPositionLatitudeMin)
+                    .setParameter(3, initialPositionLatitudeMax)
+                    .setParameter(4, initialPositionLongitudeMin)
+                    .setParameter(5, initialPositionLongitudeMax)
+                    .setParameter(6, receivedBy)
+                    //分页查询
+                    .setFirstResult(begin)
+                    .setMaxResults(pageSize)
+                    .list();
+        } else {
+            //全局
+            sql = "from Order where ifAccept=? and ifFinish =? and receivedBy = ?";
+            orders = this.getSessionFactory().getCurrentSession()
+                    .createQuery(sql)
+                    //设置问号参数
+                    .setParameter(0, ifAccept)
+                    .setParameter(1, ifFinish)
+                    .setParameter(2, receivedBy)
+                    //分页查询
+                    .setFirstResult(begin)
+                    .setMaxResults(pageSize)
+                    .list();
+        }
+        return orders;
     }
 
     /**
@@ -94,10 +130,25 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                                           Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
                                           Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
                                           boolean ifAccept, boolean ifFinish, String receivedBy) {
-        return null;
+        Logger.getLogger(OrderDaoImpl.class).info("-------findPageNearbyFull()方法执行----");
+        List<Order> orders = this.getSessionFactory().getCurrentSession()
+                .createQuery("from Order where ifAccept=? and ifFinish =? and initialPositionLatitude < ?" +
+                        " and initialPositionLatitude > ? and initialPositionLongitude < ? " +
+                        "and initialPositionLongitude > ? and receivedBy = ?")
+                //设置问号参数
+                .setParameter(0, ifAccept)
+                .setParameter(1, ifFinish)
+                .setParameter(2, initialPositionLatitudeMin)
+                .setParameter(3, initialPositionLatitudeMax)
+                .setParameter(4, initialPositionLongitudeMin)
+                .setParameter(5, initialPositionLongitudeMax)
+                .setParameter(6, receivedBy)
+                //分页查询
+                .setFirstResult(begin)
+                .setMaxResults(pageSize)
+                .list();
+        return orders;
     }
-
-
 
 
 }

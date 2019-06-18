@@ -7,6 +7,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -21,19 +22,8 @@ import java.util.List;
  * @modified By ：
  * @version: 1.0.0
  */
+@Transactional
 public class OrderAction extends ActionSupport implements ModelDriven<Order> {
-
-    /**
-     * create by: BubbleTg
-     * description: 属性注入  OrderService 对象，
-     * 通过OrderService对象进行具体操作
-     * create time: 2019/6/13 19:33
-     */
-    private OrderService orderService;
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     /**
      * create by: BubbleTg
@@ -49,10 +39,24 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
 
     /**
      * create by: BubbleTg
+     * description: 属性注入  OrderService 对象，
+     * 通过OrderService对象进行具体操作
+     * create time: 2019/6/13 19:33
+     */
+    private OrderService orderService;
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    /**
+     * create by: BubbleTg
      * description: 分页查询
      * create time: 2019/6/16 15:26
      */
+
     public void pagingQuery() throws IOException {
+        System.out.println(order);
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------pagingQuery()方法执行---");
         //获得请求域对象
@@ -85,9 +89,10 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
          */
         HashMap<String, Object> hashMapOrders = new HashMap<>();
         hashMapOrders.put("data", orders);
+        hashMapOrders.put("dataLength", orders.size()); //保存附近查询到数据的长度
 
         //判断经纬度最大最小值是否相等，相等表示全局查找，直接返回全局查找数据
-        if(initialPositionLatitudeMin != initialPositionLatitudeMax){
+        if (initialPositionLatitudeMin != initialPositionLatitudeMax) {
             //获得附近之外的全部数据
             orders = orderService.pagingQueryNearbyFull(currentPage, pageSize,
                     initialPositionLatitudeMin, initialPositionLatitudeMax,
@@ -95,18 +100,18 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
                     order.isIfAccept(), order.isIfFinish(), order.getReceivedBy());
             //不相等，表示附近查找
             hashMapOrders.put("dataQuan", orders);
+            hashMapOrders.put("dataQuanlength", orders.size());
         }
-        hashMapOrders.put("length", orders.size());
 
         //获得Order表总记录数
         int totalCount = orderService.findCount();
         //开始的位置   当前页减一乘每页记录数
-        int begin = (currentPage-1) * pageSize;
+        int begin = (currentPage - 1) * pageSize;
         /*
         是否加载完毕，用开始位置+查询到的数据长度：比如第一页查询位子是0，
         记录长度2，总长度2，表示查询全部完
          */
-        if (begin+orders.size() >= totalCount) {
+        if (begin + orders.size() >= totalCount) {
             //LoadUp 表示加载完，即数据查询完毕
             hashMapOrders.put("LoadUp", true);
         } else {
@@ -124,15 +129,26 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * create by: BubbleTg
      * description: 订单表添加操作，即下单操作
      * create time: 2019/6/13 16:44
-     *
-     * @Param: null
      */
+
     public void add() throws Exception {
-        //显示日志信息
-        Logger.getLogger(OrderAction.class).info("--订单操作--------add()方法执行----数据为：");
         System.out.println(order);
+        //显示日志信    @Action
+        //    public息
+        Logger.getLogger(OrderAction.class).info("--订单操作--------add()方法执行----数据为：");
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //像数据库里面插入数据
         orderService.add(order);
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        hashMapOrders.put("add_data", true);
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
+
     }
 
     /**
@@ -153,11 +169,22 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */
-    public void delete() {
+    public String delete() throws IOException {
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------delete()方法执行----");
         //删除
         orderService.delete(order);
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        hashMapOrders.put("delete_data", true);
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
+        return SUCCESS;
     }
 
     /**

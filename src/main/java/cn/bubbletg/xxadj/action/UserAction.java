@@ -7,8 +7,10 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author ：BubbleTg
@@ -17,6 +19,7 @@ import java.io.IOException;
  * @modified By：
  * @version: 1.0.0
  */
+@Transactional
 public class UserAction extends ActionSupport implements ModelDriven<User> {
 
     /**
@@ -50,6 +53,9 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      * create time: 2019/6/13 16:44
      */
     public void add() throws Exception {
+        System.out.println(user);
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //显示日志信息
@@ -63,10 +69,15 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
             id = userService.add(user);
         } catch (RuntimeException e) {
             System.out.println("一个账户多次注册！，忽略异常打印，使返回前端数据整洁！");
-        } finally {
-            ServletActionContext.getResponse().getWriter().write("id=" + id);
-            ServletActionContext.getResponse().getWriter().flush();
         }
+        System.out.println("转换为json---------------------------");
+        //转换为json
+        HashMap<String, Integer> data = new HashMap<>();
+        data.put("id", id);
+        String dataJson = JSON.toJSONString(data);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(dataJson);
+
 
     }
 
