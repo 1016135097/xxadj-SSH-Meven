@@ -82,13 +82,17 @@ Page({
         commentsTheNumber: 0,  //评论数
         showCard: false,
         joinTime: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate(),//加入时间
-      },          // method:'POST',
+      },          
+       method:'POST',
       header: {
-        'content-type': 'application/json' // 默认值
+        'content-type': 'application/x-www-form-urlencoded' 
       },
       success(res) {
+        console.log(res.data) 
+        app.globalDataOpenid.user_id = res.data.id; //获得返回回来的ID，保存到全局
+      },
+      fail(res) {
         console.log(res.data) //返回数据为：id=1  格式，通过=分开
-        app.globalDataOpenid.user_id = res.data.split('=')[1]; //获得返回回来的ID，保存到全局
       }  
     })
   },
