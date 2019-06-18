@@ -39,15 +39,15 @@ Page({
     //包车服务
     baocheArray: [['选择包车的类型', '经济型小轿车', '舒适型小轿车', '豪华型小轿车', '商务车', '婚礼用车']],
     baocheIndex: 0,
-    xuandingren:[],
-    tianjiasiji:[],
-    tianjiasiji_length:0,
+    xuandingren: [],
+    tianjiasiji: [],
+    tianjiasiji_length: 0,
 
   },
-    /**
-   * 下单成功，清除所有输入
-   */
-  qingchuinput(){
+  /**
+ * 下单成功，清除所有输入
+ */
+  qingchuinput() {
     //获取当前时间
     this.getCurrentDate();
     //设置默认下单时间
@@ -55,15 +55,15 @@ Page({
       multiIndex: [(dateYear == 2019 ? 0 : (dateYear == 2020) ? 1 : 2), (dateMonth - 1), (dateDay - 1), dateHour, dateMinute],
     })
     this.setData({
-      qishiweizhisuozaidi:'',
-      zhongdianweizhisuozaidi:'',
-      phone:'', 
+      qishiweizhisuozaidi: '',
+      zhongdianweizhisuozaidi: '',
+      phone: '',
       daijiarenIndex: 0,
       baoshiIndex: 0,
       baocheIndex: 0,
-      xuandingren:[],
-      tianjiasiji:[],
-      tianjiasiji_length:0,
+      xuandingren: [],
+      tianjiasiji: [],
+      tianjiasiji_length: 0,
     })
   },
 
@@ -113,8 +113,8 @@ Page({
       richangdaijia: richangdaijia,
       baoshidaijia: baoshidaijia,
       baochefuwu: baochefuwu,
-      tianjiasiji:[],  //清空
-      xuandingren:[], //清空
+      tianjiasiji: [],  //清空
+      xuandingren: [], //清空
     })
   },
 
@@ -207,28 +207,6 @@ Page({
     })
   },
 
-  /**
-   * 
-   * 下载头像上传到云存储
-   */
-  xiazaitouxiang: function (avatarUrl) {
-    let that = this;
-    //先下载
-    wx.downloadFile({
-      url: '' + avatarUrl,
-      success(res) {
-        if (res.statusCode === 200) {
-          console.log(res.tempFilePath);
-          portraitTup = res.tempFilePath;
-        }
-      },
-      fail(){
-        wx.showToast({
-          title:'下载失败',
-        })
-      }
-    })
-  },
   //输入验证
   verify: function (e) {
     let appointmentDate = this.data.multiArray;
@@ -239,7 +217,6 @@ Page({
       + (appointmentTime[2] + 1) + " " + appointmentDate[3][appointmentTime[3]] + ":"
       + appointmentDate[4][appointmentTime[4]]);
     var time2 = date2.getTime();
-    console.log("---------------time1=" + time1 + "----------time2=" + time2)
 
     //验证起始位置是否添加
     if (e.detail.value.qishiweizhi == '') {
@@ -339,123 +316,50 @@ Page({
     let t = new Date(); //获得时间
     //向daijiadingdan表中添加信息
     let that = this;
+    console.log('-----------------------------------', t.getMinutes());
     wx.request({
-      url:  app.globalData.url+'orderAction_add', //上传数据
+      url: app.globalData.url + 'orderAction_add', //上传数据
       data: {
-            id: t.getTime(),
-            portrait: '' + this.data.portrait,// 默认头像
-            username: '' + this.data.userInfo.nickName, //默认
-            initialPosition: e.detail.value.qishiweizhi, //起始位置
-            finalPosition: e.detail.value.zhongdianweizhi, //终点位置
-            phone: e.detail.value.phone, //联系方式
-            time: e.detail.value.time, //预约时间
-            addGenerationOfDriving: '' + tianjiadaijia, //添加代驾
-            charterCarService: '' + baochefuwu, //包车服务
-            packageTimeDriving: '' + baoshidaijia, //包时代驾
-            initialPositionLatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
-            initialPositionLongitude: '' + this.data.qishiweizhilongitude, //起始位置经度
-            finalPositionLatitude: '' + this.data.zhongdianweizhilatitude, //终点纬度
-            finalPositionLongitude: '' + this.data.zhongdianweizhilongitude, //终点经度
-            ifFinish: false, //表示是否完成
-            ifAccept: false, //表示是否被接单
-            receivedBy: '', //表示此订单被谁接单
-            daijiajiedan_id: '', //接单表的id
-            zhidingsiji: '', //指定司机信息id
-            creationTime: t.getFullYear() + '/' + (t.getMonth() + 1) +
-              '/' + t.getDate()+ ' '+t.getHours() + ':' + t.getMinutes(),//创建时间
-          },
-          // method:'POST',
-      header: {
-        'content-type': 'application/json' // 默认值
-        
+        id: 1,
+        portrait: '' + that.data.user.portrait,// 默认头像
+        username: '' + that.data.user.username, //默认
+        initialPosition: e.detail.value.qishiweizhi, //起始位置
+        finalPosition: e.detail.value.zhongdianweizhi, //终点位置
+        phone: e.detail.value.phone, //联系方式
+        time: e.detail.value.time, //预约时间
+        addGenerationOfDriving: '' + tianjiadaijia, //添加代驾
+        charterCarService: '' + baochefuwu, //包车服务
+        packageTimeDriving: '' + baoshidaijia, //包时代驾
+        initialPositionLatitude: that.data.qishiweizhilatitude, //起始位置纬度
+        initialPositionLongitude: that.data.qishiweizhilongitude, //起始位置经度
+        finalPositionLatitude: that.data.zhongdianweizhilatitude, //终点纬度
+        finalPositionLongitude: that.data.zhongdianweizhilongitude, //终点经度
+        ifFinish: false, //表示是否完成
+        ifAccept: false, //表示是否被接单
+        receivedBy: '', //表示此订单被谁接单
+        daijiajiedan_id: '', //接单表的id
+        zhidingsiji: '', //指定司机信息id
+        creationTime: t.getFullYear() + '/' + (t.getMonth() + 1) +
+          '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//创建时间
       },
-      success (res) {
-        console.log(res.data)
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success(res) {
+        //返回值  add_data  为true表示插入成功
+        if (res.data.add_data) {
+          //关闭加载...
+          wx.hideLoading();
+          //下单成功，清空所有输入
+          that.qingchuinput();
+          that.setData({
+            modalName: 'DialogModal2',
+          })
+        }
       }
     })
 
-
-    // db.collection("daijiadingdan").add({
-    //   // data 字段表示需新增的 JSON 数据
-    //   data: {
-    //     _id: t,
-    //     portrait: '' + this.data.portrait,// 默认头像
-    //     username: '' + this.data.userInfo.nickName, //默认
-    //     qishiweizhi: e.detail.value.qishiweizhi, //起始位置
-    //     zhongdianweizhi: e.detail.value.zhongdianweizhi, //终点位置
-    //     phone: e.detail.value.phone, //联系方式
-    //     time: e.detail.value.time, //预约时间
-    //     tianjiadaijia: '' + tianjiadaijia, //添加代驾
-    //     baochefuwu: '' + baochefuwu, //包车服务
-    //     baoshidaijia: '' + baoshidaijia, //包时代驾
-    //     qishiweizhilatitude: '' + this.data.qishiweizhilatitude, //起始位置纬度
-    //     qishiweizhilongitude: '' + this.data.qishiweizhilongitude, //起始位置经度
-    //     zhongdianweizhilatitude: '' + this.data.zhongdianweizhilatitude, //终点纬度
-    //     zhongdianweizhilongitude: '' + this.data.zhongdianweizhilongitude, //终点经度
-    //     ifFinish: false, //表示是否完成
-    //     isaccept: false, //表示是否被接单
-    //     jiedanren: '', //表示此订单被谁接单
-    //     daijiajiedan_id: '', //接单表的id
-    //     zhidingsij: this.data.xuandingren, //指定司机信息id
-    //     chuangjianshijian: [t.getFullYear() + '/' + (t.getMonth() + 1) +
-    //       '/' + t.getDate(), t.getHours() + ':' + t.getMinutes()],//创建时间
-    //   }
-    // }).then(add_res => {
-    //   // //发送模块信息
-    //   //   for(let i = 0;i<this.data.xuandingren.length;i++){
-    //   //   wx.cloud.callFunction({
-    //   //     name: 'mobanxiaoxi_zijitiaoxuanshiji',
-    //   //     data: {
-    //   //       touser: this.data.xuandingren[i],  //接受者id
-    //   //       dingdanhao : add_res._id, //订单号
-    //   //        xiadanyonghu :this.data.userInfo.nickName,//下单用户
-    //   //        formId :''+e.detail.formId,
-    //   //     }
-
-    //   //   }).then(console.log)
-    //   //   console.log('---e.detail.formId-----',e)
-    //   // }
-    //   for (let i = 0; i < this.data.xuandingren.length; i++) {
-    //     db.collection("news").add({
-    //       data: {
-    //         fadanren: app.globalDataOpenid.openid_, //下单者id
-    //         gaunlianId: add_res._id, //订单号 ,当是点赞时，表示点赞表id
-    //         jiedanren: this.data.xuandingren[i],  //接单人
-    //         newsName: this.data.userInfo.nickName + '让你代驾了', //信息标题
-    //         newsNameP: this.data.userInfo.avatarUrl,//头像
-    //         newsContent: '起始位置：' + e.detail.value.qishiweizhi,//信息内容,
-    //         chuangjianshijian: t.getFullYear() + '/' + (t.getMonth() + 1) +
-    //           '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//创建时间
-    //         ifdakai: false,//标记是否打开,每一个用户有不同的标签
-    //         if_and: "add", //值为add 表示代驾,
-    //       }
-    //     }).then(res => {
-    //       console.log("-----消息发送成功！！！")
-    //     }).catch(res => {
-    //       console.log("-----消息发送成功！！！")
-    //     })
-    //   }
-    // }).then(add_ress => {
-    //   console.log("------------add_ress", add_ress)
-    //   //关闭加载...
-    //   wx.hideLoading();
-    //   //表示下单成功，把id保存到
-    //   console.log("下单成功", add_ress)
-    //   //下单成功，清空所有输入
-    //   that.qingchuinput();
-    //   that.setData({
-    //     modalName: 'DialogModal2',
-    //   })
-    // }).catch(error => {
-    //   //关闭加载...
-    //   wx.hideLoading();
-    //   console.log("下单失败", error)
-    //   wx.showToast({
-    //     title: "下单失败！",
-    //     icon: "none",
-    //     duration: 2000
-    //   });
-    // })
   },
   closeModal() {
     //关闭，留在此页
@@ -483,25 +387,24 @@ Page({
         url: '../user/orderForm/orderForm?openid=' + app.globalDataOpenid.openid_,
       });
       this.closeModal();
-    }else if (operation == "chong") {
+    } else if (operation == "chong") {
       //重新选择代驾人
-      let daijiaren = (parseInt(this.data.daijiarenIndex)+1);
+      let daijiaren = (parseInt(this.data.daijiarenIndex) + 1);
       wx.navigateTo({
         //参数代驾多少人
-        url:'addYourOwnDriver?daijiaren='+daijiaren,
+        url: 'addYourOwnDriver?daijiaren=' + daijiaren,
       })
       this.closeModal();
     }
     else if (operation == "zidongfenpei") {
       //系统自动分配,全部获取的归零
       this.setData({
-        xuandingren:[],
-        tianjiasiji:[],
-        tianjiasiji_length:0,
+        xuandingren: [],
+        tianjiasiji: [],
+        tianjiasiji_length: 0,
       })
       this.closeModal();
     }
-
   },
 
 
@@ -511,29 +414,29 @@ Page({
    */
   onLoad: function (options) {
     console.log("----------add页面--onLoad生命周期函数-this.data")
-      //判断账号是否存在
-      db.collection('user').doc(app.globalDataOpenid.openid_).get({
-        success(){
-          app.globalDataAndLogin.login = true;
-        },
-        fail(){
-          app.globalDataAndLogin.login = false;
-          //失败不存在，提示登录
-          wx.showModal({
-            title: '登录过期',
-            content: '登录过期，请重新登录',
-            confirmText: '确定',
-            cancelText: '取消',
-            success(ress) {
-              //表示点击了取消
-                //切换到添加代驾
-                wx.switchTab({
-                  url: '../user/user'
-                })        
-            }
-          })
-        }
-      })
+    //判断账号是否存在
+    db.collection('user').doc(app.globalDataOpenid.openid_).get({
+      success() {
+        app.globalDataAndLogin.login = true;
+      },
+      fail() {
+        app.globalDataAndLogin.login = false;
+        //失败不存在，提示登录
+        wx.showModal({
+          title: '登录过期',
+          content: '登录过期，请重新登录',
+          confirmText: '确定',
+          cancelText: '取消',
+          success(ress) {
+            //表示点击了取消
+            //切换到添加代驾
+            wx.switchTab({
+              url: '../user/user'
+            })
+          }
+        })
+      }
+    })
   },
 
   /**
@@ -544,26 +447,21 @@ Page({
     console.log("----------add页面----获得数据方法：")
     var thiss = this;
     //查询数据
-    db.collection('user').doc(openid_).get({
-      success(res) {
-        console.log("----------add页面----获得数据方法：success--------------------", res)
-        // res.data 包含该记录的数据
-        thiss.setData({
-          name: res.data.name, //姓名
-          phone: res.data.phone, //电话
-          age: res.data.age, //年龄
-          jialing: res.data.jialing, //驾龄
-          suozaidi: res.data.suozaidi, //所在地
-          spe_i: res.data.spe_i, //实名认证
-          jiashi: res.data.jiashi, //驾驶认证
-          region: res.data.region, //所在地
-          portrait:res.data.portrait, //头像
-        })
+    wx.request({
+      url: app.globalData.url + 'userAction_findOne', //查询一条数据
+      data: {
+        openid: app.globalDataOpenid.openid_, //通过全局查找当前用户
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
       },
-      fail() {
-        console.log("----------add页面----获得数据方法：fail--------------------")
+      success(res) {
+        thiss.setData({
+          user: res.data
+        })
+        app.globalDataOpenid.user_id = res.data.id;
       }
-    });
+    })
 
   },
   /**
@@ -621,7 +519,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log(this.data.xuandingren,+'=xuandingren')
+    console.log(this.data.xuandingren, +'=xuandingren')
     let that = this;
     console.log("----------add页面--onShow生命周期函数")
     /**
@@ -654,35 +552,26 @@ Page({
             }
           })
         } else {
-          wx.getUserInfo({
-            success(res) {
-              that.xiazaitouxiang(res.userInfo.avatarUrl);
-              that.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo,
-              })
-            }
-          })
           //获取用户信息
           that.huoquyonhuxinxi();
         }
       }
     })
 
-   
+
 
 
     // 判断是否子页面（自己挑选时司机页面）返回,大于0 ，表示挑选了司机
-    if((this.data.xuandingren).length > 0){
+    if ((this.data.xuandingren).length > 0) {
       //初始化调用，默认为空，0
-      this.tianjiasiji([],0);
-    }else{
-    //获取当前时间
-    this.getCurrentDate();
-    //设置默认下单时间
-    this.setData({
-      multiIndex: [(dateYear == 2019 ? 0 : (dateYear == 2020) ? 1 : 2), (dateMonth - 1), (dateDay - 1), dateHour, dateMinute],
-    })
+      this.tianjiasiji([], 0);
+    } else {
+      //获取当前时间
+      this.getCurrentDate();
+      //设置默认下单时间
+      this.setData({
+        multiIndex: [(dateYear == 2019 ? 0 : (dateYear == 2020) ? 1 : 2), (dateMonth - 1), (dateDay - 1), dateHour, dateMinute],
+      })
     }
   },
   /**
@@ -690,7 +579,7 @@ Page({
    * 需求：自己挑选，同意，不在首页显示，不可以被接单，发送信息给特定司机，
    * 司机是否同意，同意，接单完成，不同意，发布到首页，其他司机接单。
    */
-  AddYourOwnDriver(){
+  AddYourOwnDriver() {
     let that = this;
     wx.showModal({
       title: '确认自己挑选司机',
@@ -701,12 +590,12 @@ Page({
         console.log(res)
         //表示点击了取消
         if (res.confirm == false) {
-         return;
+          return;
         } else {
-          let daijiaren = (parseInt(that.data.daijiarenIndex)+1);
+          let daijiaren = (parseInt(that.data.daijiarenIndex) + 1);
           wx.navigateTo({
             //参数代驾多少人
-            url:'addYourOwnDriver?daijiaren='+daijiaren,
+            url: 'addYourOwnDriver?daijiaren=' + daijiaren,
           })
         }
       }
@@ -719,19 +608,19 @@ Page({
    * tianjiasiji_  暂时保存数据数组，
    * i 递归调用自己下标，作用，获得xuandingren里数据，判断何时停止调用自己
    */
-  tianjiasiji(tianjiasiji_,i){
-    db.collection('user').doc(this.data.xuandingren[i]).get().then(res=>{
+  tianjiasiji(tianjiasiji_, i) {
+    db.collection('user').doc(this.data.xuandingren[i]).get().then(res => {
       tianjiasiji_.push(res.data)
       //i = (this.data.xuandingren).length 表示要获取的用户卡片信息查询完成。
-      if(i<(this.data.xuandingren).length){
-        console.log("----------调用自己---------i="+i)
+      if (i < (this.data.xuandingren).length) {
+        console.log("----------调用自己---------i=" + i)
         i++;
-        this.tianjiasiji(tianjiasiji_,i); //调用自己
+        this.tianjiasiji(tianjiasiji_, i); //调用自己
       }
     })
     this.setData({
-      tianjiasiji:tianjiasiji_,
-      tianjiasiji_length:tianjiasiji_.length,
+      tianjiasiji: tianjiasiji_,
+      tianjiasiji_length: tianjiasiji_.length,
     })
   }
 })
