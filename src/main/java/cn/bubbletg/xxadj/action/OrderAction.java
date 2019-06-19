@@ -241,10 +241,32 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 根据ID查询单条记录
      * create time: 2019/6/14 15:29
      */
-    public void findOne() {
+    public void findOne() throws IOException {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------findOne()方法执行----");
+
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        /*
+         通过 HashMap 保存每一次获得的长度,数据，LoadUp返回给前端
+         */
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
         //根据ID查询单条记录
-        orderService.findOne(order.getId());
+        Order orderOne = orderService.findOne(order.getId());
+
+        //是否查询成功判断
+        if(orderOne != null){
+            hashMapOrders.put("OrderData",orderOne);
+            hashMapOrders.put("success",true);
+        }else{
+            hashMapOrders.put("success",false);
+        }
+        //转换为json
+        String jsonOrder = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(jsonOrder);
+
     }
 }

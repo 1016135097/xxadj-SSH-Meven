@@ -28,6 +28,7 @@
 
         <!-- 第三部分 把映射放到核心配置文件中 -->
         <mapping resource="hbm/Order.hbm.xml"/>
+        <mapping resource="hbm/Orders.hbm.xml"/>
         <mapping resource="hbm/User.hbm.xml"/>
 
     </session-factory>

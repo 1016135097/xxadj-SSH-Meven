@@ -64,6 +64,7 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <import resource="classpath:user.xml"/>
+    <import resource="classpath:orders.xml"/>
 
 </beans>
 

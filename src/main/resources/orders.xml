@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="ordersAction" class="cn.bubbletg.xxadj.action.OrdersAction">
+        <property name="ordersService" ref="ordersService"/>
+    </bean>
+    <bean id="ordersService" class="cn.bubbletg.xxadj.service.OrdersService">
+        <property name="ordersDao" ref="ordersDaoImpl"/>
+    </bean>
+
+    <bean id="ordersDaoImpl" class="cn.bubbletg.xxadj.dao.OrdersDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>
