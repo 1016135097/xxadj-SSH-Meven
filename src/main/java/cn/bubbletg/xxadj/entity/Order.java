@@ -13,6 +13,14 @@ public class Order {
      */
     private int id;
     /**
+     * userId 用户的ID
+     */
+    private int userId;
+    /**
+     * openid,微信自带的openid,记录当前下单人
+     */
+    private String openid;
+    /**
      * 头像，下单着的头像地址
      */
     private String portrait;
@@ -98,7 +106,21 @@ public class Order {
         this.id = id;
     }
 
+    public int getUserId() {
+        return userId;
+    }
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
 
     public String getPortrait() {
         return portrait;
@@ -256,6 +278,8 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id=" + id +
+                ", userId=" + userId +
+                ", openid='" + openid + '\'' +
                 ", portrait='" + portrait + '\'' +
                 ", username='" + username + '\'' +
                 ", initialPosition='" + initialPosition + '\'' +

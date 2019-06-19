@@ -12,10 +12,19 @@ public class Orders {
      * id 接单的 id，当前id
      */
     private int id;
+
     /**
      * orderId 订单的 id，
      */
     private int orderId;
+    /**
+     * userId 用户的ID
+     */
+    private int userId;
+    /**
+     * openid,微信自带的openid,记录当前下单人
+     */
+    private String openid;
     /**
      * 头像，下单着的头像地址
      */
@@ -100,6 +109,22 @@ public class Orders {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getOrderPortrait() {
@@ -243,6 +268,8 @@ public class Orders {
         return "Orders{" +
                 "id=" + id +
                 ", orderId=" + orderId +
+                ", userId=" + userId +
+                ", openid='" + openid + '\'' +
                 ", orderPortrait='" + orderPortrait + '\'' +
                 ", orderUsername='" + orderUsername + '\'' +
                 ", orderInitialPosition='" + orderInitialPosition + '\'' +

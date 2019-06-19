@@ -190,14 +190,30 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
 
     /**
      * create by: BubbleTg
-     * description: 更新订单表
+     * description: 更新订单表，接单更新
      * create time: 2019/6/14 15:20
      */
-    public void update() {
+    public void updateAccept() throws IOException {
+
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        //像数据库里面插入数据
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
+        //先查询要更新的订单表
+        Order orders = orderService.findOne(order.getId());
+        orders.setIfAccept(order.isIfAccept()); //更新，表示接单
         //更新
-        orderService.update(order);
+        orderService.update(orders);
+        hashMapOrders.put("updateAccept_data", true);
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
+
     }
 
 

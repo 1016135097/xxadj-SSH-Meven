@@ -25,6 +25,8 @@
              <property name="portrait" column="portrait"/>
          -->
         <property name="orderId"/>
+        <property name="userId"/>
+        <property name="openid"/>
         <property name="orderPortrait"/>
         <property name="orderUsername"/>
         <property name="orderInitialPosition"/>
