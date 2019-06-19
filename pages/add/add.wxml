@@ -34,7 +34,7 @@
       </view>
       <view class='form-item'>
         <view class='form-title cur'>联系方式</view>
-        <input name='phone' type="number" placeholder="输入联系方式" wx:if="{{ifphone==true}}" value="{{phone}}" class='form-input'></input>
+        <input name='phone' type="number" placeholder="输入联系方式" wx:if="{{ifphone==true}}" value="{{user.phone}}" class='form-input'></input>
         <input name='phone' type="number" placeholder="输入联系方式" wx:if="{{ifphone!=true}}" class='form-input'></input>
         <view class='form-input-btn'>
           <view class="iconfont icon-phone moren-text" catch:tap="phonetap"></view>

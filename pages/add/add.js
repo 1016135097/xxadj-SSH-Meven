@@ -190,7 +190,7 @@ Page({
     let that = this;
     wx.showModal({
       title: '默认联系方式',
-      content: '默认联系方式可以在个人详细页面修改，你确定使用此 ' + this.data.phone + ' 默认联系方式吗？',
+      content: '默认联系方式可以在个人详细页面修改，你确定使用此 ' + that.data.user.phone + ' 默认联系方式吗？',
       confirmText: '确定',
       cancelText: '取消',
       success(ress) {
@@ -321,6 +321,8 @@ Page({
       url: app.globalData.url + 'orderAction_add', //上传数据
       data: {
         id: 1,
+        userId:app.globalDataOpenid.user_id, //接单人ID
+        openid:app.globalDataOpenid.openid_,//接单人openid
         portrait: '' + that.data.user.portrait,// 默认头像
         username: '' + that.data.user.username, //默认
         initialPosition: e.detail.value.qishiweizhi, //起始位置

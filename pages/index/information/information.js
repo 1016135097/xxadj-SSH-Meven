@@ -2,7 +2,7 @@
 const db = wx.cloud.database();
 var informationid; //信息id
 var pages;  //表示上一个页面
-var jiedanyonghuxinxi; //接单用户信息 
+var user; //接单用户信息 
 const app = getApp();
 Page({
 
@@ -93,10 +93,10 @@ Page({
   informationJieDan(e) {
     console.log("---------informationJieDan执行----------------", this.data);
     //判断是否实名
-    if (this.data.jiedanyonghuxinxi.spe_i == '已实名认证') {
+    if (this.data.user.realNameAuthentication == '已实名认证') {
       let information = this.data.information;
       //先判断接单是否自己的的单
-      if (information._openid == app.globalDataOpenid.openid_) {
+      if (information.openid != app.globalDataOpenid.openid_) {
         wx.showToast({
           title: '自己不可接自己的订单！',
           icon: '',
@@ -117,60 +117,81 @@ Page({
             wx.showLoading({
               title: '接单中',
             })
-            //添加在数据库
-            db.collection('daijiajiedan').add({
-              // data 字段表示需新增的 JSON 数据
+            let t = new Date(); //获得时间
+            wx.request({
+              url: app.globalData.url + 'ordersAction_add', //上传数据
               data: {
-                _id: information._id + (new Date()),    //id  用订单表_id + 现在时间表示  
-                daijiadingdan_id: information._id, //订单id，表示当前被接的订单
-                qishiweizhi: information.qishiweizhi, //起始位置
-                zhongdianweizhi: information.zhongdianweizhi, //终点位置
-                phone: information.phone, //联系方式
-                time: information.time, //预约时间
-                tianjiadaijia: '' + information.tianjiadaijia, //添加代驾
-                baochefuwu: '' + information.baochefuwu, //包车服务
-                baoshidaijia: '' + information.baoshidaijia, //包时代驾
-                qishiweizhilatitude: '' + information.qishiweizhilatitude, //起始位置纬度
-                qishiweizhilongitude: '' + information.qishiweizhilongitude, //起始位置经度
-                zhongdianweizhilatitude: '' + information.zhongdianweizhilatitude, //终点纬度
-                zhongdianweizhilongitude: '' + information.zhongdianweizhilongitude, //终点经度
+                id: 1, //当前接单表id ,自动递增
+                orderId:information.id, //订单表id
+                userId:app.globalDataOpenid.user_id, //接单人ID
+                openid:app.globalDataOpenid.openid_,//接单人openid
+                orderPortrait: information.portrait,// 默认头像
+                orderUsername: '' + information.username, //默认
+                orderInitialPosition:information.initialPosition, //起始位置
+                orderFinalPosition:information.finalPosition, //终点位置
+                orderPhone: information.phone, //联系方式
+                orderTime: information.time, //预约时间
+                addGenerationOfDriving: information.addGenerationOfDriving, //添加代驾
+                charterCarService: information.charterCarService, //包车服务
+                packageTimeDriving: information.packageTimeDriving, //包时代驾
+                initialPositionLatitude: information.initialPositionLatitude, //起始位置纬度
+                initialPositionLongitude: information.initialPositionLongitude, //起始位置经度
+                finalPositionLatitude: information.finalPositionLatitude, //终点纬度
+                finalPositionLongitude: information.finalPositionLongitude, //终点经度
                 ifFinish: false, //表示是否完成
-                isaccept: true, //表示是否被接单
-                jiedanren: app.globalDataOpenid.openid_, //表示此订单当前登录用户接单
-                chuangjianshijian: information.chuangjianshijian,//创建时间
-              }
-            }).then(daijiajiedan_res => {
-              console.log("------------daijiajiedanid_" + daijiajiedan_res._id);
-              //通过云函数更新驾驶dingdan表，因为不同用户更新一个表不可能，只有通过云函数
-              wx.cloud.callFunction({
-                name: 'jiedancaozuo_daijiadingdangengxin',
-                data: {
-                  informationid: information._id,
-                  openid_: app.globalDataOpenid.openid_,
-                  daijiajiedan_id: daijiajiedan_res._id,
-                },
-                complete: res => {
-                  wx.hideLoading();
-                  wx.showModal({
-                    title: '完成成功',
-                    content: '您已经成功接单，是否切换到接单管理页面？',
-                    confirmText: '确定',
-                    cancelText: '取消',
-                    success(ress_) {
-                      //表示点击了取消
-                      if (ress_.confirm == false) {
-                        getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
-                      } else {
-                        wx.redirectTo({
-                          url: '../../user/orderReceiving/orderReceiving?openid=' + app.globalDataOpenid.openid_,
-                        })
+                ifAccept: true, //表示是否被接单
+                orderCreationTime:information.creationTime, //订单创建时间
+                creationTime:  t.getFullYear() + '/' + (t.getMonth() + 1) +
+                '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//接单创建时间
+              },
+              method: 'POST',
+              header: {
+                'content-type': 'application/x-www-form-urlencoded'
+              },
+              success(res) {
+                //返回值  add_data  为true表示插入成功
+                if (res.data.add_data) {
+                  //修改订单表，表示被接单
+                  wx.request({
+                    url: app.globalData.url + 'orderAction_updateAccept', //更新
+                    data: {
+                      id: information.id, //要修改的表id
+                      daijiajiedan_id: app.globalDataOpenid.user_id, //接单表的id
+                      ifAccept:true,  //表示被接单
+                    },
+                    method: 'POST',
+                    header: {
+                      'content-type': 'application/x-www-form-urlencoded'
+                    },
+                    success(res) {
+                    
+                      if (res.data.updateAccept_data) {
+                        //修改订单表，表示被接单
+                        wx.showModal({
+                                  title: '完成成功',
+                                  content: '您已经成功接单，是否切换到接单管理页面？',
+                                  confirmText: '确定',
+                                  cancelText: '取消',
+                                  success(ress_) {
+                                    //表示点击了取消
+                                    if (ress_.confirm == false) {
+                                      getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
+                                    } else {
+                                      wx.redirectTo({
+                                        url: '../../user/orderReceiving/orderReceiving?openid=' + app.globalDataOpenid.openid_,
+                                      })
+                                    }
+                                  }
+                                })
+                        //关闭加载...
+                        wx.hideLoading();
+                       
                       }
                     }
-                  })
+                  })          
                 }
-              });
+              }
             })
-
           }
         }
       })
@@ -225,24 +246,23 @@ Page({
         })
       }
     })
-    // console.log("-----getinformation---------执行----------");
-    // db.collection("daijiadingdan").doc(informationid).get().then(res => {
-    //   console.log("--------------详细信息获取完成---------");
-    //   information = res.data;
-    //   db.collection("user").where({
-    //     _id: app.globalDataOpenid.openid_,
-    //   }).get().then(ress => {
-    //     //关闭加载...
-    //     wx.hideLoading()
-    //     jiedanyonghuxinxi = ress.data;
-    //     that.setData({
-    //       jiedanyonghuxinxi: jiedanyonghuxinxi[0],
-    //       information: information,
-    //     })
-    //   })
-
-    // });
-
+    wx.request({
+      url: app.globalData.url + 'userAction_findOne', //查询一条数据
+      data: {
+        openid: app.globalDataOpenid.openid_, //通过全局查找当前用户
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        that.setData({
+          user: res.data
+        })
+        //关闭加载...
+        wx.hideLoading()
+        app.globalDataOpenid.user_id = res.data.id;
+      }
+    })
   },
 
   /**
