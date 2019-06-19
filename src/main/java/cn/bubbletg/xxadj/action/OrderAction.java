@@ -49,6 +49,44 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         this.orderService = orderService;
     }
 
+
+    /**
+     * create by: BubbleTg
+     * description: 模糊查询
+     * create time: 2019/6/19 14:16
+     *
+     * @Param: null
+     */
+    public void fuzzyQuery() throws IOException {
+
+        //显示日志信息
+        Logger.getLogger(OrderAction.class).info("--订单操作--------fuzzyQuery()方法执行---");
+        //获得请求域对象
+        HttpServletRequest request = ServletActionContext.getRequest();
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        /*
+         通过 HashMap 保存每一次获得的长度,数据，LoadUp返回给前端
+         */
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        //查询并获得数据,执行起始位置模糊查询
+        List<Order> orders = orderService.fuzzyQueryInitialPosition(order.getReceivedBy(), order.isIfAccept(),
+                order.isIfFinish(), order.getInitialPosition());
+        hashMapOrders.put("InitialPositionData", orders);
+        hashMapOrders.put("InitialPositionDataLength", orders.size()); //保存附近查询到数据的长度
+        //查询并获得数据,执行终点位置模糊查询
+        orders = orderService.fuzzyQueryFinalPosition(order.getReceivedBy(), order.isIfAccept(),
+                order.isIfFinish(), order.getFinalPosition());
+        hashMapOrders.put("FinalPositionData", orders);
+        hashMapOrders.put("FinalPositionDataLength", orders.size()); //保存附近查询到数据的长度
+        //转换为json
+        String jsonOrder = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(jsonOrder);
+    }
+
     /**
      * create by: BubbleTg
      * description: 分页查询
@@ -132,7 +170,6 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      */
 
     public void add() throws Exception {
-        System.out.println(order);
         //显示日志信    @Action
         //    public息
         Logger.getLogger(OrderAction.class).info("--订单操作--------add()方法执行----数据为：");

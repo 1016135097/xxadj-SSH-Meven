@@ -72,4 +72,30 @@ public interface OrderDao extends BaseDao<Order> {
                                    Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
                                    Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
                                    boolean ifAccept, boolean ifFinish, String receivedBy);
+
+    /**
+     * create by: BubbleTg
+     * description: 终点位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept      表示是否被接单
+     * @param ifFinish      表示是否完成
+     * @param receivedBy    表示被指定的接单人
+     * @param initialPosition 表示终点位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    List<Order> fuzzyQueryInitialPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String initialPosition);
+
+    /**
+     * create by: BubbleTg
+     * description: 终点位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept      表示是否被接单
+     * @param ifFinish      表示是否完成
+     * @param receivedBy    表示被指定的接单人
+     * @param finalPosition 表示终点位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    List<Order> fuzzyQueryFinalPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String finalPosition);
 }

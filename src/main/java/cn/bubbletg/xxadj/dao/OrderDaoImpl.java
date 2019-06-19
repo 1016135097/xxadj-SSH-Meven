@@ -69,17 +69,17 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
          * 是否被接单：
          * --根据ifAccept值来判断
          */
-        String sql = null;
+
         //查询
         List<Order> orders = null;
         //判断是全局查找还是附近查找
-        if (initialPositionLatitudeMin == initialPositionLatitudeMin) {
+        if (initialPositionLatitudeMin != initialPositionLatitudeMax) {
+            Logger.getLogger(OrderDaoImpl.class).info("-------findPage()方法执行----附近查找");
             //附近查找
-            sql = "from Order where ifAccept=? and ifFinish =? and initialPositionLatitude > ?" +
-                    " and initialPositionLatitude < ? and initialPositionLongitude > ? " +
-                    "and initialPositionLongitude < ? and receivedBy = ?";
             orders = this.getSessionFactory().getCurrentSession()
-                    .createQuery(sql)
+                    .createQuery("from Order where ifAccept=? and ifFinish =? and initialPositionLatitude > ?" +
+                            " and initialPositionLatitude < ? and initialPositionLongitude > ? " +
+                            "and initialPositionLongitude < ? and receivedBy = ?")
                     //设置问号参数
                     .setParameter(0, ifAccept)
                     .setParameter(1, ifFinish)
@@ -93,10 +93,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                     .setMaxResults(pageSize)
                     .list();
         } else {
+            Logger.getLogger(OrderDaoImpl.class).info("-------findPage()方法执行----全局查找");
             //全局
-            sql = "from Order where ifAccept=? and ifFinish =? and receivedBy = ?";
             orders = this.getSessionFactory().getCurrentSession()
-                    .createQuery(sql)
+                    .createQuery("from Order where ifAccept=? and ifFinish =? and receivedBy = ?")
                     //设置问号参数
                     .setParameter(0, ifAccept)
                     .setParameter(1, ifFinish)
@@ -132,9 +132,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                                           boolean ifAccept, boolean ifFinish, String receivedBy) {
         Logger.getLogger(OrderDaoImpl.class).info("-------findPageNearbyFull()方法执行----");
         List<Order> orders = this.getSessionFactory().getCurrentSession()
-                .createQuery("from Order where ifAccept=? and ifFinish =? and initialPositionLatitude < ?" +
-                        " and initialPositionLatitude > ? and initialPositionLongitude < ? " +
-                        "and initialPositionLongitude > ? and receivedBy = ?")
+                .createQuery("from Order where ifAccept=? and ifFinish =? and initialPositionLatitude <= ?" +
+                        " and initialPositionLatitude >= ? and initialPositionLongitude <= ? " +
+                        "and initialPositionLongitude >= ? and receivedBy = ?")
                 //设置问号参数
                 .setParameter(0, ifAccept)
                 .setParameter(1, ifFinish)
@@ -146,6 +146,57 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                 //分页查询
                 .setFirstResult(begin)
                 .setMaxResults(pageSize)
+                .list();
+        return orders;
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 终点位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept      表示是否被接单
+     * @param ifFinish      表示是否完成
+     * @param receivedBy    表示被指定的接单人
+     * @param initialPosition 表示终点位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    @Override
+    public List<Order> fuzzyQueryInitialPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String initialPosition) {
+        Logger.getLogger(OrderDaoImpl.class).info("-------fuzzyQueryInitialPosition()方法执行----initialPosition = "+initialPosition);
+        List<Order> orders = this.getSessionFactory().getCurrentSession()
+                .createQuery("from Order where initialPosition like ? and ifAccept=? and ifFinish =? and receivedBy = ? ")
+                //设置问号参数
+                .setParameter(0, "%"+initialPosition+"%")
+                .setParameter(1, ifAccept)
+                .setParameter(2, ifFinish)
+                .setParameter(3, receivedBy)
+
+                .list();
+        return orders;
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 终点位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept      表示是否被接单
+     * @param ifFinish      表示是否完成
+     * @param receivedBy    表示被指定的接单人
+     * @param finalPosition 表示终点位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    @Override
+    public List<Order> fuzzyQueryFinalPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String finalPosition) {
+        Logger.getLogger(OrderDaoImpl.class).info("-------fuzzyQueryFinalPosition()方法执行----");
+        List<Order> orders = this.getSessionFactory().getCurrentSession()
+                .createQuery("from Order where finalPosition like ?  and ifAccept=? and ifFinish =? and receivedBy = ?")
+                //设置问号参数
+                .setParameter(0, "%"+finalPosition+"%")
+                .setParameter(1, ifAccept)
+                .setParameter(2, ifFinish)
+                .setParameter(3, receivedBy)
                 .list();
         return orders;
     }

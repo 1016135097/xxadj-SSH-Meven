@@ -102,6 +102,7 @@ public class OrderService {
                                    Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
                                    Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
                                    boolean ifAccept, boolean ifFinish, String receivedBy) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----pagingQuery()方法执行----");
         //创建页面对象
         Page<Order> orderPage = new Page<>();
         //设置当前页面
@@ -150,9 +151,10 @@ public class OrderService {
      * @param receivedBy                  表示被指定的接单人
      */
     public List<Order> pagingQueryNearbyFull(Integer currentPage, Integer pageSize,
-                                   Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                   Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
-                                   boolean ifAccept, boolean ifFinish, String receivedBy) {
+                                             Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
+                                             Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                             boolean ifAccept, boolean ifFinish, String receivedBy) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----pagingQueryNearbyFull()方法执行----");
         //创建页面对象
         Page<Order> orderPage = new Page<>();
         //设置当前页面
@@ -163,6 +165,8 @@ public class OrderService {
         orderPage.setTotalCount(totalCount);
         //开始的位置   当前页减一乘每页记录数
         int begin = (currentPage - 1) * pageSize;
+        Logger.getLogger(OrderService.class).info("--订单操作-----pagingQueryNearbyFull()方法执行----begin="
+                + begin + "===pageSize" + pageSize);
         //每页记录的Order的list集合
         List<Order> orders = orderDao.findPageNearbyFull(begin, pageSize,
                 initialPositionLatitudeMin, initialPositionLatitudeMax,
@@ -181,6 +185,39 @@ public class OrderService {
      */
     public int findCount() {
         return orderDao.findCount();
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 起始位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept        表示是否被接单
+     * @param ifFinish        表示是否完成
+     * @param receivedBy      表示被指定的接单人
+     * @param initialPosition 表示起始位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    public List<Order> fuzzyQueryInitialPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String initialPosition) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----fuzzyQueryInitialPosition()方法执行----");
+        List<Order> orders = orderDao.fuzzyQueryInitialPosition(receivedBy, ifAccept, ifFinish, initialPosition);
+        return orders;
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 终点位置模糊查询
+     * create time: 2019/6/19 14:38
+     *
+     * @param ifAccept      表示是否被接单
+     * @param ifFinish      表示是否完成
+     * @param receivedBy    表示被指定的接单人
+     * @param finalPosition 表示终点位置模糊查询输入的值
+     * @return: List<Order> 返回的订单集合
+     */
+    public List<Order> fuzzyQueryFinalPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String finalPosition) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----fuzzyQueryFinalPosition()方法执行----");
+        return orderDao.fuzzyQueryFinalPosition(receivedBy, ifAccept, ifFinish, finalPosition);
     }
 }
 
