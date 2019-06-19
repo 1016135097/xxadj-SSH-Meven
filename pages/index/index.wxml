@@ -21,7 +21,7 @@
 <block wx:if="{{xianshi=='sousuoxianshi'}}">
     <!-- 搜索模块 -->
     <view class="sousuo-quanju">
-        <view class="sousuo-view1" wx:if="{{qishiweizhi.length>0||zhongdianweizhi.length>0}}">
+        <view class="sousuo-view1" wx:if="{{qishiweizhi.InitialPositionDataLength>0||zhongdianweizhi.FinalPositionDataLength>0}}">
             <view class="nav center-nav success-nav">
                 <view class="nav-item-box">
                     <view class="nav-item nav-item-left {{qishiweizhiqiehuan}}" catchtap="weizhiqiehuan" data-weizhiqiehuan="起始位置">
@@ -36,11 +36,11 @@
             </view>
             <view class="sousuo-view2">
                 <scroll-view class="sousuo-huadong" scroll-y="true">
-                    <view class="sousuo" wx:if="{{qishiweizhi.length>0&&qishiweizhiqiehuan!=''}}" wx:for="{{qishiweizhi}}" wx:key="index" wx:for-item="item" catchtap="sousuoxiangxi" data-sousuoid='{{item._id}}'>
-                        {{item.qishiweizhi}}
+                    <view class="sousuo" wx:if="{{qishiweizhi.InitialPositionDataLength>0&&qishiweizhiqiehuan!=''}}" wx:for="{{qishiweizhi.InitialPositionData}}" wx:key="index" wx:for-item="item" catchtap="sousuoxiangxi" data-sousuoid='{{item.InitialPositionData.id}}'>
+                        {{item.initialPosition}}
                     </view>
-                    <view class="sousuo" wx:if="{{zhongdianweizhi.length>0&&zhongdianweizhiqiehuan!=''}}" wx:for="{{zhongdianweizhi}}" wx:key="index" wx:for-item="item" catchtap="sousuoxiangxi" data-sousuoid='{{item._id}}'>
-                        {{item.zhongdianweizhi}}
+                    <view class="sousuo" wx:if="{{zhongdianweizhi.FinalPositionDataLength>0&&zhongdianweizhiqiehuan!=''}}" wx:for="{{zhongdianweizhi.FinalPositionData}}" wx:key="index" wx:for-item="item" catchtap="sousuoxiangxi" data-sousuoid='{{item.FinalPositionData.id}}'>
+                        {{item.finalPosition}}
                     </view>
                 </scroll-view>
             </view>

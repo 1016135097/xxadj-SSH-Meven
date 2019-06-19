@@ -87,6 +87,7 @@ Page({
                     if (resss.authSetting['scope.userLocation']) {
                       //用户打开了位置授权，重新加载
                       //获得当前位置, 参数为空表示不是点击切换附近
+                      shouyefujin = [];
                       that.weizhi('');
                     }
                   }
@@ -94,6 +95,8 @@ Page({
               }
             }
           })
+
+
         }
 
       }
@@ -174,8 +177,8 @@ Page({
    * 查询发布的代驾信息
    */
   weizhichaxundaijia() {
-        //查询数据库   起始位置
-        let that = this;
+    //查询数据库   起始位置
+    let that = this;
     wx.request({
       url: app.globalData.url + 'orderAction_pagingQuery', //分页查询
       data: {
@@ -184,20 +187,20 @@ Page({
         receivedBy: '', //表示此订单被谁接单,为空没有被指定
         currentPage: target_, //当前页
         pageSize: 10,//每页大小
-         //附近查找
-         initialPositionLatitudeMin: that.data.MaxMinLongitudeLatitude[2], //起始位置纬度附近最小值
-         initialPositionLatitudeMax: that.data.MaxMinLongitudeLatitude[3], //起始位置纬度附近最大值
-         initialPositionLongitudeMin: that.data.MaxMinLongitudeLatitude[0],//起始位置经度附近最小值
-         initialPositionLongitudeMax: that.data.MaxMinLongitudeLatitude[1],//起始位置经度附近最大值
-      },          
-      method:'POST',
+        //附近查找
+        initialPositionLatitudeMin: that.data.MaxMinLongitudeLatitude[2], //起始位置纬度附近最小值
+        initialPositionLatitudeMax: that.data.MaxMinLongitudeLatitude[3], //起始位置纬度附近最大值
+        initialPositionLongitudeMin: that.data.MaxMinLongitudeLatitude[0],//起始位置经度附近最小值
+        initialPositionLongitudeMax: that.data.MaxMinLongitudeLatitude[1],//起始位置经度附近最大值
+      },
+      method: 'POST',
       header: {
-        'content-type': 'application/x-www-form-urlencoded' 
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success(res) {
         target_ += 1; //当前页，表示一个页面，+1表示到第二个页面
-       console.log(res.data)
-       //获得附近信息，保存大数组shouyefujin
+        console.log(res.data)
+        //获得附近信息，保存大数组shouyefujin
         for (let i = 0; i < res.data.dataLength; i++) {
           shouyefujin.push(res.data.data[i]);
         }
@@ -207,103 +210,60 @@ Page({
         }
         that.setData({
           shouyefujin: shouyefujin,
-          shouyequanju,shouyequanju,
+          shouyequanju, shouyequanju,
         })
         //判断是否加载完毕数据
-        if (res.data.LoadUp){
+        if (res.data.LoadUp) {
           that.setData({
             isLoad: true,//表示附近获取完了
-        })
-      }
+          })
+        }
       }
     })
   },
-
-  // /**
-  //  * 
-  //  * 查询发布的代驾信息
-  //  * 获取位置成功时执行的全局查找
-  //  */
-  // chaxundaijia: function (fujin) {
-  //   //查询数据库   起始位置
-  //   let that = this;
-  //   wx.request({
-  //     url: app.globalData.url + 'orderAction_pagingQuery', //分页查询
-  //     data: {
-  //       ifFinish: false, //表示是否完成
-  //       ifAccept: false, //表示是否被接单
-  //       receivedBy: '', //表示此订单被谁接单,为空没有被指定
-  //       currentPage: target_quan_wei, //当前页
-  //       pageSize: 10,//每页大小
-  //        //起始位置经纬度附近最小值与起始位置经纬度附近最大值 相等表示全局
-  //        initialPositionLatitudeMin: that.data.latitude, //起始位置纬度附近最小值
-  //        initialPositionLatitudeMax: that.data.latitude, //起始位置纬度附近最大值
-  //        initialPositionLongitudeMin: that.data.longitude,//起始位置经度附近最小值
-  //        initialPositionLongitudeMax: that.data.longitude,//起始位置经度附近最大值
-  //     },          // method:'POST',
-  //     header: {
-  //       'content-type': 'application/json' // 默认值
-  //     },
-  //     success(res) {
-  //       target_quan_wei += 1; //当前页，表示一个页面，+1表示到第二个页面
-  //      console.log(res.data)
-  //       for (let i = 0; i < res.data.length; i++) {
-  //         shouyequanju.push(res.data.data[i]);
-  //       }
-  //       that.setData({
-  //         shouyequanju: shouyequanju,
-  //       })
-  //       //判断是否加载完毕数据
-  //       if (res.data.LoadUp){
-  //           that.setData({
-  //             isLoad: true,//表示附近获取完了
-  //         })
-  //       }
-  //     }
-  //   })
-  // },
   /**
  * 
  * 查询发布的代驾信息
  * 获取位置失败时执行的全局查找
  */
   chaxundaijiaquan: function (fujin) {
-      //查询数据库   起始位置
-      let that = this;
-      wx.request({
-        url: app.globalData.url + 'orderAction_pagingQuery', //分页查询
-        data: {
-          ifFinish: false, //表示是否完成
-          ifAccept: false, //表示是否被接单
-          receivedBy: '', //表示此订单被谁接单,为空没有被指定
-          currentPage: target_quan, //当前页
-          pageSize: 10,//每页大小
-           //起始位置经纬度附近最小值与起始位置经纬度附近最大值 相等表示全局
-           initialPositionLatitudeMin: that.data.latitude, //起始位置纬度附近最小值
-           initialPositionLatitudeMax: that.data.latitude, //起始位置纬度附近最大值
-           initialPositionLongitudeMin: that.data.longitude,//起始位置经度附近最小值
-           initialPositionLongitudeMax: that.data.longitude,//起始位置经度附近最大值
-        },          // method:'POST',
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success(res) {
-          target_quan += 1; //当前页，表示一个页面，+1表示到第二个页面
-         console.log(res.data)
-          for (let i = 0; i < res.data.length; i++) {
-            shouyequanju.push(res.data.data[i]);
-          }
-          that.setData({
-            shouyequanju: shouyequanju,
-          })
-          //判断是否加载完毕数据
-          if (res.data.LoadUp){
-              that.setData({
-                isLoad: true,//表示附近获取完了
-            })
-          }
+    //查询数据库   起始位置
+    let that = this;
+    wx.request({
+      url: app.globalData.url + 'orderAction_pagingQuery', //分页查询
+      data: {
+        ifFinish: false, //表示是否完成
+        ifAccept: false, //表示是否被接单
+        receivedBy: '', //表示此订单被谁接单,为空没有被指定
+        currentPage: target_quan, //当前页
+        pageSize: 10,//每页大小
+        //起始位置经纬度附近最小值与起始位置经纬度附近最大值 相等表示全局,应为好的附近失败
+        initialPositionLatitudeMin: 0, //起始位置纬度附近最小值
+        initialPositionLatitudeMax: 0, //起始位置纬度附近最大值
+        initialPositionLongitudeMin: 0,//起始位置经度附近最小值
+        initialPositionLongitudeMax: 0,//起始位置经度附近最大值
+      },          // method:'POST',
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        target_quan += 1; //当前页，表示一个页面，+1表示到第二个页面
+        console.log(res.data)
+        //获得附近信息，保存大数组shouyefujin
+        for (let i = 0; i < res.data.dataLength; i++) {
+          shouyefujin.push(res.data.data[i]);
         }
-      })
+        that.setData({
+          shouyefujin: shouyefujin,
+        })
+        //判断是否加载完毕数据
+        if (res.data.LoadUp) {
+          that.setData({
+            isLoad: true,//表示附近获取完了
+          })
+        }
+      }
+    })
   },
 
   /**
@@ -396,7 +356,7 @@ Page({
                   avatarUrl: res.userInfo.avatarUrl,
                   userInfo: res.userInfo
                 })
-              let   thiss = this;
+                let thiss = this;
                 wx.request({
                   url: app.globalData.url + 'userAction_findOne', //查询一条数据
                   data: {
@@ -423,7 +383,7 @@ Page({
     //下拉刷新，相当于重新加载页面，全部数据恢复默认
     fujinmeiyou = false;
     target_quan_wei = 1;
-    target_quan =1; target_ = 1;//用于分页查询起始位置,分别是 获得位置成功全局，获取位置失败全局，位置
+    target_quan = 1; target_ = 1;//用于分页查询起始位置,分别是 获得位置成功全局，获取位置失败全局，位置
     shouyefujin = []; shouyequanju = [];
     /**
  * 把开始获得的数据清空，防止数据重复。
@@ -441,9 +401,9 @@ Page({
  */
     this.weizhi('');
   },
-      /**
-   * 页面上拉触底事件的处理函数
-   */
+  /**
+* 页面上拉触底事件的处理函数
+*/
   onReachBottom: function () {
     //上拉刷新，表示前面已经加载过了，设置为true
     fujinmeiyou = true;
@@ -509,30 +469,44 @@ Page({
     //为空则不进行操作
     if (sousuo != '') {
       //查询数据库   起始位置
-      db.collection("daijiadingdan").where({
-        qishiweizhi: {
-          $regex: '.*' + sousuo,
-          $options: '1'
+      //查询数据库   起始位置
+      let that = this;
+      wx.request({
+        url: app.globalData.url + 'orderAction_fuzzyQuery', //分页查询
+        data: {
+          ifFinish: false, //表示是否完成
+          ifAccept: false, //表示是否被接单
+          receivedBy: '', //表示此订单被谁接单,为空没有被指定
+          initialPosition: sousuo, //起始位置
         },
-      }).get().then(res => {
-        // res.data 包含该记录的数据
-        console.log(res.data)
-        this.setData({
-          qishiweizhi: res.data,
-        })
-      })
-      //查询数据库   终点位置
-      db.collection("daijiadingdan").where({
-        zhongdianweizhi: {
-          $regex: '.*' + sousuo,
-          $options: '1'
+        method: 'POST',
+        header: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        success(res) {
+          that.setData({
+            qishiweizhi: res.data,
+          })
         }
-      }).get().then(res => {
-        // res.data 包含该记录的数据
-        console.log(res.data)
-        this.setData({
-          zhongdianweizhi: res.data,
-        })
+      })
+      //终点位置模糊查询
+      wx.request({
+        url: app.globalData.url + 'orderAction_fuzzyQuery', //分页查询
+        data: {
+          ifFinish: false, //表示是否完成
+          ifAccept: false, //表示是否被接单
+          receivedBy: '', //表示此订单被谁接单,为空没有被指定
+          finalPosition: sousuo,//终点位置
+        },
+        method: 'POST',
+        header: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        success(res) {
+          that.setData({
+            zhongdianweizhi: res.data,
+          })
+        }
       })
     } else {
       //隐藏清空缓存
