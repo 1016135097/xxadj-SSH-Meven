@@ -8,7 +8,7 @@
                     <view class="content flex-sub">
                         <view>{{information.username}}</view>
                         <view class="text-gray text-sm flex justify-between">
-                            {{information.chuangjianshijian[0]}} {{information.chuangjianshijian[1]}}
+                            {{information.creationTime}}
                         </view>
                     </view>
                 </view>
@@ -17,14 +17,14 @@
             <view class="grid col-1">
                 <view class="bg-yellow  radius  light">
                     <view class="padding text-center">
-                        <view catch:tap="dakaiqishiweizhiditu" data-longitude=" {{information.qishiweizhilongitude}}" data-latitude=" {{information.qishiweizhilatitude}}">
-                            <view>{{information.qishiweizhi}}</view>
+                        <view catch:tap="dakaiqishiweizhiditu" data-longitude=" {{information.initialPositionLongitude}}" data-latitude=" {{information.initialPositionLatitude}}">
+                            <view>{{information.initialPosition}}</view>
                             <view class="text-xs padding-xs solid-bottom">
                                 <text class="text-gray">（点击查看地图）</text>
                             </view>
                         </view>
                         <view class="solid-top padding-xs">
-                            {{information.zhongdianweizhi==''?"...":information.zhongdianweizhi}}
+                            {{information.finalPosition==''?"...":information.finalPosition}}
                         </view>
                         <view catch:tap="dial" data-phone="{{information.phone}}">
                             <view>{{information.phone}}</view>
@@ -34,24 +34,24 @@
                         </view>
                         <view class="padding-xs">{{information.time}}</view>
                         <!-- 日常代驾 -->
-                        <view class="padding-xs" wx:if="{{information.baochefuwu=='undefined'}}">
-                            {{information.tianjiadaijia}}
+                        <view class="padding-xs" wx:if="{{information.charterCarService=='undefined'}}">
+                            {{information.addGenerationOfDriving}}
                         </view>
                         <!-- 包时代驾 -->
-                        <view class="padding-xs" wx:if="{{information.baoshidaijia!='undefined'&&information.baochefuwu=='undefined'}}">
-                            {{information.baoshidaijia}}
+                        <view class="padding-xs" wx:if="{{information.packageTimeDriving!='undefined'&&information.charterCarService=='undefined'}}">
+                            {{information.packageTimeDriving}}
                         </view>
                         <!-- 包车代驾 -->
-                        <view class="padding-xs" wx:if="{{information.baoshidaijia=='undefined'&&information.baochefuwu!='undefined'}}">
-                            {{information.baochefuwu}}
+                        <view class="padding-xs" wx:if="{{information.packageTimeDriving=='undefined'&&information.charterCarService!='undefined'}}">
+                            {{information.charterCarService}}
                         </view>
                         <view class="flex flex-direction" wx:if="{{information.ifFinish==false}}" >
-                         <bottom class="cu-btn line-yellow lg margin-tb-sm shadow"  wx:if="{{information.isaccept==false}}"
-                         catch:tap="informationJieDan" data-informationid="{{information._id}}">接单</bottom>
+                         <bottom class="cu-btn line-yellow lg margin-tb-sm shadow"  wx:if="{{information.ifAccept==false}}"
+                         catch:tap="informationJieDan" data-informationid="{{information.id}}">接单</bottom>
                          <bottom class="cu-btn block line-red margin-tb-sm lg" 
                         wx:if="{{pages=='news'}}" catch:tap="fangqicidan">放弃此单</bottom>
                          <bottom class="cu-btn block line-blue margin-tb-sm lg" 
-                         wx:if="{{information.isaccept==true}}">已接单</bottom>
+                         wx:if="{{information.ifAccept==true}}">已接单</bottom>
                          </view>
                          <view class="flex flex-direction" wx:if="{{information.ifFinish==true}}" >
                          <bottom class="cu-btn block line-blue margin-tb-sm lg" >已完成</bottom>

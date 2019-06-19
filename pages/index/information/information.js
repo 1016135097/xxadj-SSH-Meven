@@ -18,10 +18,10 @@ Page({
    * 
    * 此为v1.0.0版本不足之处，后期在2.0版本上改正
    */
-  fangqicidan:function(e){
+  fangqicidan: function (e) {
     let that = this;
     //给出提示，是否放弃此单
-     wx.showModal({
+    wx.showModal({
       title: '放弃此单',
       content: '放弃此单后不可恢复，是否放弃？',
       confirmText: '放弃',
@@ -40,7 +40,7 @@ Page({
               jiedanren: that.data.information._openid,  //接单人   ,这里表示接收信息者
               newsName: that.data.userInfo.nickName + '放弃接单了', //信息标题
               newsNameP: that.data.userInfo.avatarUrl,//头像
-              newsContent: '您指定的接单人：' + that.data.userInfo.nickName+' 放弃接单了',//信息内容,  ，该订单自动自动完成，出于安全考虑，建议您指定的代驾司机一个一个指定！
+              newsContent: '您指定的接单人：' + that.data.userInfo.nickName + ' 放弃接单了',//信息内容,  ，该订单自动自动完成，出于安全考虑，建议您指定的代驾司机一个一个指定！
               chuangjianshijian: t.getFullYear() + '/' + (t.getMonth() + 1) +
                 '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//创建时间
               ifdakai: false,//标记是否打开,每一个用户有不同的标签
@@ -52,9 +52,9 @@ Page({
               name: 'xiaoxicaozuo_gengxin',
               data: {
                 _id: informationid,
-                and:'fangqijiedan', //表示已读
+                and: 'fangqijiedan', //表示已读
               },
-              complete: res => { 
+              complete: res => {
                 console.log('---更新成功')
                 wx.navigateBack();
               }
@@ -77,9 +77,9 @@ Page({
   onLoad: function (options) {
     console.log("-----information 页面----------onLoad（）---------");
     informationid = options.informationid;
-    pages =options.pages;
+    pages = options.pages;
     this.setData({
-      pages:pages, 
+      pages: pages,
     })
 
   },
@@ -196,7 +196,7 @@ Page({
 
 
   },
-  
+
   /**
    * 查询详细信息
    *  */
@@ -207,23 +207,41 @@ Page({
     let information;
     //查询数据库   起始位置
     const _ = db.command;
-    console.log("-----getinformation---------执行----------");
-    db.collection("daijiadingdan").doc(informationid).get().then(res => {
-      console.log("--------------详细信息获取完成---------");
-      information = res.data;
-      db.collection("user").where({
-        _id: app.globalDataOpenid.openid_,
-      }).get().then(ress => {
+    //终点位置模糊查询
+    wx.request({
+      url: app.globalData.url + 'orderAction_findOne',
+      data: {
+        id: informationid,
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success(res) {
         //关闭加载...
         wx.hideLoading()
-        jiedanyonghuxinxi = ress.data;
         that.setData({
-          jiedanyonghuxinxi: jiedanyonghuxinxi[0],
-          information: information,
+          information: res.data.OrderData,
         })
-      })
+      }
+    })
+    // console.log("-----getinformation---------执行----------");
+    // db.collection("daijiadingdan").doc(informationid).get().then(res => {
+    //   console.log("--------------详细信息获取完成---------");
+    //   information = res.data;
+    //   db.collection("user").where({
+    //     _id: app.globalDataOpenid.openid_,
+    //   }).get().then(ress => {
+    //     //关闭加载...
+    //     wx.hideLoading()
+    //     jiedanyonghuxinxi = ress.data;
+    //     that.setData({
+    //       jiedanyonghuxinxi: jiedanyonghuxinxi[0],
+    //       information: information,
+    //     })
+    //   })
 
-    });
+    // });
 
   },
 
