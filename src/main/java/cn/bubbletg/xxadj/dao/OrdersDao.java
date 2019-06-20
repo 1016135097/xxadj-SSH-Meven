@@ -2,6 +2,8 @@ package cn.bubbletg.xxadj.dao;
 
 import cn.bubbletg.xxadj.entity.Orders;
 
+import java.util.List;
+
 /**
  * @author ：BubbleTg
  * @date ：Created in 2019/6/13 17:47
@@ -19,4 +21,13 @@ public interface OrdersDao extends BaseDao<Orders> {
      * @return 总记录数据
      */
     int findCount();
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:45
+     *
+     * @param orders 条件查询，模型驱动获得数据封装在Order对象里面
+     * @return Order对象集合
+     */
+    List<Orders> conditionQuery(Orders orders);
 }

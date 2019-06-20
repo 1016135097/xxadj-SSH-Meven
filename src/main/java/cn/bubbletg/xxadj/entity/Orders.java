@@ -82,7 +82,7 @@ public class Orders {
      */
     private boolean ifFinish;
     /**
-     * 表示是否被接单
+     * 表示是否被接单,没用
      */
     private boolean ifAccept;
     /**

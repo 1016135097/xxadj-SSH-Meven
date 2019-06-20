@@ -134,8 +134,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
         Logger.getLogger(OrderDaoImpl.class).info("-------findPageNearbyFull()方法执行----");
         List<Order> orders = this.getSessionFactory().getCurrentSession()
                 .createQuery("from Order where ifAccept=? and ifFinish =? and initialPositionLatitude <= ?" +
-                        " and initialPositionLatitude >= ? and initialPositionLongitude <= ? " +
-                        "and initialPositionLongitude >= ? and receivedBy = ?")
+                        " or initialPositionLatitude >= ? and initialPositionLongitude <= ? " +
+                        "or initialPositionLongitude >= ? and receivedBy = ?")
                 //设置问号参数
                 .setParameter(0, ifAccept)
                 .setParameter(1, ifFinish)

@@ -1,9 +1,12 @@
 package cn.bubbletg.xxadj.service;
 
 import cn.bubbletg.xxadj.dao.OrdersDao;
+import cn.bubbletg.xxadj.entity.Order;
 import cn.bubbletg.xxadj.entity.Orders;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author ：BubbleTg
@@ -92,6 +95,19 @@ public class OrdersService {
      */
     public int findCount() {
         return ordersDao.findCount();
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:42
+     *
+     * @param order 条件查询，模型驱动获得数据封装在Order对象里面
+     * @return Order对象集合
+     */
+    public List<Orders> conditionQuery(Orders orders) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----conditionQuery()方法执行----");
+        return ordersDao.conditionQuery(orders);
     }
 }
 

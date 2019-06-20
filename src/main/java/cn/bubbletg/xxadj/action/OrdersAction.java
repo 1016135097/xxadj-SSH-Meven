@@ -1,5 +1,6 @@
 package cn.bubbletg.xxadj.action;
 
+import cn.bubbletg.xxadj.entity.Order;
 import cn.bubbletg.xxadj.entity.Orders;
 import cn.bubbletg.xxadj.service.OrdersService;
 import com.alibaba.fastjson.JSON;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -163,5 +165,29 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
         //传递给前端
         ServletActionContext.getResponse().getWriter().write(jsonOrder);
 
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:31
+     */
+    public void conditionQuery () throws IOException {
+        //显示日志信息
+        Logger.getLogger(OrdersAction.class).info("--订单操作--------conditionQuery()方法执行----");
+
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        //条件查询
+        List<Orders> list = ordersService.conditionQuery(orders);
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        hashMapOrders.put("data", list);
+        hashMapOrders.put("dataLength", list.size());
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
     }
 }

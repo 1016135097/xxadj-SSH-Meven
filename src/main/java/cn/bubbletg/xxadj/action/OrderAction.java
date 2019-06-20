@@ -214,6 +214,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
             //更新ifFinish
             orders.setIfFinish(order.isIfFinish());
         }else if(what.equals("ifAccept")){
+            orders.setDaijiajiedan_id(order.getDaijiajiedan_id());
             orders.setIfAccept(order.isIfAccept());
         }
         //更新
