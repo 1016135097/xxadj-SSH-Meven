@@ -1,5 +1,6 @@
 //获得数据库引用
 const db = wx.cloud.database();
+const app = getApp();
 // 订单页面
 Page({
 
@@ -34,25 +35,33 @@ Page({
   },
   //获得数据
   daijiadingdan: function (ifFinish) {
-    //
-    db.collection('daijiadingdan').where({
-      _openid: this.data.openid, //openid 表示当前用户
-      ifFinish: ifFinish  //订单是否完成 
-    }).get().then(res => {
-      // res.data 包含该记录的数据
-      if (ifFinish) {
-        //完成
-        this.setData({
-          daijiadingdanFinish: res.data,
-        })
-      } else {
-        //未完成
-        this.setData({
-          daijiadingdanNoFinish: res.data,
-        })
+    let that = this;
+    //终点位置模糊查询
+    wx.request({
+      url: app.globalData.url + 'orderAction_conditionQuery', //条件查询全部
+      data: {
+        openid: that.data.openid,
+        ifFinish: ifFinish, //表示是否完成
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success(res) {
+        if (ifFinish) {
+          //完成
+          that.setData({
+            daijiadingdanFinish: res.data.data,
+          })
+        } else {
+          //未完成
+          that.setData({
+            daijiadingdanNoFinish: res.data.data,
+          })
+        }
+        //得到数据，关闭加载
+        wx.hideLoading();
       }
-      //得到数据，关闭加载
-      wx.hideLoading();
     })
   },
 
@@ -71,17 +80,20 @@ Page({
         } else {
           //执行删除操作
           console.log("删除根据id删除", e.currentTarget.dataset.id);
-          db.collection('daijiadingdan').doc(e.currentTarget.dataset.id).remove({
+          wx.request({
+            url: app.globalData.url + 'orderAction_delete',
+            data: {
+              id: e.currentTarget.dataset.id,
+            },
+            method: 'POST',
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
             success(res) {
-              wx.showToast({
-                title: '删除成功！',
-                icon: 'success',
-                duration: 2000
-              })
-              setTimeout(res=>{
-                //返回上一层页面
+              if (res.data.delete_data) {
                 getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
-                },2000)
+              }
+
             }
           })
         }

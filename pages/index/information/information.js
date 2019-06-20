@@ -153,11 +153,12 @@ Page({
                 if (res.data.add_data) {
                   //修改订单表，表示被接单
                   wx.request({
-                    url: app.globalData.url + 'orderAction_updateAccept', //更新
+                    url: app.globalData.url + 'orderAction_update', //更新
                     data: {
                       id: information.id, //要修改的表id
                       daijiajiedan_id: app.globalDataOpenid.user_id, //接单表的id
                       ifAccept:true,  //表示被接单
+                      what:'ifAccept',
                     },
                     method: 'POST',
                     header: {

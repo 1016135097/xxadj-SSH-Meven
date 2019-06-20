@@ -7,32 +7,54 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userid:'', //当前订单用户id
-    xuanzhedeyonghu:'点击上面用户信息进行评论',  //提示
+    userid: '', //当前订单用户id
+    xuanzhedeyonghu: '点击上面用户信息进行评论',  //提示
   },
   //获得数据
   daijiadingdan: function () {
-    db.collection('daijiadingdan').doc(this.data.detailId).get().then(res => {
-      // res.data 包含该记录的数据
-      this.setData({
-        daijiadingdanDetail: res.data,
-      })
-      this.tianjiasiji([],0);
-      this.jiedanzhe();
-      //得到数据，关闭加载
-      wx.hideLoading();
+    let that = this;
+    //终点位置模糊查询
+    wx.request({
+      url: app.globalData.url + 'orderAction_findOne',//根据id查询信息
+      data: {
+        id: that.data.detailId,
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success(res) {
+
+        //完成
+        that.setData({
+          daijiadingdanDetail: res.data.OrderData,
+        })
+        //得到数据，关闭加载
+        wx.hideLoading();
+      }
     })
+
+    // db.collection('daijiadingdan').doc(this.data.detailId).get().then(res => {
+    //   // res.data 包含该记录的数据
+    //   this.setData({
+    //     daijiadingdanDetail: res.data,
+    //   })
+    //   this.tianjiasiji([],0);
+    //   this.jiedanzhe();
+    //   //得到数据，关闭加载
+    //   wx.hideLoading();
+    // })
   },
 
   /**
    * 获取接单者信息
    */
-  jiedanzhe:function(){
+  jiedanzhe: function () {
     // 查询数据库
     db.collection('user').doc(this.data.daijiadingdanDetail.jiedanren).get().then(res => {
       this.setData({
-        jiedanzhexinxi:res.data,
-        jiedanren_length:1,
+        jiedanzhexinxi: res.data,
+        jiedanren_length: 1,
       })
     });
   },
@@ -40,11 +62,11 @@ Page({
   /**
    * 点击查看详细接单人
    */
-  jiedanrenxiangxi:function(){
+  jiedanrenxiangxi: function () {
     this.jiedanzhe();
     this.setData({
-      sijitanchuang:true,
-      jiedanrenxiangxi_an:true,
+      sijitanchuang: true,
+      jiedanrenxiangxi_an: true,
     })
   },
 
@@ -53,36 +75,36 @@ Page({
    * tianjiasiji_  暂时保存数据数组，
    * i 递归调用自己下标，作用，获得xuandingren里数据，判断何时停止调用自己
    */
-  tianjiasiji(tianjiasiji_,i){
-    db.collection('user').doc(this.data.daijiadingdanDetail.zhidingsij[i]).get().then(res=>{
+  tianjiasiji(tianjiasiji_, i) {
+    db.collection('user').doc(this.data.daijiadingdanDetail.zhidingsij[i]).get().then(res => {
       tianjiasiji_.push(res.data)
       //i = (this.data.xuandingren).length 表示要获取的用户卡片信息查询完成。
-      if(i<(this.data.daijiadingdanDetail.zhidingsij).length){
-        console.log("----------调用自己---------i="+i)
+      if (i < (this.data.daijiadingdanDetail.zhidingsij).length) {
+        console.log("----------调用自己---------i=" + i)
         i++;
-        this.tianjiasiji(tianjiasiji_,i); //调用自己
+        this.tianjiasiji(tianjiasiji_, i); //调用自己
       }
     })
     this.setData({
-      tianjiasiji:tianjiasiji_,
-      tianjiasiji_length:tianjiasiji_.length,
+      tianjiasiji: tianjiasiji_,
+      tianjiasiji_length: tianjiasiji_.length,
     })
   },
 
   /**
    * 评论司机,拉起操作
    */
-  pinglunTap:function(){
+  pinglunTap: function () {
     //先判断是否完成
-    if(this.data.daijiadingdanDetail.ifFinish!=false){
+    if (this.data.daijiadingdanDetail.ifFinish != false) {
       this.setData({
-        sijitanchuang:true,
-        pinglunTapFaView:true,
+        sijitanchuang: true,
+        pinglunTapFaView: true,
       })
-    }else{
+    } else {
       wx.showToast({
         title: '请先完成订单',
-        icon:'none',
+        icon: 'none',
         duration: 2000
       })
     }
@@ -91,111 +113,111 @@ Page({
    * 
    * 选择用户
    */
-  xuanzeyonghu:function(e){
+  xuanzeyonghu: function (e) {
     console.log(e.currentTarget.dataset.item);
     let item = e.currentTarget.dataset.item;
     this.setData({
-      xuanzhedeyonghu:'你选择的用户是：'+item.username,
-      userid:item._id,
+      xuanzhedeyonghu: '你选择的用户是：' + item.username,
+      userid: item._id,
     })
   },
   /**
    * 评论司机，提交
    */
-  pinglunTapFa:function(e){
+  pinglunTapFa: function (e) {
     let userid = this.data.userid; //被评价的用户id;
     //先判断用户是否选择司机
-    if(userid == ''){
+    if (userid == '') {
       wx.showToast({
         title: "请选择评论司机",
         icon: "none",
         duration: 2000
-      });     
+      });
       return;
     }
     //关闭
     this.chankaidaijguanbi();
     wx.showLoading({
-      title:"评论中",
+      title: "评论中",
     })
     let currentDate = new Date();
-    let pinglun_content  =  e.detail.value.pinglun_content;
+    let pinglun_content = e.detail.value.pinglun_content;
     //插入数据库，pinglun_user与用户表相连接，存储用户卡片被评论信息
     db.collection("pinglun_user").add({
-      data:{
-            //id 自动生成
-          user_id: userid, //用户卡片id
-          content:pinglun_content, //评论内容
-          pinglunDate: currentDate.getFullYear()+'/'+(currentDate.getMonth() + 1)+'/'+currentDate.getDate()+' '+currentDate.getHours() + ':' + currentDate.getMinutes(),//评论时间
-          pinglunzhe:app.globalDataOpenid.openid_,//评论着 openid
-          pinglunzheC:this.data.userInfo,
+      data: {
+        //id 自动生成
+        user_id: userid, //用户卡片id
+        content: pinglun_content, //评论内容
+        pinglunDate: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes(),//评论时间
+        pinglunzhe: app.globalDataOpenid.openid_,//评论着 openid
+        pinglunzheC: this.data.userInfo,
 
       }
     })
-    .then(add_res => {
-      //这里进行的是云操作
+      .then(add_res => {
+        //这里进行的是云操作
         //查询
-      db.collection('user').doc(userid).get().then(getuserres => {
+        db.collection('user').doc(userid).get().then(getuserres => {
 
-        wx.cloud.callFunction({
-          name: 'pingluncaozuo_gengxin',
-          data: {
-            userid:userid,
-            pinglunshu:getuserres.data.pinglunshu, 
-          },
-          complete: res => {
-            wx.showToast({
-              title: "评论成功",
-              icon: "none",
-              duration: 2000
-            });
-          }
+          wx.cloud.callFunction({
+            name: 'pingluncaozuo_gengxin',
+            data: {
+              userid: userid,
+              pinglunshu: getuserres.data.pinglunshu,
+            },
+            complete: res => {
+              wx.showToast({
+                title: "评论成功",
+                icon: "none",
+                duration: 2000
+              });
+            }
+          });
+          //修改用户表 更新数据库，更新被评价的用户被评价的数量
+          //  db.collection('user').doc(userid).update({
+          //    data:{
+          //     pinglunshu: (getuserres.data.pinglunshu+1), //原来评论数加1
+          //    }
+          //  }).then(updateuserres => {
+          //     //关闭加载...
+          //   wx.hideLoading();
+          //   console.log("评论成功", updateuserres)
+          //   wx.showToast({
+          //     title: "评论成功",
+          //     icon: "none",
+          //     duration: 2000
+          //   });     
+          //  })
+        })
+      })
+      .catch(error => {
+        //关闭加载...
+        wx.hideLoading();
+        console.log("评论失败", res)
+        wx.showToast({
+          title: "评论失败！",
+          icon: "none",
+          duration: 2000
         });
-       //修改用户表 更新数据库，更新被评价的用户被评价的数量
-      //  db.collection('user').doc(userid).update({
-      //    data:{
-      //     pinglunshu: (getuserres.data.pinglunshu+1), //原来评论数加1
-      //    }
-      //  }).then(updateuserres => {
-      //     //关闭加载...
-      //   wx.hideLoading();
-      //   console.log("评论成功", updateuserres)
-      //   wx.showToast({
-      //     title: "评论成功",
-      //     icon: "none",
-      //     duration: 2000
-      //   });     
-      //  })
-      }) 
-    })
-    .catch(error => {
-      //关闭加载...
-      wx.hideLoading();
-      console.log("评论失败", res)
-      wx.showToast({
-        title: "评论失败！",
-        icon: "none",
-        duration: 2000
-      });
-    })
+      })
     // 更新数据库，更新被评价的用户被评价的数量
 
   },
   //点击查看详细代驾司机
-  chankaidaij:function(){
+  chankaidaij: function () {
     this.setData({
-      sijitanchuang:true,
+      sijitanchuang: true,
     })
   },
   //关闭点击查看详细代驾司机
-  chankaidaijguanbi:function(){
+  chankaidaijguanbi: function () {
     this.setData({
-      pinglunTapFaView:false,
-      sijitanchuang:false,
-      jiedanrenxiangxi_an:false,
-      userid:'', //当前订单用户id
-    xuanzhedeyonghu:'点击上面用户信息进行评论',  //提示
-    }) 
+      pinglunTapFaView: false,
+      sijitanchuang: false,
+      jiedanrenxiangxi_an: false,
+      userid: '', //当前订单用户id
+      xuanzhedeyonghu: '点击上面用户信息进行评论',  //提示
+    })
   }
   ,
   /**
@@ -211,7 +233,7 @@ Page({
     this.setData({
       detailId: options.detailId
     })
-    
+
   },
 
   /**
@@ -252,14 +274,21 @@ Page({
         if (res.confirm == false) {
           return;
         } else {
-          db.collection('daijiadingdan').doc(that.data.detailId).update({
+          wx.request({
+            url: app.globalData.url + 'orderAction_update', //更新
             data: {
-              ifFinish: true
+              id: that.data.detailId, //要修改的表id
+              ifFinish: true,
+              what:'ifFinish',
+            },
+            method: 'POST',
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
             },
             success(res) {
               getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
             }
-          })
+          }) 
         }
       }
     })
@@ -284,17 +313,21 @@ Page({
         if (res.confirm == false) {
           return;
         } else {
-          db.collection('daijiadingdan').doc(that.data.detailId).remove({
+          wx.request({
+            url: app.globalData.url + 'orderAction_delete',
+            data: {
+              id: that.data.detailId,
+            },
+            method: 'POST',
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
             success(res) {
-              wx.showToast({
-                title: '删除成功！',
-                icon: 'success',
-                duration: 1000
-              })
-              setTimeout(res=>{
+              if (res.data.delete_data) {
                 //返回上一层页面
                 wx.navigateBack();
-                },1000)
+              }
+
             }
           })
         }
@@ -305,7 +338,7 @@ Page({
   /**
    * 订单修改
    */
-  orderFormUpdate:function(e){
+  orderFormUpdate: function (e) {
     //跳转编辑信息页面
     wx.navigateTo({
       url: '../orderFormUpdate/orderFormUpdate?detailId=' + e.currentTarget.dataset.id,
