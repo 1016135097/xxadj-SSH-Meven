@@ -193,22 +193,32 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 更新订单表，接单更新
      * create time: 2019/6/14 15:20
      */
-    public void updateAccept() throws IOException {
+    public void update() throws IOException {
+
+        //显示日志信息
+        Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
+        //获得请求域对象
+        HttpServletRequest request = ServletActionContext.getRequest();
+        //获得跟下标签，用来判断更新的那个字段
+        String  what = request.getParameter("what");
 
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //像数据库里面插入数据
         HashMap<String, Object> hashMapOrders = new HashMap<>();
-
-        //显示日志信息
-        Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
         //先查询要更新的订单表
         Order orders = orderService.findOne(order.getId());
-        orders.setIfAccept(order.isIfAccept()); //更新，表示接单
+        //判断更新那个字段
+        if(what.equals("ifFinish")){
+            //更新ifFinish
+            orders.setIfFinish(order.isIfFinish());
+        }else if(what.equals("ifAccept")){
+            orders.setIfAccept(order.isIfAccept());
+        }
         //更新
         orderService.update(orders);
-        hashMapOrders.put("updateAccept_data", true);
+        hashMapOrders.put("update_data", true);
         //转换为json
         String json = JSON.toJSONString(hashMapOrders);
         //传递给前端
@@ -217,12 +227,13 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
     }
 
 
+
     /**
      * create by: BubbleTg
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */
-    public String delete() throws IOException {
+    public void delete() throws IOException {
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
@@ -237,7 +248,31 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         String json = JSON.toJSONString(hashMapOrders);
         //传递给前端
         ServletActionContext.getResponse().getWriter().write(json);
-        return SUCCESS;
+
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:31
+     */
+    public void conditionQuery () throws IOException {
+        //显示日志信息
+        Logger.getLogger(OrderAction.class).info("--订单操作--------conditionQuery()方法执行----");
+
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        //条件查询
+        List<Order>  list = orderService.conditionQuery(order);
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        hashMapOrders.put("data", list);
+        hashMapOrders.put("dataLength", list.size());
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
     }
 
     /**
@@ -250,6 +285,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         Logger.getLogger(OrderAction.class).info("--订单操作--------findAll()方法执行----");
         //订单查询操作，查询全部
         orderService.findAll();
+
     }
 
     /**

@@ -25,6 +25,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     @Override
     public int findCount() {
         Logger.getLogger(OrderDaoImpl.class).info("-------findCount()方法执行----");
+
         List<Order> list = (List<Order>) this.getHibernateTemplate().find("select count(*) from Order");
         // 从list中得到
         if (list != null && list.size() != 0) {
@@ -155,19 +156,19 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
      * description: 终点位置模糊查询
      * create time: 2019/6/19 14:38
      *
-     * @param ifAccept      表示是否被接单
-     * @param ifFinish      表示是否完成
-     * @param receivedBy    表示被指定的接单人
+     * @param ifAccept        表示是否被接单
+     * @param ifFinish        表示是否完成
+     * @param receivedBy      表示被指定的接单人
      * @param initialPosition 表示终点位置模糊查询输入的值
      * @return: List<Order> 返回的订单集合
      */
     @Override
     public List<Order> fuzzyQueryInitialPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String initialPosition) {
-        Logger.getLogger(OrderDaoImpl.class).info("-------fuzzyQueryInitialPosition()方法执行----initialPosition = "+initialPosition);
+        Logger.getLogger(OrderDaoImpl.class).info("-------fuzzyQueryInitialPosition()方法执行----initialPosition = " + initialPosition);
         List<Order> orders = this.getSessionFactory().getCurrentSession()
                 .createQuery("from Order where initialPosition like ? and ifAccept=? and ifFinish =? and receivedBy = ? ")
                 //设置问号参数
-                .setParameter(0, "%"+initialPosition+"%")
+                .setParameter(0, "%" + initialPosition + "%")
                 .setParameter(1, ifAccept)
                 .setParameter(2, ifFinish)
                 .setParameter(3, receivedBy)
@@ -190,13 +191,34 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     @Override
     public List<Order> fuzzyQueryFinalPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String finalPosition) {
         Logger.getLogger(OrderDaoImpl.class).info("-------fuzzyQueryFinalPosition()方法执行----");
+        //查询，hibernate 的HQL查询
         List<Order> orders = this.getSessionFactory().getCurrentSession()
                 .createQuery("from Order where finalPosition like ?  and ifAccept=? and ifFinish =? and receivedBy = ?")
                 //设置问号参数
-                .setParameter(0, "%"+finalPosition+"%")
+                .setParameter(0, "%" + finalPosition + "%")
                 .setParameter(1, ifAccept)
                 .setParameter(2, ifFinish)
                 .setParameter(3, receivedBy)
+                .list();
+        return orders;
+    }
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:45
+     *
+     * @param order 条件查询，模型驱动获得数据封装在Order对象里面
+     * @return Order对象集合
+     */
+    @Override
+    public List<Order> conditionQuery(Order order) {
+
+        List<Order> orders = this.getSessionFactory().getCurrentSession()
+                .createQuery("from Order where  ifFinish =? and openid = ?")
+                //设置问号参数
+                .setParameter(0, order.isIfFinish())
+                .setParameter(1, order.getOpenid())
                 .list();
         return orders;
     }

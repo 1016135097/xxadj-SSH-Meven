@@ -219,6 +219,19 @@ public class OrderService {
         Logger.getLogger(OrderService.class).info("--订单操作-----fuzzyQueryFinalPosition()方法执行----");
         return orderDao.fuzzyQueryFinalPosition(receivedBy, ifAccept, ifFinish, finalPosition);
     }
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:42
+     *
+     * @param order 条件查询，模型驱动获得数据封装在Order对象里面
+     * @return Order对象集合
+     */
+    public List<Order> conditionQuery(Order order) {
+        Logger.getLogger(OrderService.class).info("--订单操作-----conditionQuery()方法执行----");
+        return orderDao.conditionQuery(order);
+    }
 }
 
 

@@ -98,4 +98,14 @@ public interface OrderDao extends BaseDao<Order> {
      * @return: List<Order> 返回的订单集合
      */
     List<Order> fuzzyQueryFinalPosition(String receivedBy, boolean ifAccept, boolean ifFinish, String finalPosition);
+
+    /**
+     * create by: BubbleTg
+     * description: 条件查询
+     * create time: 2019/6/20 13:45
+     *
+     * @param order 条件查询，模型驱动获得数据封装在Order对象里面
+     * @return Order对象集合
+     */
+    List<Order> conditionQuery(Order order);
 }
