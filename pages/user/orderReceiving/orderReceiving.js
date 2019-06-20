@@ -1,5 +1,6 @@
 //获得数据库引用
 const db = wx.cloud.database();
+const app = getApp();
 // 订单页面
 Page({
 
@@ -38,27 +39,34 @@ Page({
    * 因为是接单管理，所以查询条件接单人员是自己的数据
    *  */
   daijiadingdan: function (ifFinish) {
-    console.log(this.data.openid,"-----------------")
-    //
-    db.collection('daijiajiedan').where({
-      jiedanren: this.data.openid, //openid 表示当前用户
-      ifFinish: ifFinish  //订单是否完成 
-    }).get().then(res => {
-      // res.data 包含该记录的数据
-      if (ifFinish) {
-        //完成
-        this.setData({
-          daijiadingdanFinish: res.data,
-        })
-      } else {
-        //未完成
-        this.setData({
-          daijiadingdanNoFinish: res.data,
-        })
+    let that = this;
+    wx.request({
+      url: app.globalData.url + 'ordersAction_conditionQuery', 
+      data: {
+        openid: that.data.openid,
+        ifFinish: ifFinish, //表示是否完成
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success(res) {
+        if (ifFinish) {
+          //完成
+          that.setData({
+            daijiadingdanFinish: res.data.data,
+          })
+        } else {
+          //未完成
+          that.setData({
+            daijiadingdanNoFinish: res.data.data,
+          })
+        }
+        //得到数据，关闭加载
+        wx.hideLoading();
       }
-      //得到数据，关闭加载
-      wx.hideLoading();
     })
+
   },
 
   //删除根据id删除

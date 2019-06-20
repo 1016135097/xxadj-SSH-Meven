@@ -164,9 +164,10 @@ Page({
                     header: {
                       'content-type': 'application/x-www-form-urlencoded'
                     },
-                    success(res) {
-                    
-                      if (res.data.updateAccept_data) {
+                    success(res) {      
+                       //关闭加载...
+                       wx.hideLoading();          
+                      if (res.data.update_data) {
                         //修改订单表，表示被接单
                         wx.showModal({
                                   title: '完成成功',
@@ -184,8 +185,7 @@ Page({
                                     }
                                   }
                                 })
-                        //关闭加载...
-                        wx.hideLoading();
+                       
                        
                       }
                     }

@@ -43,13 +43,16 @@
                                <!-- 包时代驾 -->
                             <view class="padding-xs" wx:if="{{jiedanren_length==1}}" catch:tap="jiedanrenxiangxi">
                                 <text>
-                                    {{jiedanzhexinxi.username}}
+                                    {{jie_user.username}}
                                     <text class="text-gray">(点击查看详细)</text>
                                 </text>
                             </view>
                             <view class="flex solid-bottom padding justify-between">
                                 <view>
-                                    <bottom class="cu-btn line-mauve lg margin-tb-sm shadow" catchtap="orderFormUpdate" data-id='{{daijiadingdanDetail.id}}' wx:if="{{daijiadingdanDetail.ifFinish==false}}">
+                                 <bottom class="cu-btn line-mauve lg margin-tb-sm shadow"  wx:if="{{daijiadingdanDetail.ifFinish==false&&daijiadingdanDetail.daijiajiedan_id!=''}}">
+                                        已被接单
+                                    </bottom>
+                                    <bottom class="cu-btn line-mauve lg margin-tb-sm shadow" catchtap="orderFormUpdate" data-id='{{daijiadingdanDetail.id}}' wx:if="{{daijiadingdanDetail.ifFinish==false&&daijiadingdanDetail.daijiajiedan_id==''}}">
                                         修改订单
                                     </bottom>
                                     <bottom class="cu-btn line-red lg margin-tb-sm shadow" wx:if="{{daijiadingdanDetail.ifFinish!=false}}" catchtap="orderFromDelete">
@@ -65,40 +68,10 @@
                                     </bottom>
                                 </view>
                             </view>
-                            <view class="padding-xs" wx:if="{{daijiadingdanDetail.ifFinish!=false}}">
-                                你也完成此订单，点击下面评价，赶快去评论一番司机的技术吧。
-                            </view>
+                            
                         </view>
                     </view>
-                </view>
-                <!-- 点赞 收藏 -->
-                <view class="text-gray text-sm text-right padding" catch:tap="pinglunTap">
-                    评论
-                    <text class="cuIcon-messagefill margin-lr-xs"></text>
-                </view>
-                <!-- 评论 -->
-                <!-- <view class="cu-list menu-avatar comment solids-top">
-                    <view class="cu-item" wx:for="{{[1,2,3,4]}}" wx:key="index">
-                        <image src='{{yonghuxinxi[0].portrait}}' class='cu-avatar round'></image>
-                        <view class="content">
-                            <view class="text-grey">{{yonghuxinxi[0].username}}</view>
-                            <view class="text-gray text-content text-df">凯尔，你被自己的光芒变的盲目。</view>
-                            <view class="bg-orange light padding-sm radius margin-top-sm  text-sm">
-                                <view class="flex">
-                                    <view>凯尔：</view>
-                                    <view class="flex-sub">妹妹，你在帮他们给黑暗找借口吗?</view>
-                                </view>
-                            </view>
-                            <view class="margin-top-sm flex justify-between">
-                                <view class="text-gray text-df">2018年12月4日</view>
-                                <view>
-                                    <text class="cuIcon-appreciatefill text-red"></text>
-                                    <text class="cuIcon-messagefill text-gray margin-left-sm"></text>
-                                </view>
-                            </view>
-                        </view>
-                    </view>
-                </view> -->
+                </view>                
             </view>
         </view>
     </view>
@@ -147,32 +120,32 @@
                         <view class="bg-yellow  radius  light">
                             <view class="padding text-center">
                                 <view>
-                                    所在地：{{jiedanzhexinxi.region[0]}},{{jiedanzhexinxi.region[1]}},{{jiedanzhexinxi.region[2]}}
+                                    所在地：{{jie_user.region}}
                                 </view>
-                                <view class="solid-top padding-xs">年龄：{{jiedanzhexinxi.age}}</view>
-                                <view class="solid-top padding-xs">驾龄：{{jiedanzhexinxi.jialing}}</view>
-                                <view class="solid-top padding-xs">{{jiedanzhexinxi.jiashi}}</view>
-                                <view class="solid-top padding-xs">{{jiedanzhexinxi.spe_i}}</view>
-                                <view class="solid-top padding-xs">手机：{{jiedanzhexinxi.phone}}</view>
+                                <view class="solid-top padding-xs">年龄：{{jie_user.age}}</view>
+                                <view class="solid-top padding-xs">驾龄：{{jie_user.drivingYears}}</view>
+                                <view class="solid-top padding-xs">{{jie_user.drivingCertification}}</view>
+                                <view class="solid-top padding-xs">{{jie_user.realNameAuthentication}}</view>
+                                <view class="solid-top padding-xs">手机：{{jie_user.phone}}</view>
                             </view>
                         </view>
                     </view>
                 </view>
                 <view class="cu-list menu-avatar">
                     <view class="cu-item">
-                        <view class="cu-avatar round lg" style="background-image:url({{jiedanzhexinxi.portrait}});"></view>
+                        <view class="cu-avatar round lg" style="background-image:url({{jie_user.portrait}});"></view>
                         <view class="content flex-sub">
-                            <view class="text-grey">{{jiedanzhexinxi.username}}
+                            <view class="text-grey">{{jie_user.username}}
                             </view>
                             <view class="text-gray text-sm flex justify-between">
-                                {{jiedanzhexinxi.addDate}} 加入
+                                {{jie_user.joinTime}} 加入
                                 <view class="text-gray text-sm">
                                     <text class="cuIcon-attentionfill margin-lr-xs"></text>
-                                   {{jiedanzhexinxi.chakanshu}}
+                                   {{jie_user.visitTheNumber}}
                                     <text class="cuIcon-appreciatefill margin-lr-xs"></text>
-                                    {{jiedanzhexinxi.shoucangshu}}
+                                    {{jie_user.visitTheNumber}}
                                     <text class="cuIcon-messagefill margin-lr-xs"></text>
-                                    {{jiedanzhexinxi.pinglunshu}}
+                                    {{jie_user.commentsTheNumber}}
                                 </view>
                             </view>
                         </view>

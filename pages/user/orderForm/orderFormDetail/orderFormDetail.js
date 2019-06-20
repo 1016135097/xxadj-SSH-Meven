@@ -24,13 +24,33 @@ Page({
         'content-type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-
         //完成
         that.setData({
           daijiadingdanDetail: res.data.OrderData,
         })
-        //得到数据，关闭加载
-        wx.hideLoading();
+        //判断是否被接单,不等于空表示接单
+        if(res.data.OrderData.daijiajiedan_id!=''){
+          //查询接单者用户信息
+          wx.request({
+            url: app.globalData.url + 'userAction_findOne', //查询一条数据
+            data: {
+              id: res.data.OrderData.daijiajiedan_id, //通过全局查找当前用户
+            },          // method:'POST',
+            header: {
+              'content-type': 'application/json' // 默认值
+            },
+            success(res) {
+              that.setData({
+                jie_user: res.data,
+                jiedanren_length:1,
+              })
+             
+            }
+          })
+        }
+       // this.tianjiasiji([],0);
+        //关闭加载...
+        wx.hideLoading()
       }
     })
 
@@ -46,24 +66,12 @@ Page({
     // })
   },
 
-  /**
-   * 获取接单者信息
-   */
-  jiedanzhe: function () {
-    // 查询数据库
-    db.collection('user').doc(this.data.daijiadingdanDetail.jiedanren).get().then(res => {
-      this.setData({
-        jiedanzhexinxi: res.data,
-        jiedanren_length: 1,
-      })
-    });
-  },
+
 
   /**
    * 点击查看详细接单人
    */
   jiedanrenxiangxi: function () {
-    this.jiedanzhe();
     this.setData({
       sijitanchuang: true,
       jiedanrenxiangxi_an: true,

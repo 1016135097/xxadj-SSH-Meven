@@ -36,7 +36,7 @@ Page({
   //获得数据
   daijiadingdan: function (ifFinish) {
     let that = this;
-    //终点位置模糊查询
+    
     wx.request({
       url: app.globalData.url + 'orderAction_conditionQuery', //条件查询全部
       data: {
