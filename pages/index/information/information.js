@@ -92,6 +92,7 @@ Page({
    */
   informationJieDan(e) {
     console.log("---------informationJieDan执行----------------", this.data);
+    let that = this;
     //判断是否实名
     if (this.data.user.realNameAuthentication == '已实名认证') {
       let information = this.data.information;
@@ -151,6 +152,22 @@ Page({
               success(res) {
                 //返回值  add_data  为true表示插入成功
                 if (res.data.add_data) {
+                  //接单完成，添加信息提示
+                  wx.request({
+                    url: app.globalData.url + 'messageAction_add',
+                    data: {
+                      id:0,//默认ID，数据库自动递增
+                      creationUserId:app.globalDataOpenid.user_id,//信息创建者ID，也是接单者id 
+                      embracerUserId:information.userId, //接收者ID，即当前订单用户id
+                      creationUserPortrait:that.data.user.portrait,//创建者用户头像
+                      messageContent:'您的--'+information.initialPosition+
+                      '--被用户>'+that.data.user.username+' 接单了！',//信息内容
+                      orderId:information.id, //订单ID
+                      visit:false, //是否被查看
+                      creationTime: t.getFullYear() + '/' + (t.getMonth() + 1) +
+                      '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes(),//信息的创建时间
+                    }
+                  }),
                   //修改订单表，表示被接单
                   wx.request({
                     url: app.globalData.url + 'orderAction_update', //更新
@@ -160,11 +177,7 @@ Page({
                       ifAccept:true,  //表示被接单
                       what:'ifAccept',
                     },
-                    method: 'POST',
-                    header: {
-                      'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    success(res) {      
+                    success(res) {   
                        //关闭加载...
                        wx.hideLoading();          
                       if (res.data.update_data) {
