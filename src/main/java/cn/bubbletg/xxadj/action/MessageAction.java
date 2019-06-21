@@ -126,7 +126,7 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
         List<Message> messages = messageService.findAll();
         //转换为json
         HashMap<String, Object> data = new HashMap<>();
-        data.put("date", messages);
+        data.put("data", messages);
         String dataJson = JSON.toJSONString(data);
         //传递给前端
         ServletActionContext.getResponse().getWriter().write(dataJson);
