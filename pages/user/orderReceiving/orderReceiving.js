@@ -72,11 +72,11 @@ Page({
   //删除根据id删除
   orderReceivingquxiao: function (e) {
     let that  = this;
-    let daijiadingdanNoFinish = that.data.daijiadingdanNoFinish[0];
+    let daijiadingdanNoFinish = that.data.daijiadingdanNoFinish[e.currentTarget.dataset.id];
     //其实是否确定删除
     wx.showModal({
-      title: '确认删除',
-      content: '订单删除后此单后可在首页或搜索继续添加！',
+      title: '确认取消',
+      content: '订单取消后此单后可在首页或搜索继续添加！',
       confirmText: '确定',
       cancelText: '取消',
       success(res) {
@@ -85,30 +85,32 @@ Page({
           return;
         } else {
           wx.showLoading({
-            title:"删除中",
+            title:"取消中",
           })
-          //先删除（删除接单表），再取消(订单表）。
-          db.collection('daijiajiedan').doc(daijiadingdanNoFinish._id).remove({
-          }).then(res => {
-            //取消订单表，
-           //通过云函数更新驾驶dingdan表，因为不同用户更新一个表不可能，只有通过云函数
-           wx.cloud.callFunction({
-            name: 'jiedancaozuo_daijiadingdangengxin_quexiao',
-            data: {
-              daijiadingdan_id: daijiadingdanNoFinish.daijiadingdan_id,
-            },
-            complete: res => { 
-              wx.hideLoading();
-              wx.showToast({
-                title: '取消订单成功！',
-                icon: 'success',
-                duration: 2000
-              })   
-                getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
-            }
-          });
+//先删除（删除接单表），再取消(订单表）。
+wx.request({
+  url: app.globalData.url + 'ordersAction_delete',
+  data: {
+    id: daijiadingdanNoFinish.id,
+  },
+  success(res){
+    //修改订单表，表示取消接单
+    wx.request({
+      url: app.globalData.url + 'orderAction_update', 
+      data: {
+        id: daijiadingdanNoFinish.orderId, //要修改的表id
+        ifAccept:false,  
+        what:'ifAccept',
+      },
+      success(res) {      
+         //关闭加载...
+         wx.hideLoading(); 
+         getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示         
+      }
+    })  
 
-          })
+  }
+})
         }
       }
     })
@@ -116,7 +118,6 @@ Page({
   },
   orderReceivingDelete: function (e) {
     let that  = this;
-    let daijiadingdanNoFinish = that.data.daijiadingdanNoFinish[0];
     //其实是否确定删除
     wx.showModal({
       title: '确认删除',
@@ -132,16 +133,17 @@ Page({
             title:"删除中",
           })
           //先删除（删除接单表），再取消(订单表）。
-          db.collection('daijiajiedan').doc(daijiadingdanNoFinish._id).remove({
-          }).then(res => {
-            wx.hideLoading();
-            wx.showToast({
-              title: '删除成功！',
-              icon: 'success',
-              duration: 2000
-            })   
-              getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
+          wx.request({
+            url: app.globalData.url + 'ordersAction_delete',
+            data: {
+              id: e.currentTarget.dataset.id,
+            },
+            success(res){
+    //关闭加载...
+    wx.hideLoading(); 
+    getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示  
 
+            }
           })
         }
       }

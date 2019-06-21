@@ -96,7 +96,7 @@ Page({
     if (this.data.user.realNameAuthentication == '已实名认证') {
       let information = this.data.information;
       //先判断接单是否自己的的单
-      if (information.openid != app.globalDataOpenid.openid_) {
+      if (information.openid == app.globalDataOpenid.openid_) {
         wx.showToast({
           title: '自己不可接自己的订单！',
           icon: '',
