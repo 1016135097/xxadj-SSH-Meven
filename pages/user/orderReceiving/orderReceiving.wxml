@@ -46,7 +46,7 @@
                 <view class="flex solid-bottom padding justify-end orderReceiving-proceed-finish-biaoqian">
                     <view class="padding-sm orderReceiving-proceed-finish-delete">
                         <view class="padding-xs">
-                            <view class="cu-tag bg-red"  catchtap="orderReceivingDelete" data-id='{{item.id}}'>取消</view>
+                            <view class="cu-tag bg-red"  catchtap="orderReceivingDelete" data-id='{{item.id}}'>删除</view>
                         </view>
                     </view>
                 </view>

@@ -41,14 +41,10 @@ Page({
   daijiadingdan: function (ifFinish) {
     let that = this;
     wx.request({
-      url: app.globalData.url + 'ordersAction_conditionQuery', 
+      url: app.globalData.url + 'ordersAction_conditionQuery',
       data: {
         openid: that.data.openid,
         ifFinish: ifFinish, //表示是否完成
-      },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
       },
       success(res) {
         if (ifFinish) {
@@ -71,7 +67,7 @@ Page({
 
   //删除根据id删除
   orderReceivingquxiao: function (e) {
-    let that  = this;
+    let that = this;
     let daijiadingdanNoFinish = that.data.daijiadingdanNoFinish[e.currentTarget.dataset.id];
     //其实是否确定删除
     wx.showModal({
@@ -85,39 +81,39 @@ Page({
           return;
         } else {
           wx.showLoading({
-            title:"取消中",
+            title: "取消中",
           })
-//先删除（删除接单表），再取消(订单表）。
-wx.request({
-  url: app.globalData.url + 'ordersAction_delete',
-  data: {
-    id: daijiadingdanNoFinish.id,
-  },
-  success(res){
-    //修改订单表，表示取消接单
-    wx.request({
-      url: app.globalData.url + 'orderAction_update', 
-      data: {
-        id: daijiadingdanNoFinish.orderId, //要修改的表id
-        ifAccept:false,  
-        what:'ifAccept',
-      },
-      success(res) {      
-         //关闭加载...
-         wx.hideLoading(); 
-         getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示         
-      }
-    })  
+          //先删除（删除接单表），再取消(订单表）。
+          wx.request({
+            url: app.globalData.url + 'ordersAction_delete',
+            data: {
+              id: daijiadingdanNoFinish.id,
+            },
+            success(res) {
+              //修改订单表，表示取消接单
+              wx.request({
+                url: app.globalData.url + 'orderAction_update',
+                data: {
+                  id: daijiadingdanNoFinish.orderId, //要修改的表id
+                  ifAccept: false,
+                  what: 'ifAccept',
+                },
+                success(res) {
+                  //关闭加载...
+                  wx.hideLoading();
+                  getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示         
+                }
+              })
 
-  }
-})
+            }
+          })
         }
       }
     })
 
   },
   orderReceivingDelete: function (e) {
-    let that  = this;
+    let that = this;
     //其实是否确定删除
     wx.showModal({
       title: '确认删除',
@@ -130,7 +126,7 @@ wx.request({
           return;
         } else {
           wx.showLoading({
-            title:"删除中",
+            title: "删除中",
           })
           //先删除（删除接单表），再取消(订单表）。
           wx.request({
@@ -138,10 +134,10 @@ wx.request({
             data: {
               id: e.currentTarget.dataset.id,
             },
-            success(res){
-    //关闭加载...
-    wx.hideLoading(); 
-    getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示  
+            success(res) {
+              //关闭加载...
+              wx.hideLoading();
+              getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示  
 
             }
           })

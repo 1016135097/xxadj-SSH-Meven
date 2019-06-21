@@ -11,13 +11,19 @@ Page({
   },
   //获得数据
   daijiajiedan: function () {
-    db.collection('daijiajiedan').doc(this.data.detailId).get().then(res => {
-      // res.data 包含该记录的数据
-      this.setData({
-        daijiajiedanDetail: res.data,
-      })
-      //得到数据，关闭加载
-      wx.hideLoading();
+    let that = this;
+    wx.request({
+      url: app.globalData.url + 'ordersAction_findOne',//根据id查询信息
+      data: {
+        id: that.data.detailId,
+      },
+      success(res) {
+        //完成
+        that.setData({
+          daijiajiedanDetail: res.data.OrdersData,
+        })
+        wx.hideLoading()
+      }
     })
   },
   /**
@@ -28,8 +34,8 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
-     //获得传递过来的 detail
-     this.setData({
+    //获得传递过来的 detail
+    this.setData({
       detailId: options.detailId
     })
   },
@@ -52,7 +58,7 @@ Page({
    * 用户点击完成操作
    */
   wanchengcaozuo: function (e) {
-    let that = this;
+    let that =this;
     wx.showModal({
       title: '确认完成',
       content: '订单完成后不可修改，确认完成了吗？',
@@ -63,14 +69,20 @@ Page({
         if (res.confirm == false) {
           return;
         } else {
-          db.collection('daijiajiedan').doc(that.data.detailId).update({
+          wx.showLoading({
+            title: "加载中...",
+          })
+          wx.request({
+            url: app.globalData.url + 'ordersAction_update',
             data: {
-              ifFinish: true
+              id:that.data.daijiajiedanDetail.id, //要修改的表id
+              ifFinish: true,
+              what: 'ifFinish',
             },
             success(res) {
-              getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
-            }
-          })
+              wx.hideLoading();
+              getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示     
+            }})
         }
       }
     })
@@ -81,12 +93,11 @@ Page({
    * 用户点击删除时，删除根据id删除
    */
   orderReceivingDelete: function (e) {
-  
-    let that  = this;
+    let that =this;
     //其实是否确定删除
     wx.showModal({
       title: '确认删除',
-      content: '订单删除后不可恢复，确认删除吗？',
+      content: '订单删除后不可恢复，确认删除！',
       confirmText: '确定',
       cancelText: '取消',
       success(res) {
@@ -94,30 +105,29 @@ Page({
         if (res.confirm == false) {
           return;
         } else {
+          wx.showLoading({
+            title: "删除中",
+          })
           //先删除（删除接单表），再取消(订单表）。
-            db.collection('daijiajiedan').doc(that.data.detailId).remove({
-              success(res) {
-                wx.showToast({
-                  title: '删除成功！',
-                  icon: 'success',
-                  duration: 2000
-                })
-                setTimeout(res=>{
-                  //返回上一层页面
-                  wx.navigateBack();
-                  },2000)
-              }
-            })
+          wx.request({
+            url: app.globalData.url + 'ordersAction_delete',
+            data: {
+              id:that.data.daijiajiedanDetail.id,
+            },
+            success(res) {
+              //返回上一层页面
+              wx.navigateBack();
+            }
+          })
         }
       }
     })
-
   },
-    /**
-   * 订单取消
-   */
-  orderReceivingUpdate:function(e){
-    let that  = this;
+  /**
+ * 订单取消
+ */
+  orderReceivingUpdate: function (e) {
+    let that = this;
     let daijiajiedanDetail = that.data.daijiajiedanDetail;
     //其实是否确定删除
     wx.showModal({
@@ -131,29 +141,30 @@ Page({
           return;
         } else {
           wx.showLoading({
-            title:"取消中",
+            title: "取消中",
           })
-          db.collection('daijiajiedan').doc(daijiajiedanDetail._id).remove({
-          }).then(res => {
-           wx.cloud.callFunction({
-            name: 'jiedancaozuo_daijiadingdangengxin_quexiao',
+          //先删除（删除接单表），再取消(订单表）。
+          wx.request({
+            url: app.globalData.url + 'ordersAction_delete',
             data: {
-              daijiadingdan_id: daijiajiedanDetail.daijiadingdan_id,
+              id: daijiajiedanDetail.id,
             },
-            complete: res => { 
-              wx.hideLoading();
-              wx.showToast({
-                title: '取消订单成功！',
-                icon: 'success',
-                duration: 2000
-              })   
-              setTimeout(res=>{
-                //返回上一层页面
-                wx.navigateBack();
-                },1000)
-            }
-          });
+            success(res) {
+              //修改订单表，表示取消接单
+              wx.request({
+                url: app.globalData.url + 'orderAction_update',
+                data: {
+                  id: daijiajiedanDetail.orderId, //要修改的表id
+                  ifAccept: false,
+                  what: 'ifAccept',
+                },
+                success(res) {
+                  //返回上一层页面
+                  wx.navigateBack();
+                }
+              })
 
+            }
           })
         }
       }

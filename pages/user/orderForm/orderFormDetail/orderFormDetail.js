@@ -19,51 +19,33 @@ Page({
       data: {
         id: that.data.detailId,
       },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
       success(res) {
         //完成
         that.setData({
           daijiadingdanDetail: res.data.OrderData,
         })
         //判断是否被接单,不等于空表示接单
-        if(res.data.OrderData.daijiajiedan_id!=''){
+        if (res.data.OrderData.daijiajiedan_id != '') {
           //查询接单者用户信息
           wx.request({
             url: app.globalData.url + 'userAction_findOne', //查询一条数据
             data: {
               id: res.data.OrderData.daijiajiedan_id, //通过全局查找当前用户
-            },          // method:'POST',
-            header: {
-              'content-type': 'application/json' // 默认值
             },
             success(res) {
               that.setData({
                 jie_user: res.data,
-                jiedanren_length:1,
+                jiedanren_length: 1,
               })
-             
+
             }
           })
         }
-       // this.tianjiasiji([],0);
+        // this.tianjiasiji([],0);
         //关闭加载...
         wx.hideLoading()
       }
     })
-
-    // db.collection('daijiadingdan').doc(this.data.detailId).get().then(res => {
-    //   // res.data 包含该记录的数据
-    //   this.setData({
-    //     daijiadingdanDetail: res.data,
-    //   })
-    //   this.tianjiasiji([],0);
-    //   this.jiedanzhe();
-    //   //得到数据，关闭加载
-    //   wx.hideLoading();
-    // })
   },
 
 
@@ -116,100 +98,6 @@ Page({
         duration: 2000
       })
     }
-  },
-  /**
-   * 
-   * 选择用户
-   */
-  xuanzeyonghu: function (e) {
-    console.log(e.currentTarget.dataset.item);
-    let item = e.currentTarget.dataset.item;
-    this.setData({
-      xuanzhedeyonghu: '你选择的用户是：' + item.username,
-      userid: item._id,
-    })
-  },
-  /**
-   * 评论司机，提交
-   */
-  pinglunTapFa: function (e) {
-    let userid = this.data.userid; //被评价的用户id;
-    //先判断用户是否选择司机
-    if (userid == '') {
-      wx.showToast({
-        title: "请选择评论司机",
-        icon: "none",
-        duration: 2000
-      });
-      return;
-    }
-    //关闭
-    this.chankaidaijguanbi();
-    wx.showLoading({
-      title: "评论中",
-    })
-    let currentDate = new Date();
-    let pinglun_content = e.detail.value.pinglun_content;
-    //插入数据库，pinglun_user与用户表相连接，存储用户卡片被评论信息
-    db.collection("pinglun_user").add({
-      data: {
-        //id 自动生成
-        user_id: userid, //用户卡片id
-        content: pinglun_content, //评论内容
-        pinglunDate: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes(),//评论时间
-        pinglunzhe: app.globalDataOpenid.openid_,//评论着 openid
-        pinglunzheC: this.data.userInfo,
-
-      }
-    })
-      .then(add_res => {
-        //这里进行的是云操作
-        //查询
-        db.collection('user').doc(userid).get().then(getuserres => {
-
-          wx.cloud.callFunction({
-            name: 'pingluncaozuo_gengxin',
-            data: {
-              userid: userid,
-              pinglunshu: getuserres.data.pinglunshu,
-            },
-            complete: res => {
-              wx.showToast({
-                title: "评论成功",
-                icon: "none",
-                duration: 2000
-              });
-            }
-          });
-          //修改用户表 更新数据库，更新被评价的用户被评价的数量
-          //  db.collection('user').doc(userid).update({
-          //    data:{
-          //     pinglunshu: (getuserres.data.pinglunshu+1), //原来评论数加1
-          //    }
-          //  }).then(updateuserres => {
-          //     //关闭加载...
-          //   wx.hideLoading();
-          //   console.log("评论成功", updateuserres)
-          //   wx.showToast({
-          //     title: "评论成功",
-          //     icon: "none",
-          //     duration: 2000
-          //   });     
-          //  })
-        })
-      })
-      .catch(error => {
-        //关闭加载...
-        wx.hideLoading();
-        console.log("评论失败", res)
-        wx.showToast({
-          title: "评论失败！",
-          icon: "none",
-          duration: 2000
-        });
-      })
-    // 更新数据库，更新被评价的用户被评价的数量
-
   },
   //点击查看详细代驾司机
   chankaidaij: function () {
@@ -287,16 +175,12 @@ Page({
             data: {
               id: that.data.detailId, //要修改的表id
               ifFinish: true,
-              what:'ifFinish',
-            },
-            method: 'POST',
-            header: {
-              'content-type': 'application/x-www-form-urlencoded'
+              what: 'ifFinish',
             },
             success(res) {
               getCurrentPages()[getCurrentPages().length - 1].onShow(); //重新页面显示
             }
-          }) 
+          })
         }
       }
     })
@@ -325,10 +209,6 @@ Page({
             url: app.globalData.url + 'orderAction_delete',
             data: {
               id: that.data.detailId,
-            },
-            method: 'POST',
-            header: {
-              'content-type': 'application/x-www-form-urlencoded'
             },
             success(res) {
               if (res.data.delete_data) {

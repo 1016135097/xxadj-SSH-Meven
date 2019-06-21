@@ -193,10 +193,6 @@ Page({
         initialPositionLongitudeMin: that.data.MaxMinLongitudeLatitude[0],//起始位置经度附近最小值
         initialPositionLongitudeMax: that.data.MaxMinLongitudeLatitude[1],//起始位置经度附近最大值
       },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
       success(res) {
         target_ += 1; //当前页，表示一个页面，+1表示到第二个页面
         console.log(res.data)
@@ -242,10 +238,7 @@ Page({
         initialPositionLatitudeMax: 0, //起始位置纬度附近最大值
         initialPositionLongitudeMin: 0,//起始位置经度附近最小值
         initialPositionLongitudeMax: 0,//起始位置经度附近最大值
-      },          // method:'POST',
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
+      },         
       success(res) {
         target_quan += 1; //当前页，表示一个页面，+1表示到第二个页面
         console.log(res.data)

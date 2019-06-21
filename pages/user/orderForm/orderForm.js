@@ -43,10 +43,6 @@ Page({
         openid: that.data.openid,
         ifFinish: ifFinish, //表示是否完成
       },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
       success(res) {
         if (ifFinish) {
           //完成
