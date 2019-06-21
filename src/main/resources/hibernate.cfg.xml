@@ -30,6 +30,7 @@
         <mapping resource="hbm/Order.hbm.xml"/>
         <mapping resource="hbm/Orders.hbm.xml"/>
         <mapping resource="hbm/User.hbm.xml"/>
+        <mapping resource="hbm/Message.hbm.xml"/>
 
     </session-factory>
 

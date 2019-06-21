@@ -38,33 +38,13 @@
     <!-- 开启事务注解 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="orderService" class="cn.bubbletg.xxadj.service.OrderService">
-        <!-- 注入orderDaoImpl -->
-        <property name="orderDao" ref="orderDaoImpl"/>
-    </bean>
-
-    <!-- 创建实现类对象 -->
-    <bean id="orderDaoImpl" class="cn.bubbletg.xxadj.dao.OrderDaoImpl">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <!-- 创建hibernateTemplate对象 -->
-    <!--    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">-->
-    <!--        注入sessionFactory-->
-    <!--        <property name="sessionFactory" ref="sessionFactory"></property>-->
-    <!--    </bean>-->
-
     <!-- struts2和spring整合部分  **************************************** -->
-    <!-- 配置action的对象 -->
-    <bean id="orderAction" class="cn.bubbletg.xxadj.action.OrderAction" scope="prototype">
-        <!-- 注入service -->
-        <property name="orderService" ref="orderService"/>
-    </bean>
-
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <import resource="classpath:user.xml"/>
-    <import resource="classpath:orders.xml"/>
+    <import resource="classpath:entity/user.xml"/>
+    <import resource="classpath:entity/order.xml"/>
+    <import resource="classpath:entity/orders.xml"/>
+    <import resource="classpath:entity/message.xml"/>
 
 </beans>
 

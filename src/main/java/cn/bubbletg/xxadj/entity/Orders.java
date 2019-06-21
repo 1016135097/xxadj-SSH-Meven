@@ -3,7 +3,7 @@ package cn.bubbletg.xxadj.entity;
 /**
  * @author ：BubbleTg
  * @date ：Created in 2019/6/13 15:52
- * @description：订单实体类，用户发布代驾产生的订单实体类。
+ * @description：接单单实体类，用户接单产生的单实体类。
  * @modified By ：
  * @version: 1.0.0
  */
