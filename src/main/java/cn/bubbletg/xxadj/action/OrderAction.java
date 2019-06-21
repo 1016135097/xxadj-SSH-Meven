@@ -104,13 +104,13 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         //获得当前页面大小
         int pageSize = Integer.valueOf(request.getParameter("pageSize"));
         //起始位置纬度附近最小值
-        Double initialPositionLatitudeMin = Double.valueOf(request.getParameter("initialPositionLatitudeMin"));
+        String initialPositionLatitudeMin = request.getParameter("initialPositionLatitudeMin");
         //起始位置纬度附近最大值
-        Double initialPositionLatitudeMax = Double.valueOf(request.getParameter("initialPositionLatitudeMax"));
+        String initialPositionLatitudeMax = request.getParameter("initialPositionLatitudeMax");
         //起始位置经度附近最小值
-        Double initialPositionLongitudeMin = Double.valueOf(request.getParameter("initialPositionLongitudeMin"));
+        String initialPositionLongitudeMin = request.getParameter("initialPositionLongitudeMin");
         //起始位置经度附近最大值
-        Double initialPositionLongitudeMax = Double.valueOf(request.getParameter("initialPositionLongitudeMax"));
+        String initialPositionLongitudeMax = request.getParameter("initialPositionLongitudeMax");
 
         //查询并获得数据
         List<Order> orders = orderService.pagingQuery(currentPage, pageSize,
@@ -127,10 +127,10 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
          */
         HashMap<String, Object> hashMapOrders = new HashMap<>();
         hashMapOrders.put("data", orders);
-        hashMapOrders.put("dataLength", orders.size()); //保存附近查询到数据的长度
-
+        //保存附近查询到数据的长度
+        hashMapOrders.put("dataLength", orders.size());
         //判断经纬度最大最小值是否相等，相等表示全局查找，直接返回全局查找数据
-        if (initialPositionLatitudeMin != initialPositionLatitudeMax) {
+        if (!initialPositionLatitudeMin.equals(initialPositionLatitudeMax)) {
             //获得附近之外的全部数据
             orders = orderService.pagingQueryNearbyFull(currentPage, pageSize,
                     initialPositionLatitudeMin, initialPositionLatitudeMax,
@@ -200,7 +200,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         //获得请求域对象
         HttpServletRequest request = ServletActionContext.getRequest();
         //获得跟下标签，用来判断更新的那个字段
-        String  what = request.getParameter("what");
+        String what = request.getParameter("what");
 
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
@@ -209,11 +209,12 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         HashMap<String, Object> hashMapOrders = new HashMap<>();
         //先查询要更新的订单表
         Order orders = orderService.findOne(order.getId());
+        System.out.println(orders);
         //判断更新那个字段
-        if(what.equals("ifFinish")){
+        if (what.equals("ifFinish")) {
             //更新ifFinish
             orders.setIfFinish(order.isIfFinish());
-        }else if(what.equals("ifAccept")){
+        } else if (what.equals("ifAccept")) {
             orders.setDaijiajiedan_id(order.getDaijiajiedan_id());
             orders.setIfAccept(order.isIfAccept());
         }
@@ -226,8 +227,6 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         ServletActionContext.getResponse().getWriter().write(json);
 
     }
-
-
 
     /**
      * create by: BubbleTg
@@ -257,7 +256,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
      * description: 条件查询
      * create time: 2019/6/20 13:31
      */
-    public void conditionQuery () throws IOException {
+    public void conditionQuery() throws IOException {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------conditionQuery()方法执行----");
 
@@ -266,7 +265,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //条件查询
-        List<Order>  list = orderService.conditionQuery(order);
+        List<Order> list = orderService.conditionQuery(order);
         HashMap<String, Object> hashMapOrders = new HashMap<>();
         hashMapOrders.put("data", list);
         hashMapOrders.put("dataLength", list.size());
@@ -310,11 +309,11 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         Order orderOne = orderService.findOne(order.getId());
 
         //是否查询成功判断
-        if(orderOne != null){
-            hashMapOrders.put("OrderData",orderOne);
-            hashMapOrders.put("success",true);
-        }else{
-            hashMapOrders.put("success",false);
+        if (orderOne != null) {
+            hashMapOrders.put("OrderData", orderOne);
+            hashMapOrders.put("success", true);
+        } else {
+            hashMapOrders.put("success", false);
         }
         //转换为json
         String jsonOrder = JSON.toJSONString(hashMapOrders);

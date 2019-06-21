@@ -54,8 +54,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
      * @return: list 返回查询到的多条记录
      */
     public List<Order> findPage(int begin, int pageSize,
-                                Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                                String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                                 boolean ifAccept, boolean ifFinish, String receivedBy) {
         Logger.getLogger(OrderDaoImpl.class).info("-------findPage()方法执行----");
         /**
@@ -74,7 +74,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
         //查询
         List<Order> orders = null;
         //判断是全局查找还是附近查找
-        if (initialPositionLatitudeMin != initialPositionLatitudeMax) {
+        if (!initialPositionLatitudeMin.equals(initialPositionLatitudeMax)) {
             Logger.getLogger(OrderDaoImpl.class).info("-------findPage()方法执行----附近查找");
             //附近查找
             orders = this.getSessionFactory().getCurrentSession()
@@ -84,10 +84,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                     //设置问号参数
                     .setParameter(0, ifAccept)
                     .setParameter(1, ifFinish)
-                    .setParameter(2, initialPositionLatitudeMin)
-                    .setParameter(3, initialPositionLatitudeMax)
-                    .setParameter(4, initialPositionLongitudeMin)
-                    .setParameter(5, initialPositionLongitudeMax)
+                    //转换为Double类型
+                    .setParameter(2, Double.valueOf(initialPositionLatitudeMin))
+                    .setParameter(3, Double.valueOf(initialPositionLatitudeMax))
+                    .setParameter(4, Double.valueOf(initialPositionLongitudeMin))
+                    .setParameter(5, Double.valueOf(initialPositionLongitudeMax))
                     .setParameter(6, receivedBy)
                     //分页查询
                     .setFirstResult(begin)
@@ -128,8 +129,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
      */
     @Override
     public List<Order> findPageNearbyFull(int begin, Integer pageSize,
-                                          Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                          Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                          String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                                          String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                                           boolean ifAccept, boolean ifFinish, String receivedBy) {
         Logger.getLogger(OrderDaoImpl.class).info("-------findPageNearbyFull()方法执行----");
         List<Order> orders = this.getSessionFactory().getCurrentSession()
@@ -139,10 +140,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                 //设置问号参数
                 .setParameter(0, ifAccept)
                 .setParameter(1, ifFinish)
-                .setParameter(2, initialPositionLatitudeMin)
-                .setParameter(3, initialPositionLatitudeMax)
-                .setParameter(4, initialPositionLongitudeMin)
-                .setParameter(5, initialPositionLongitudeMax)
+                //转换为Double类型
+                .setParameter(2, Double.valueOf(initialPositionLatitudeMin))
+                .setParameter(3, Double.valueOf(initialPositionLatitudeMax))
+                .setParameter(4, Double.valueOf(initialPositionLongitudeMin))
+                .setParameter(5, Double.valueOf(initialPositionLongitudeMax))
                 .setParameter(6, receivedBy)
                 //分页查询
                 .setFirstResult(begin)

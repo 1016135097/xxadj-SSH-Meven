@@ -1,6 +1,5 @@
 package cn.bubbletg.xxadj.action;
 
-import cn.bubbletg.xxadj.entity.Order;
 import cn.bubbletg.xxadj.entity.Orders;
 import cn.bubbletg.xxadj.service.OrdersService;
 import com.alibaba.fastjson.JSON;
@@ -44,6 +43,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
      * create time: 2019/6/13 19:33
      */
     private OrdersService ordersService;
+
     public void setOrdersService(OrdersService ordersService) {
         this.ordersService = ordersService;
     }
@@ -103,7 +103,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */
-    public String delete() throws IOException {
+    public void delete() throws IOException {
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
@@ -118,7 +118,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
         String json = JSON.toJSONString(hashMapOrders);
         //传递给前端
         ServletActionContext.getResponse().getWriter().write(json);
-        return SUCCESS;
+
     }
 
     /**
@@ -154,11 +154,11 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
         Orders ordersOne = ordersService.findOne(orders.getId());
 
         //是否查询成功判断
-        if(ordersOne != null){
-            hashMapOrders.put("OrdersData",ordersOne);
-            hashMapOrders.put("success",true);
-        }else{
-            hashMapOrders.put("success",false);
+        if (ordersOne != null) {
+            hashMapOrders.put("OrdersData", ordersOne);
+            hashMapOrders.put("success", true);
+        } else {
+            hashMapOrders.put("success", false);
         }
         //转换为json
         String jsonOrder = JSON.toJSONString(hashMapOrders);
@@ -172,7 +172,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
      * description: 条件查询
      * create time: 2019/6/20 13:31
      */
-    public void conditionQuery () throws IOException {
+    public void conditionQuery() throws IOException {
         //显示日志信息
         Logger.getLogger(OrdersAction.class).info("--订单操作--------conditionQuery()方法执行----");
 

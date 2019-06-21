@@ -99,8 +99,8 @@ public class OrderService {
      * @param receivedBy                  表示被指定的接单人
      */
     public List<Order> pagingQuery(Integer currentPage, Integer pageSize,
-                                   Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                   Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                   String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                                   String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                                    boolean ifAccept, boolean ifFinish, String receivedBy) {
         Logger.getLogger(OrderService.class).info("--订单操作-----pagingQuery()方法执行----");
         //创建页面对象
@@ -151,8 +151,8 @@ public class OrderService {
      * @param receivedBy                  表示被指定的接单人
      */
     public List<Order> pagingQueryNearbyFull(Integer currentPage, Integer pageSize,
-                                             Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                             Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                             String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                                             String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                                              boolean ifAccept, boolean ifFinish, String receivedBy) {
         Logger.getLogger(OrderService.class).info("--订单操作-----pagingQueryNearbyFull()方法执行----");
         //创建页面对象

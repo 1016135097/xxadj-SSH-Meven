@@ -48,8 +48,8 @@ public interface OrderDao extends BaseDao<Order> {
      * @return: list 返回查询到的多条记录
      */
     List<Order> findPage(int begin, int pageSize,
-                         Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                         Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                         String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                         String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                          boolean ifAccept, boolean ifFinish, String receivedBy);
 
     /**
@@ -69,8 +69,8 @@ public interface OrderDao extends BaseDao<Order> {
      * @return: list 返回查询到的多条记录
      */
     List<Order> findPageNearbyFull(int begin, Integer pageSize,
-                                   Double initialPositionLatitudeMin, Double initialPositionLatitudeMax,
-                                   Double initialPositionLongitudeMin, Double initialPositionLongitudeMax,
+                                   String initialPositionLatitudeMin, String initialPositionLatitudeMax,
+                                   String initialPositionLongitudeMin, String initialPositionLongitudeMax,
                                    boolean ifAccept, boolean ifFinish, String receivedBy);
 
     /**
