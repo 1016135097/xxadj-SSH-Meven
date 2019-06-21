@@ -11,4 +11,13 @@ import cn.bubbletg.xxadj.entity.Message;
  */
 public interface MessageDao extends BaseDao<Message>{
 
+    /**
+     * create by: BubbleTg
+     * description: 查询是否还有没有查看的消息
+     * create time: 2019/6/21 20:32
+     *
+     * @Param: null
+     * @return
+     */
+    Boolean unread(Message message);
 }

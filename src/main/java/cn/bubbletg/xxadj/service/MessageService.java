@@ -79,4 +79,16 @@ public class MessageService {
     public List<Message> findAll() {
         return messageDao.findAll();
     }
+
+    /**
+     * create by: BubbleTg
+     * description: 查询是否还有没有查看的消息
+     * create time: 2019/6/21 20:32
+     * 
+      * @Param: null
+     * @return 
+     */
+    public Boolean unread(Message message) {
+        return messageDao.unread(message);
+    }
 }

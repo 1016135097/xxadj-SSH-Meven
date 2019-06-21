@@ -133,5 +133,27 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
 
     }
 
-
+    /**
+     * create by: BubbleTg
+     * description: 查询是否还有没有查看的消息
+     * create time: 2019/6/21 20:30
+     *
+      * @Param: null
+     * @return
+     */
+    public void unread() throws IOException {
+        //显示日志信息
+        Logger.getLogger(MessageAction.class).info("--------unread()方法执行----");
+        //设置返回类型
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        Boolean b  =   messageService.unread(message);
+        //转换为json
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("data",b);
+        String dataJson = JSON.toJSONString(data);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(dataJson);
+    }
 }
