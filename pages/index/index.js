@@ -314,6 +314,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let that = this;
     /**
      * 执行云涵数，获得openid作为id
      * 设置全局openid ，当用户退出时，再次进来则加载云函数获得用户信息，保存到全局变量中
@@ -323,6 +324,7 @@ Page({
       name: 'login',
       complete: (res) => {
         app.globalDataOpenid.openid_ = res.result.openid;
+        that.userAnd(); //获得用户信息
       }
     })
     /**
@@ -332,12 +334,7 @@ Page({
  */
     this.weizhi('');
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    if (app.globalDataAndLogin.login) {
+  userAnd(){
       // 获取用户信息
       wx.getSetting({
         success: res => {
@@ -351,14 +348,12 @@ Page({
                 })
                 let thiss = this;
                 wx.request({
-                  url: app.globalData.url + 'userAction_findOne', //查询一条数据
+                  url: app.globalData.url + 'userAction_findOne', 
                   data: {
-                    openid: app.globalDataOpenid.openid_, //通过全局查找当前用户
-                  },          // method:'POST',
-                  header: {
-                    'content-type': 'application/json' // 默认值
-                  },
+                    openid: app.globalDataOpenid.openid_, 
+                  },      
                   success(res) {
+                    console.log('-------app.globalDataOpenid.user_id-----------',res.data.id)
                     app.globalDataOpenid.user_id = res.data.id;
                   }
                 })
@@ -367,7 +362,11 @@ Page({
           }
         }
       })
-    }
+  },
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
