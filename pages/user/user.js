@@ -12,31 +12,6 @@ Page({
     avatarUrl: '../../images/user-unlogin.png',
     userInfo: '',
   },
-  /**
-   * 更新头像
-   */
-  updatePortrait() {
-    if (!updatePortrait_) {
-      updatePortrait_ = true;//防止多次执行更新头像
-      console.log("---------执行一次")
-      //先查询当前用户
-      db.collection('user').doc(app.globalDataOpenid.openid_).get().then(res => {
-        if (res.data.portrait == this.data.avatarUrl) {
-          return;
-        } else {
-          db.collection('user').doc(app.globalDataOpenid.openid_).update({
-            data: {
-              portrait: this.data.avatarUrl,
-            }
-          }).then(update_res => {
-            console.log("----头像更新成功");
-          })
-        }
-      })
-
-    }
-
-  },
   //登录授权
   onGetUserInfo: function (e) {
     console.log("---点击登录授权---", e)
@@ -146,9 +121,7 @@ Page({
     wx.cloud.callFunction({
       name: 'login',
       complete: (res) => {
-        this.setData({
-          isopenid: res.result.openid,
-        })
+        app.globalDataOpenid.openid_ = res.result.openid;
       }
     })
   },
@@ -161,7 +134,6 @@ Page({
       icon: 'loading',
     })
     let that = this;
-    if (app.globalDataAndLogin.login) {
       //判断是否登录
       wx.getSetting({
         success(res) {
@@ -183,34 +155,34 @@ Page({
                   avatarUrl: res.userInfo.avatarUrl,
                   userInfo: res.userInfo,
                 });
-                that.updatePortrait();
               }
             })
           }
         }
       })
+      console.log('-------app.globalDataOpenid.user_id-----------',app.globalDataOpenid.user_id)
        //消息查询，消息是否全部已读
-    wx.cloud.database().collection('news').where({
-      jiedanren: app.globalDataOpenid.openid_,
-      ifdakai: false
-    })
-      .get().then(res => {
-        console.log('------评论查询', res, '长度:' + res.data.length)
-        if (res.data.length > 0) {
-          this.setData({
-            huodexiaoxiifdakai: true,
-          })
-        }else{
-          this.setData({
-            huodexiaoxiifdakai: false,
-          })
+       wx.request({
+        url: app.globalData.url + 'messageAction_unread',
+        data:{
+          visit:false,
+          embracerUserId:app.globalDataOpenid.user_id,
+        },
+        success(res) {
+           //关闭加载...
+        wx.hideLoading()
+          if(res.data.data){
+            that.setData({
+              huodexiaoxiifdakai: true,
+            })
+          }else{
+            that.setData({
+              huodexiaoxiifdakai: false,
+            })
+          }
         }
       })
-    } else {
-      //关闭加载...
-      wx.hideLoading()
-    }
-
+     
   },
 
   /**

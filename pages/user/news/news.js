@@ -60,12 +60,6 @@ Page({
       url: '../orderForm/orderFormDetail/orderFormDetail?detailId=' + e.currentTarget.dataset.orderid,
     })
   },
-  hideModal() {
-    //表示放弃
-    this.setData({
-      fangqi: false,
-    })
-  },
 
   huodeshuju: function () {
     let that = this;
