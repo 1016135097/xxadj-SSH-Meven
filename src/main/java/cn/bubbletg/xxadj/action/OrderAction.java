@@ -111,7 +111,6 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
         String initialPositionLongitudeMin = request.getParameter("initialPositionLongitudeMin");
         //起始位置经度附近最大值
         String initialPositionLongitudeMax = request.getParameter("initialPositionLongitudeMax");
-
         //查询并获得数据
         List<Order> orders = orderService.pagingQuery(currentPage, pageSize,
                 initialPositionLatitudeMin, initialPositionLatitudeMax,
@@ -197,19 +196,18 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
 
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
+
+        //先查询要更新的订单表
+        Order orders = orderService.findOne(order.getId());
         //获得请求域对象
         HttpServletRequest request = ServletActionContext.getRequest();
         //获得跟下标签，用来判断更新的那个字段
         String what = request.getParameter("what");
-
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
         //像数据库里面插入数据
         HashMap<String, Object> hashMapOrders = new HashMap<>();
-        //先查询要更新的订单表
-        Order orders = orderService.findOne(order.getId());
-        System.out.println(orders);
         //判断更新那个字段
         if (what.equals("ifFinish")) {
             //更新ifFinish

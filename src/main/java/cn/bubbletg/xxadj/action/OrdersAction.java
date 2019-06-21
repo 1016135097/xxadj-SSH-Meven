@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -70,16 +71,16 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
         //显示日志信    @Action
         //    public息
         Logger.getLogger(OrdersAction.class).info("--订单操作--------add()方法执行----数据为：");
+        //像数据库里面插入数据
+        ordersService.add(orders);
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
-        //像数据库里面插入数据
-        ordersService.add(orders);
-        HashMap<String, Object> hashMapOrders = new HashMap<>();
-        hashMapOrders.put("add_data", true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("add_data", true);
         //转换为json
-        String json = JSON.toJSONString(hashMapOrders);
+        String json = JSON.toJSONString(hashMap);
         //传递给前端
         ServletActionContext.getResponse().getWriter().write(json);
 
@@ -90,11 +91,35 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
      * description: 更新订单表
      * create time: 2019/6/14 15:20
      */
-    public void update() {
+    public void update() throws IOException {
         //显示日志信息
-        Logger.getLogger(OrdersAction.class).info("--订单操作--------update()方法执行----");
+        Logger.getLogger(OrderAction.class).info("--订单操作--------update()方法执行----");
+        //获得请求域对象
+        HttpServletRequest request = ServletActionContext.getRequest();
+        //获得跟下标签，用来判断更新的那个字段
+        String what = request.getParameter("what");
+
+        ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
+        //设置返回数据编码
+        ServletActionContext.getResponse().setCharacterEncoding("utf-8");
+        //像数据库里面插入数据
+        HashMap<String, Object> hashMapOrders = new HashMap<>();
+        //先查询要更新的订单表
+        Orders orders_ = ordersService.findOne(orders.getId());
+        //判断更新那个字段
+        if (what.equals("ifFinish")) {
+            //更新ifFinish
+            orders_.setIfFinish(orders.isIfFinish());
+        } else if (what.equals("ifAccept")) {
+            orders_.setIfAccept(orders.isIfAccept());
+        }
         //更新
-        ordersService.update(orders);
+        ordersService.update(orders_);
+        hashMapOrders.put("update_data", true);
+        //转换为json
+        String json = JSON.toJSONString(hashMapOrders);
+        //传递给前端
+        ServletActionContext.getResponse().getWriter().write(json);
     }
 
 
