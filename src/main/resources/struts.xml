@@ -22,5 +22,7 @@
         </action>
         <action name="messageAction_*" class="messageAction" method="{1}">
         </action>
+        <action name="authenticationAction_*" class="authenticationAction" method="{1}">
+        </action>
     </package>
 </struts>

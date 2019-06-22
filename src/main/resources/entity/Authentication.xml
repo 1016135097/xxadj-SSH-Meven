@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="authenticationAction" class="cn.bubbletg.xxadj.action.AuthenticationAction">
+        <property name="authenticationService" ref="authenticationService"/>
+    </bean>
+    <bean id="authenticationService" class="cn.bubbletg.xxadj.service.AuthenticationService">
+        <property name="authenticationDao" ref="authenticationDaoImpl"/>
+    </bean>
+
+    <bean id="authenticationDaoImpl" class="cn.bubbletg.xxadj.dao.AuthenticationDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>

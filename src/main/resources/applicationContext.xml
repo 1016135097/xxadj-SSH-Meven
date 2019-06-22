@@ -45,6 +45,7 @@
     <import resource="classpath:entity/order.xml"/>
     <import resource="classpath:entity/orders.xml"/>
     <import resource="classpath:entity/message.xml"/>
+    <import resource="classpath:entity/Authentication.xml"/>
 
 </beans>
 
