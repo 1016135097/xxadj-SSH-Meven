@@ -129,7 +129,7 @@ Page({
 
   //修改实名认证
   alterSpei: function(e) {
-    if (this.data.spe_i != '未实名认证') {
+    if (this.data.user.realNameAuthentication != '未实名认证') {
       //提示
       wx.showToast({
         title: "您已经实名认证！！",

@@ -49,7 +49,7 @@ Page({
     })
     //上传图片到服务器并识别
     wx.uploadFile({
-      url: app.globalData.url + 'jiashizheng',
+      url: 'https://xxadj.bubbletg.cn/jiashizheng',
       filePath: _this.data.jiashizhengtupian[fan][0],
       name: 'pictureFile',
       formData: {
@@ -292,66 +292,37 @@ Page({
     this.setData({
       jiashizhengtupian: thiss.data.jiashizhengtupian,
     })
-    db.collection('jiashi').add({
-      // data 字段表示需新增的 JSON 数据
+    wx.request({
+      url: app.globalData.url + 'authenticationAction_add', 
       data: {
-        _id: '' + thiss.data.openid,
-        xingming: '' + e.detail.value.xingming, //姓名
-        jiashigzhenghao: e.detail.value.jiashigzhenghao, //证件号
-        guoji: e.detail.value.guoji, //国籍
-        youxiaoqixian: e.detail.value.youxiaoqixian, //有效日期
-        zhunjiachexing: e.detail.value.zhunjiachexing, //准驾车型
-        jiashi: '已驾驶认证', //驾驶认证
-        jiashizhengtupian: thiss.data.jiashizhengtupian,   //保存在云存储的图片
-
+        id: 1, //当前接单表id ,自动递增
+        userId:app.globalDataOpenid.user_id,
+        drivingCertification:true,
+        realNameAuthentication: false,
+        drivingCertificationFrontUrl:this.data.zhengmianshangchuandaoyuncuncuImgUrl,
+        drivingCertificationBackUrl:this.data.fanmianshangchuandaoyuncuncuImgUrl,
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        thiss.setData({
-          ifjiashitianjia: 1, //驾驶添加
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
+          data: {
+            id:app.globalDataOpenid.user_id,
+            realNameAuthentication: '未实名认证', //只是提交判断用，不做修改
+            drivingCertification:'已驾驶认证',
+          },
+          success(res) {   
+              //关闭当前页面返回
+        wx.navigateBack({
+          url: '../redact?openid=' + thiss.data.openid,
+        })
+          }
         })
       }
-    });
-    //更新用户表字段
-    db.collection('user').doc(thiss.data.openid).update({
-      data: {
-        jiashi: '已驾驶认证', //
-        //驾龄
-        jialing: thiss.jialingjisuan(),
-      },
-      success(res) {
-        thiss.setData({
-          ifusergengxing: 1,
-        })
-
-      },
-      fail(res) {
-        //提示
-        wx.showToast({
-          title: '更新失败',
-          icon: "none",
-          duration: 2000
-        })
-        thiss.setData({
-          showLoading1: false,
-        })
-      }
-    });
-    //当实名表添加成功时，更新用户表字段
-    if (thiss.data.ifjiashitianjia == thiss.data.ifusergengxing) {
-      //提示
-      wx.showToast({
-        title: "你已经成功完成驾驶认证！！",
-        icon: "none",
-        duration: 2000
-      })
-      thiss.setData({
-        showLoading1: false,
-      })
-      //关闭当前页面返回
-      wx.navigateBack({
-        url: '../redact?openid=' + thiss.data.openid,
-      })
-    }
+    })
 
 
   },

@@ -2,6 +2,8 @@ const db = wx.cloud.database();
 const app = getApp();
 var setIntervalID;
 var setTimeoutID;
+var realNameAuthenticationFrontUrl = '';
+var realNameAuthenticationBackUrl = '';
 Page({
 
   /**
@@ -15,7 +17,7 @@ Page({
    * 上传到云存储方法
    * fan 参数表示正反面
    */
-  uploadFileZ: function(res, _this, fan) {
+  uploadFileZ: function (res, _this, fan) {
     var kl = _this.data.shenfenzhengtupian[fan][0].length //取保存图片地址的长度
     //把图片上传到云存储
     wx.cloud.uploadFile({
@@ -26,8 +28,10 @@ Page({
         // 返回文件 ID
         console.log(res.fileID)
         if (fan) {
+          realNameAuthenticationBackUrl = res.fileID;
           _this.fanmianshangchuandaoyuncuncu();
         } else {
+          realNameAuthenticationFrontUrl = res.fileID;
           _this.zhengmianshangchuandaoyuncuncu();
         }
 
@@ -49,7 +53,7 @@ Page({
     })
     //上传图片到服务器并识别
     wx.uploadFile({
-      url: app.globalData.url + 'shenfengzheng',
+      url: 'https://xxadj.bubbletg.cn/shenfengzheng',
       filePath: _this.data.shenfenzhengtupian[fan][0],
       name: 'pictureFile',
       formData: {
@@ -113,12 +117,12 @@ Page({
     })
   },
   //点击选择从哪里选择图片
-  chooseImage: function(shenfenzheng) {
+  chooseImage: function (shenfenzheng) {
     let _this = this;
     wx.showActionSheet({ //参考  https://developers.weixin.qq.com/miniprogram/dev/api/ui/interaction/wx.showActionSheet.html?search-key=%20wx.showActionSheet
       itemList: ['从相册中选择', '拍照'],
       itemColor: "#f7982a",
-      success: function(res) {
+      success: function (res) {
         if (!res.cancel) {
           if (res.tapIndex == 0) { //tapIndex 获得 点击的按钮顺序
             _this.chooseWxImage('album', shenfenzheng) //设置不同的参数触发下面函数
@@ -129,12 +133,12 @@ Page({
       }
     })
   },
-  chooseWxImage: function(type, shenfenzheng) {
+  chooseWxImage: function (type, shenfenzheng) {
     let _this = this;
     wx.chooseImage({ //从本地相册选择图片或使用相机拍照。
       sizeType: ['original', 'compressed'],
       sourceType: [type], //从chooseImage 里获得点击是哪一个
-      success: function(res) {
+      success: function (res) {
         //返回保存 tempFilePaths		图片的本地文件路径列表
         let fan = 0;
         if (shenfenzheng == 0) {
@@ -165,7 +169,7 @@ Page({
    * 4.返回保存路径
    * 5.返回参数
    */
-  shangchuanzhengmian: function(e) {
+  shangchuanzhengmian: function (e) {
     //当用户重新上传时，shangchuangzhengmianchengguo 置为  0
     this.setData({
       shangchuangzhengmianchengguo: 0, //识别并保存成功为1，失败为0
@@ -181,7 +185,7 @@ Page({
    * 3.保存
    * 4.返回保存路径
    */
-  shangchuanfanmian: function(e) {
+  shangchuanfanmian: function (e) {
     //当用户重新上传时，shangchuangfanmianchengguo 置为  0
     this.setData({
       shangchuangfanmianchengguo: 0, //识别并保存成功为1，失败为0
@@ -194,7 +198,7 @@ Page({
   },
 
   //上传提交
-  shenfenzhengtijiao: function(e) {
+  shenfenzhengtijiao: function (e) {
     //判断是否上传证件照
     if (this.data.shenfenzhengtupian[0] == '../../../../images/shangchuan.png') {
       wx.showToast({
@@ -215,7 +219,7 @@ Page({
     this.setData({
       showLoading: true,
     })
-    setIntervalID = setInterval(function(thiss) {
+    setIntervalID = setInterval(function (thiss) {
       console.log("这是上传定时器", thiss.data.fanmianshangchuandaoyuncuncu, thiss.data.zhengmianshangchuandaoyuncuncu, thiss.data.shangchuangzhengmianchengguo, thiss.data.shangchuangfanmianchengguo)
       if (thiss.data.fanmianshangchuandaoyuncuncu == 1 &&
         thiss.data.zhengmianshangchuandaoyuncuncu == 1 &&
@@ -231,7 +235,7 @@ Page({
     }, 1000, this);
 
     //定时十秒后判断是否上传切换，若没有则提醒用户重新
-     setTimeoutID = setTimeout(function(thiss) {
+    setTimeoutID = setTimeout(function (thiss) {
       //关闭自动定时器
       clearTimeout(setIntervalID);
       //到达时间没有切换页面，给出相应的信息
@@ -253,7 +257,7 @@ Page({
    * 重新上传
    * 
    */
-  chongxinchangchuan: function() {
+  chongxinchangchuan: function () {
     //清除定时切换，不然点当上传是正确的时候，又会切换页面
     clearTimeout(setIntervalID);
     clearTimeout(setTimeoutID); //取消自己
@@ -266,85 +270,54 @@ Page({
   /**
    * 确认提交
    */
-  shenfensubmitForm: function(e) {
-
+  shenfensubmitForm: function (e) {
+let that = this;
     this.setData({
       showLoading1: true,
     })
-    /**
-     * 更新到云数据库，修改user表中字段，表示已经实名认证
-     */
-    //登录成功后，向数据库里面添加一个表，表示用户证件信息
-    let thiss = this;
-    db.collection('shiming').add({
-      // data 字段表示需新增的 JSON 数据
+    wx.request({
+      url: app.globalData.url + 'authenticationAction_add',
       data: {
-        _id: '' + thiss.data.openid,
-        xingming: '' + e.detail.value.xingming, //姓名
-        shenfengzhenghao: e.detail.value.shenfengzhenghao, //证件号
-        spe_i: '已实名认证', //实名认证
+        id: 1, //当前接单表id ,自动递增
+        userId: app.globalDataOpenid.user_id,
+        realNameAuthentication: true,
+        drivingCertification:false,
+        realNameAuthenticationFrontUrl: realNameAuthenticationFrontUrl,
+        realNameAuthenticationBackUrl: realNameAuthenticationBackUrl,
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success(res) {
-        thiss.setData({
-          ifshimingtianjia: 1, //实名添加
+        wx.request({
+          url: app.globalData.url + 'userAction_update', //更新
+          data: {
+            id: app.globalDataOpenid.user_id,
+            drivingCertification:'未驾驶名认证',//只是提交判断用，不做修改
+            realNameAuthentication: '已实名认证',
+          },
+          success(res) {
+            //关闭当前页面返回
+            wx.navigateBack({
+              url: '../redact?openid=' + that.data.openid,
+            })
+          }
         })
       }
-    });
-    //更新用户表字段
-    db.collection('user').doc(thiss.data.openid).update({
-      data: {
-        spe_i: '已实名认证', //实名认证
-        name: e.detail.value.xingming, //姓名
-        //获得今年年份，减去出生年份 ，年龄
-        age: ((new Date().getFullYear()) - (thiss.data.chusheng.substring(0, 4))),
-      },
-      success(res) {
-        thiss.setData({
-          ifusergengxing: 1,
-        })
-
-      },
-      fail(res) {
-        //提示
-        wx.showToast({
-          title: '更新失败',
-          icon: "none",
-          duration: 2000
-        })
-        thiss.setData({
-          showLoading1: false,
-        })
-      }
-    });
-    //当实名表添加成功时，更新用户表字段
-    if (thiss.data.ifshimingtianjia == thiss.data.ifusergengxing) {
-      //提示
-      wx.showToast({
-        title: "你已经成功完成实名认证！！",
-        icon: "none",
-        duration: 2000
-      })
-      thiss.setData({
-        showLoading1: false,
-      })
-      //关闭当前页面返回
-      wx.navigateBack({
-        url: '../redact?openid=' + thiss.data.openid,
-      })
-    }
-
+    })
 
   },
 
   //正面上传成调用函数
-  zhengmianshangchuandaoyuncuncu: function() {
+  zhengmianshangchuandaoyuncuncu: function () {
     //解决异步
     this.setData({
       zhengmianshangchuandaoyuncuncu: 1, //正面上传到云存储，1表示成功
     })
   },
   //反面上传成调用函数
-  fanmianshangchuandaoyuncuncu: function() {
+  fanmianshangchuandaoyuncuncu: function () {
     this.setData({
       fanmianshangchuandaoyuncuncu: 1, //反面上传到云存储，1表示成功
     })
@@ -354,7 +327,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     this.setData({
       openid: options.openid,
       ifSpei: options.ifSpei
