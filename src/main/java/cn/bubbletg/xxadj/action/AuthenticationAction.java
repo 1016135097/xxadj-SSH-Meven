@@ -4,6 +4,8 @@ import cn.bubbletg.xxadj.entity.Authentication;
 import cn.bubbletg.xxadj.service.AuthenticationService;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ：BubbleTg
@@ -12,6 +14,7 @@ import com.opensymphony.xwork2.ModelDriven;
  * @modified By：
  * @version: 1.0.0
  */
+@Transactional
 public class AuthenticationAction extends ActionSupport implements ModelDriven<Authentication> {
     Authentication authentication = new Authentication();
     @Override
@@ -34,6 +37,8 @@ public class AuthenticationAction extends ActionSupport implements ModelDriven<A
      * @return
      */
     public void add(){
+        //显示日志信息
+        Logger.getLogger(AuthenticationAction.class).info("--------add()方法执行----");
         authenticationService.add(authentication);
 
     }
@@ -61,9 +66,6 @@ public class AuthenticationAction extends ActionSupport implements ModelDriven<A
     public void findOne(){
         authenticationService.findOne(authentication);
     }
-
-
-
 
 
 }

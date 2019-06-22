@@ -2,6 +2,8 @@ package cn.bubbletg.xxadj.service;
 
 import cn.bubbletg.xxadj.dao.AuthenticationDao;
 import cn.bubbletg.xxadj.entity.Authentication;
+import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ：BubbleTg
@@ -10,6 +12,7 @@ import cn.bubbletg.xxadj.entity.Authentication;
  * @modified By：
  * @version: 1.0.0
  */
+@Transactional
 public class AuthenticationService {
     private AuthenticationDao authenticationDao;
 
@@ -27,7 +30,8 @@ public class AuthenticationService {
      * @Param: null
      */
     public void add(Authentication authentication) {
-
+        //显示日志信息
+        Logger.getLogger(AuthenticationService.class).info("--------add()方法执行----");
         Authentication authentication1 = null;
         /**
          * 认证信息插入，先判断是否已经存在，存在就修改。因为实名认证与驾驶认证信息保存在同一个表中
@@ -40,7 +44,7 @@ public class AuthenticationService {
             通过提交的数据判断。
              */
             //判断是驾驶认证，还是实名认证
-            if(authentication.getDrivingCertification()){
+            if (authentication.getDrivingCertification()) {
                 //驾驶认证,
                 authentication1.setDrivingCertification(authentication.getDrivingCertification());
                 //修改证件地址反面
@@ -48,7 +52,7 @@ public class AuthenticationService {
                 //修改证件地址正面
                 authentication1.setDrivingCertificationFrontUrl(authentication.getDrivingCertificationFrontUrl());
 
-            }else{
+            } else {
                 authentication1.setRealNameAuthentication(authentication.getRealNameAuthentication());
                 authentication1.setRealNameAuthenticationBackUrl(authentication.getRealNameAuthenticationBackUrl());
                 authentication1.setRealNameAuthenticationFrontUrl(authentication.getRealNameAuthenticationFrontUrl());

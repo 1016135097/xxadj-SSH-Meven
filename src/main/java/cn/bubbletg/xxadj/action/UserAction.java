@@ -89,6 +89,7 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
     public void update() throws IOException {
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--------update()方法执行----");
+
         //更新
         userService.update(user);
         //更新成功后，重新查询用户数据，并返回数据

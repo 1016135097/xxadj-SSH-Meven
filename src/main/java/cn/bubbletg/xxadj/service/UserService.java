@@ -42,7 +42,31 @@ public class UserService {
      * @Param: user 封装的用户数据
      */
     public void update(User user) {
-        userDao.update(user);
+        /*
+         * 判断是什么更新，实名认证更新，还是驾驶认证更新，或者其他信息更新
+         * 通过  realNameAuthentication 判断是否实名认证更新
+         * 通过  drivingCertification 判断是否驾驶认证更新
+         * 否则就是其他信息更新
+         *
+         */
+        //更新前先根据用户ID查询
+        User u = userDao.findOne(user.getId());
+        if(user.getRealNameAuthentication().equals("已实名认证")){
+            //说明实名认证更新
+            u.setRealNameAuthentication("已实名认证");
+            //更新
+            userDao.update(u);
+        }else if(user.getDrivingCertification().equals("已驾驶认证")){
+            //驾驶认证更新
+            u.setDrivingCertification("已驾驶认证");
+            //更新
+            userDao.update(u);
+
+        }else{
+            //其他信息更新
+            //更新
+            userDao.update(user);
+        }
     }
 
     /**
