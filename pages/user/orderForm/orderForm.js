@@ -40,7 +40,7 @@ Page({
     wx.request({
       url: app.globalData.url + 'orderAction_conditionQuery', //条件查询全部
       data: {
-        openid: that.data.openid,
+        openid: app.globalDataOpenid.openid_,
         ifFinish: ifFinish, //表示是否完成
       },
       success(res) {
