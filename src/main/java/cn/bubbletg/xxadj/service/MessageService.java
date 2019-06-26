@@ -23,7 +23,7 @@ public class MessageService {
 
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 信息添加
      * create time: 2019/6/21 18:46
      *
@@ -35,7 +35,7 @@ public class MessageService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 更新信息
      * create time: 2019/6/21 18:52
      *
@@ -46,7 +46,7 @@ public class MessageService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询一个信息
      * create time: 2019/6/21 18:53
      *
@@ -57,7 +57,7 @@ public class MessageService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 删除
      * create time: 2019/6/21 18:59
      *
@@ -69,19 +69,19 @@ public class MessageService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询全部信息
      * create time: 2019/6/21 19:02
      *
      * @return 返回信息集合
      * @Param:
      */
-    public List<Message> findAll() {
-        return messageDao.findAll();
+    public List<Message> findAll(Message message) {
+        return messageDao.findAll(message);
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询是否还有没有查看的消息
      * create time: 2019/6/21 20:32
      * 

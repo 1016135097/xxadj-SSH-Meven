@@ -41,3 +41,5 @@ xxadj-SSH-Meven 原来xxadj 的SSH 加Meven 版本
 > 2019年6月15日 17:11:16 提供用户信息查询，通过openid查询。 
 
 > 2019年6月14日 19:43:04 Order 订单添加，User 用户添加，整体架构完成。（小程序部分请查看部分weixin分支）
+
+

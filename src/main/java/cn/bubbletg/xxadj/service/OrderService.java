@@ -27,7 +27,7 @@ public class OrderService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 订单表添加操作，即下单操作
      * create time: 2019/6/13 19:53
      */
@@ -38,7 +38,7 @@ public class OrderService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 更新订单表
      * create time: 2019/6/14 15:20
      */
@@ -50,7 +50,7 @@ public class OrderService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */

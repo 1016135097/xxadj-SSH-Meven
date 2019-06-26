@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import java.util.List;
 
 /**
- * @author ：BubbleTg
+ * @author ：zll
  * @date ：Created in 2019/6/13 17:50
  * @description：订单表操作具体实现
  * @modified By：
@@ -16,7 +16,7 @@ import java.util.List;
 public class OrdersDaoImpl extends BaseDaoImpl<Orders> implements OrdersDao {
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 获得总记录数据
      * create time: 2019/6/16 15:33
      *
@@ -38,7 +38,7 @@ public class OrdersDaoImpl extends BaseDaoImpl<Orders> implements OrdersDao {
 
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 条件查询
      * create time: 2019/6/20 13:45
      *

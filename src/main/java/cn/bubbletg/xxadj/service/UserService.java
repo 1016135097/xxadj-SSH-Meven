@@ -23,7 +23,7 @@ public class UserService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zck
      * description: 用户表添加操作，即注册操作
      * create time: 2019/6/13 16:44
      *
@@ -49,14 +49,20 @@ public class UserService {
          * 否则就是其他信息更新
          *
          */
+        //
+        //User u = userDao.findOne(user.getId());
         //更新前先根据用户ID查询
-        User u = userDao.findOne(user.getId());
+        User u = null;
         if(user.getRealNameAuthentication().equals("已实名认证")){
+            u = userDao.findOne(user.getId());
             //说明实名认证更新
             u.setRealNameAuthentication("已实名认证");
+            u.setName(user.getName());
             //更新
             userDao.update(u);
+
         }else if(user.getDrivingCertification().equals("已驾驶认证")){
+            u = userDao.findOne(user.getId());
             //驾驶认证更新
             u.setDrivingCertification("已驾驶认证");
             //更新
@@ -98,5 +104,5 @@ public class UserService {
      */
     public User findOne(String openid) {
         return userDao.findOne(openid);
-    }
+    }//17863275893张成可
 }

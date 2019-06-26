@@ -1,7 +1,6 @@
 package cn.bubbletg.xxadj.service;
 
 import cn.bubbletg.xxadj.dao.OrdersDao;
-import cn.bubbletg.xxadj.entity.Order;
 import cn.bubbletg.xxadj.entity.Orders;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class OrdersService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 订单表添加操作，即下单操作
      * create time: 2019/6/13 19:53
      * @param order
@@ -39,7 +38,7 @@ public class OrdersService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 更新订单表
      * create time: 2019/6/14 15:20
      * @param order
@@ -52,7 +51,7 @@ public class OrdersService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      * @param order
@@ -64,7 +63,7 @@ public class OrdersService {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 首页加载全部查询，查询全部
      * create time: 2019/6/14 15:16
      */
@@ -102,7 +101,7 @@ public class OrdersService {
      * description: 条件查询
      * create time: 2019/6/20 13:42
      *
-     * @param order 条件查询，模型驱动获得数据封装在Order对象里面
+     * @param orders 条件查询，模型驱动获得数据封装在Order对象里面
      * @return Order对象集合
      */
     public List<Orders> conditionQuery(Orders orders) {

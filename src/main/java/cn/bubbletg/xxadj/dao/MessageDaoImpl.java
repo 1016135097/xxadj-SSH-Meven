@@ -1,6 +1,7 @@
 package cn.bubbletg.xxadj.dao;
 
 import cn.bubbletg.xxadj.entity.Message;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class MessageDaoImpl extends BaseDaoImpl<Message> implements MessageDao {
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询是否还有没有查看的消息
      * create time: 2019/6/21 20:30
      *
@@ -24,6 +25,7 @@ public class MessageDaoImpl extends BaseDaoImpl<Message> implements MessageDao {
      */
     @Override
     public Boolean unread(Message message) {
+        Logger.getLogger(MessageDaoImpl.class).info("-------unread()方法执行----");
         Boolean b = false;
        List<Message> message1 =  this.getSessionFactory().getCurrentSession()
                 .createQuery("from Message where visit = ? and embracerUserId = ?")
@@ -36,5 +38,23 @@ public class MessageDaoImpl extends BaseDaoImpl<Message> implements MessageDao {
             b = true;
         }
         return  b;
+    }
+
+    /**
+     * create by: wang
+     * description: 根据当前信息接收用户id查询全部信息
+     * create time: 2019/6/21 6:35  19:30
+     *
+      * @Param: message
+     * @return
+     */
+    public List<Message> findAll(Message message){
+        Logger.getLogger(MessageDaoImpl.class).info("-------findAll0a-()方法执行----");
+        List<Message> messageList = this.getSessionFactory().getCurrentSession()
+                .createQuery("from Message where  embracerUserId =?")
+                //设置问号参数
+                .setParameter(0, message.getEmbracerUserId())
+                .list();
+        return messageList;
     }
 }

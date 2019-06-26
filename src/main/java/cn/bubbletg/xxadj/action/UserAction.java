@@ -48,7 +48,7 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
 
 
     /**
-     * create by: BubbleTg
+     * create by: zck
      * description: 用户表添加操作，即注册操作
      * create time: 2019/6/13 16:44
      */
@@ -87,6 +87,7 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
      * create time: 2019/6/14 15:20
      */
     public void update() throws IOException {
+        System.out.println(user);
         //显示日志信息
         Logger.getLogger(OrderAction.class).info("--------update()方法执行----");
 
@@ -122,7 +123,7 @@ public class UserAction extends ActionSupport implements ModelDriven<User> {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zck
      * description: 根据ID查询单条记录
      * create time: 2019/6/14 15:29
      */

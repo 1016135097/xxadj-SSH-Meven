@@ -5,7 +5,7 @@ import cn.bubbletg.xxadj.entity.Orders;
 import java.util.List;
 
 /**
- * @author ：BubbleTg
+ * @author ：zll
  * @date ：Created in 2019/6/13 17:47
  * @description：Order 订单表操作接口
  * @modified By：
@@ -14,7 +14,7 @@ import java.util.List;
 public interface OrdersDao extends BaseDao<Orders> {
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 获得总记录数据
      * create time: 2019/6/16 15:33
      *
@@ -22,7 +22,7 @@ public interface OrdersDao extends BaseDao<Orders> {
      */
     int findCount();
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 条件查询
      * create time: 2019/6/20 13:45
      *

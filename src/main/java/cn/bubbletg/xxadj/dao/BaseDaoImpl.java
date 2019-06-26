@@ -49,6 +49,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
     @Override
     public int add(T t) {
         Logger.getLogger(BaseDaoImpl.class).info("--------add()方法执行----");
+        //向数据库添加（插入）数据
         int id = (int) this.getHibernateTemplate().save(t);
         return id;
     }
@@ -63,6 +64,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
     @Override
     public void update(T t) {
         Logger.getLogger(BaseDaoImpl.class).info("--------update()方法执行----");
+        //更新
         this.getHibernateTemplate().update(t);
     }
 

@@ -62,7 +62,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
 
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 订单表添加操作，即下单操作
      * create time: 2019/6/13 16:44
      */
@@ -87,7 +87,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 更新订单表
      * create time: 2019/6/14 15:20
      */
@@ -124,7 +124,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
 
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 删除，删除不用的订单
      * create time: 2019/6/14 15:21
      */
@@ -193,7 +193,7 @@ public class OrdersAction extends ActionSupport implements ModelDriven<Orders> {
     }
 
     /**
-     * create by: BubbleTg
+     * create by: zll
      * description: 条件查询
      * create time: 2019/6/20 13:31
      */

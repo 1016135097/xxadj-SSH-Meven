@@ -42,6 +42,14 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
         this.messageService = messageService;
     }
 
+    /**
+     * create by: Wang
+     * description: 添加信息提示
+     * create time: 2019/6/21 10:55
+     *
+      * @Param: null
+     * @return
+     */
     public void add() throws Exception {
         //设置返回类型
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
@@ -61,6 +69,14 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
         ServletActionContext.getResponse().getWriter().write(dataJson);
     }
 
+    /**
+     * create by: Wang
+     * description: 修改信息提示，主要操作是信息是否已读
+     * create time: 2019/6/21 10:56
+     *
+      * @Param: null
+     * @return
+     */
     public void update() throws IOException {
         //显示日志信息
         Logger.getLogger(MessageAction.class).info("--------update()方法执行----");
@@ -83,10 +99,7 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
     }
 
     /**
-     * create by: BubbleTg
-     * description: 删除信息
-     * create time: 2019/6/21 18:56
-     *
+     * create by: Wang
      * @return
      * @Param: null
      */
@@ -109,7 +122,7 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询全部信息
      * create time: 2019/6/21 19:01
      *
@@ -123,7 +136,7 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
         ServletActionContext.getResponse().setContentType("application/json;charset=utf-8");
         //设置返回数据编码
         ServletActionContext.getResponse().setCharacterEncoding("utf-8");
-        List<Message> messages = messageService.findAll();
+        List<Message> messages = messageService.findAll(message);
         //转换为json
         HashMap<String, Object> data = new HashMap<>();
         data.put("data", messages);
@@ -134,7 +147,7 @@ public class MessageAction extends ActionSupport implements ModelDriven<Message>
     }
 
     /**
-     * create by: BubbleTg
+     * create by: Wang
      * description: 查询是否还有没有查看的消息
      * create time: 2019/6/21 20:30
      *
